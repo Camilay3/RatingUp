@@ -1,29 +1,26 @@
 <div align="center">
 
-  ![Logo do projeto](./nome.gif)
-  
+  ![Logo do projeto](frontend/public/logos/logoHorizontal.png#gh-light-mode-only)
+  ![Logo do projeto](frontend/public/logos/modoEscuro/logoHorizontal.png#gh-dark-mode-only)
+
 </div>
 
-<div align="center">
-  
-  <img src="./nome.png" width="270px">
-</div>
+<br>
 
----
-## 📑 _Índice_
+## _Índice_ |📑
 - [Sobre o projeto](#sobre-o-projeto)
 - [Tecnologias](#tecnologias)
 - [O site](##Clique-para-ver-o-mapa-do-nosso-site)
 - [Como executar](#como-executar)
 - [Como contribuir](#como-contribuir)
----
 
-# Sobre o projeto | 📍
+<br><br>
+
+# Sobre o projeto | ♟️
 
 [...]
 
-
----
+<br><br>
 
 <div align="center">
 
@@ -38,7 +35,7 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
 
 </div>
 
----
+<br><br>
 
 <!-- <details>
 <summary>
@@ -94,17 +91,16 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
 # Como executar | 💻
 ```bash
   # Clonar o repositório 
-  $ git clone 
+  $ git clone https://github.com/Camilay3/RatingUp.git
 
   # Navegar até a pasta
-  $ cd 
+  $ cd RatingUp
 
   # Instalar dependências 
   # Iniciar a aplicação
 ```
 
----
-
+<br><br>
 
 # Como contribuir | 🤝
 1. Crie um fork deste repositório.
@@ -112,7 +108,7 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
 3. Insira um pequeno resumo sobre o que foi adicionado.
 4. Solicite um pull request.
 
----
+<br><br>
 
 <div align="center" >
 
