@@ -1,1 +1,31 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+:root {
+	// Cores
+	--primary: #5A3E2B;
+	--secondary: #F1E8D6;
+	--accent: #C9A84E;
+	--success: #2F5D4E;
+	--alert: #7A1F1F;
+	--info: #3F6FA5;
+	--neutral: #1C1C1C;
+
+	// Tipografia
+	--font-family: "Lato", sans-serif;
+	--title-font-family: "Cinzel Decorative", serif;
+}
+
+h1, h2 {
+	font-family: var(--title-font-family);
+}
+
+p, span, a, button {
+	font-family: var(--font-family);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	box-sizing: border-box;
+}
