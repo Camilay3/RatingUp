@@ -1,0 +1,32 @@
+<div class="flipPage"
+    [class.flipped]="flipped"
+    [class.capaPage]="capa()"
+    [class.frente]="frenteCapa()"
+    [class.firstPage]="onFirstPage()"
+    [class.lastPage]="onLastPage()">
+
+	@if (capa()) {
+		<div class="versoPage"
+			(click)="virarPagina()"
+			[style.background-image]="backgroundImage()">
+		</div>
+
+		<div class="frentePage"
+			(click)="virarPagina()"
+			[style.background-image]="backgroundImage()">
+		</div>
+
+	} @else {
+		<div (click)="virarPagina()" class="versoPage">
+			<div class="page">
+				<div>{{ verso() }}</div>
+			</div>
+		</div>
+
+		<div (click)="virarPagina()" class="frentePage">
+			<div class="page">
+				<div>{{ frente() }}</div>
+			</div>
+		</div>
+  	}
+</div>

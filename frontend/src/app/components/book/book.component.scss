@@ -1,9 +1,10 @@
-:host {
+.book-container {
 	width: 100%;
 	height: 100%;
 	position: relative;
 	transition-duration: 1s;
 	overflow: hidden;
+	background-color: var(--secondary);
 }
 
 .page-container {
@@ -36,7 +37,7 @@
 @keyframes page {
 	from {
 		visibility: visible;
-		transform: translateY(100%);
+		transform: translateY(20%);
 	}
 
 	to {

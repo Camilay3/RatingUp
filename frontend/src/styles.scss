@@ -15,6 +15,11 @@
 	--title-font-family: "Cinzel Decorative", serif;
 }
 
+html, body {
+	width: 100dvw;
+	height: 100dvh;
+}
+
 h1, h2 {
 	font-family: var(--title-font-family);
 }

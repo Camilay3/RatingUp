@@ -1,0 +1,137 @@
+@mixin tamanho {
+	width: 100%;
+	height: 100%;
+}
+
+@mixin page {
+	overflow: hidden;
+	width: calc(100% - 2%);
+	height: calc(100% - 4%);
+	margin-top: 2%;
+	padding: 5%;
+	background-color: #fdfaf7;
+	border: solid 1px #c7bebc;
+}
+
+@mixin sheet {
+	backface-visibility: hidden;
+	transform-style: preserve-3d;
+	transition-duration: 1.5s;
+	overflow: hidden;
+	cursor: pointer;
+	@include tamanho();
+}
+
+@mixin capaPage {
+	margin: 0;
+	border: none;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	@include tamanho();
+}
+
+:host {
+	position: absolute;
+	pointer-events: none;
+	@include tamanho();
+}
+
+.flipPage {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	perspective: 2000px;
+	position: relative;
+	transition: transform 1s ease;
+	@include tamanho();
+}
+
+.flipPage.capaPage {
+	.frentePage {
+		border-top-right-radius: 8px;
+		border-bottom-right-radius: 8px;
+		box-shadow: inset 0px 0 30px 0px #240a0380, 20px 0px 20px 0px #00000030;
+		@include capaPage();
+	}
+
+	.versoPage {
+		border-top-left-radius: 8px;
+		border-bottom-left-radius: 8px;
+		box-shadow: inset 0px 0 30px 0px #240a0380, 20px 9px 20px 10px #000000b3;
+		@include capaPage();
+	}
+}
+
+.flipPage.capaPage:not(.frente) {
+	.frentePage::before, .versoPage::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		background-image: inherit;
+		background-size: 100% 100%;
+		background-position: center;
+		transform: scaleX(-1);
+		@include tamanho;
+	}
+
+	.frentePage {
+		background-image: url('./../../../../public/contracapa.png') !important;
+	}
+}
+
+.flipPage.capaPage.frente {
+	.frentePage {
+		box-shadow: inset 0px 0 30px 0px #240a0380, -20px 9px 20px 10px #000000b3;
+	}
+
+	.versoPage {
+		box-shadow: inset 0px 0 30px 0px #240a0380, -20px 0px 20px 0px #000000b3;
+		background-image: url('./../../../../public/contracapa.png') !important;
+	}
+}
+
+.versoPage {
+	transform-origin: right;
+	transform: rotateY(180deg);
+	pointer-events: none;
+
+	.page {
+		box-shadow: inset -7px 0 30px -7px #00000066, -10px 10px 15px 0px #0000001f;
+		margin-left: 2%;
+		@include page();
+	}
+	@include sheet();
+}
+
+.frentePage {
+	transform-origin: left;
+	transform: rotateY(0deg);
+	pointer-events: all;
+
+	.page {
+		box-shadow: inset 7px 0 30px -7px #00000066, 10px 10px 15px 0px #0000001f;
+		margin-right: 2%;
+		@include page();
+	}
+	@include sheet();
+}
+
+.flipPage.flipped {
+	.frentePage {
+		transform: rotateY(-180deg);
+		pointer-events: none;
+	}
+
+	.versoPage {
+		transform: rotateY(0deg);
+		pointer-events: all;
+	}
+}
+
+.flipPage.first-page {
+	transform: translateX(calc(50% / -2));
+}
+
+.flipPage.last-page {
+	transform: translateX(calc(-50% / -2));
+}
