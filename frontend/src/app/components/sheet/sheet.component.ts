@@ -19,7 +19,7 @@ export class SheetComponent {
 		console.log(this.capa())
 	}
 
-	backgroundImage = computed(() => this.capa() ? `url(/${this.capa()})` : null);
+	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
 
 	virarPagina(): void {
 		this.flipped = !this.flipped;
