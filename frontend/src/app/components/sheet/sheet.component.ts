@@ -12,8 +12,12 @@ export class SheetComponent {
 	frenteCapa = input<boolean>(false);
 	onFirstPage = input<boolean>(true);
 	onLastPage = input<boolean>(true);
-	protected flipped: boolean = false;
 	flippedChange = output<boolean>();
+	protected flipped: boolean = false;
+
+	openSound = new Audio('/livro/sounds/openCover.mp3');
+	closeSound = new Audio('/livro/sounds/closeCover.mp3');
+	pageFlipSound = new Audio('/livro/sounds/flipPage.wav');
 
 	constructor( private readonly cdr: ChangeDetectorRef ) {}
 
@@ -24,14 +28,11 @@ export class SheetComponent {
 		this.cdr.detectChanges();
 		this.flippedChange.emit(this.flipped);
 
-		let pageFlipSound;
 		if (this.capa()) {
-			pageFlipSound = (this.frenteCapa()) ? new Audio('/livro/sounds/openCover.mp3') : new Audio('/livro/sounds/closeCover.mp3');
+			(this.frenteCapa()) ? this.openSound.play() : this.closeSound.play();
 
 		} else {
-			pageFlipSound = new Audio('/livro/sounds/flipPage.wav');
+			this.pageFlipSound.play();
 		}
-
-		pageFlipSound.play().catch(function (error) { console.error('Erro ao reproduzir áudio', error) });
 	}
 }
