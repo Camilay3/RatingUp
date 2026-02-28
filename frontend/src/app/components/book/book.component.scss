@@ -16,21 +16,16 @@
 	margin: auto;
 	height: 90%;
 	aspect-ratio: 13 / 9;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
+	inset: 0;
 }
 
 .blockClick {
 	position: absolute;
 	inset: 0;
-	z-index: 10000;
+	z-index: 100000;
 	pointer-events: all;
 	background: transparent;
 }
-
-
 
 /* ANIMAÇÕES */
 .pageAnimation {

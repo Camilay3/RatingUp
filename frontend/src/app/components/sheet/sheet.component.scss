@@ -4,13 +4,12 @@
 }
 
 @mixin page {
-	overflow: hidden;
-	width: calc(100% - 2%);
-	height: calc(100% - 4%);
+	overflow: hidden; // passar futuramente para o componente page
+	height: 96%;
+	width: 97%;
 	margin-top: 2%;
-	padding: 5%;
-	background-color: #fdfaf7;
-	border: solid 1px #c7bebc;
+	background-color: #fdfaf7; // passar futuramente para o componente page
+	border: solid 1px #c4c4c4;
 }
 
 @mixin sheet {
@@ -23,8 +22,6 @@
 }
 
 @mixin capaPage {
-	margin: 0;
-	border: none;
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	@include tamanho();
@@ -70,7 +67,6 @@
 		background-image: inherit;
 		background-size: 100% 100%;
 		background-position: center;
-		transform: scaleX(-1);
 		@include tamanho;
 	}
 
@@ -97,7 +93,7 @@
 
 	.page {
 		box-shadow: inset -7px 0 30px -7px #00000066, -10px 10px 15px 0px #0000001f;
-		margin-left: 2%;
+		margin-left: auto;
 		@include page();
 	}
 	@include sheet();
@@ -105,12 +101,10 @@
 
 .frentePage {
 	transform-origin: left;
-	transform: rotateY(0deg);
 	pointer-events: all;
 
 	.page {
 		box-shadow: inset 7px 0 30px -7px #00000066, 10px 10px 15px 0px #0000001f;
-		margin-right: 2%;
 		@include page();
 	}
 	@include sheet();
@@ -128,10 +122,11 @@
 	}
 }
 
-.flipPage.first-page {
+/* SE QUISEREM LIVRO NO CENTRO
+.flipPage.firstPage {
 	transform: translateX(calc(50% / -2));
 }
 
-.flipPage.last-page {
+.flipPage.lastPage {
 	transform: translateX(calc(-50% / -2));
-}
+}*/
