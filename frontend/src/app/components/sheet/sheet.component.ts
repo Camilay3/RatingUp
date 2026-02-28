@@ -15,9 +15,7 @@ export class SheetComponent {
 	protected flipped: boolean = false;
 	flippedChange = output<boolean>();
 
-	constructor( private readonly cdr: ChangeDetectorRef ) {
-		console.log(this.capa())
-	}
+	constructor( private readonly cdr: ChangeDetectorRef ) {}
 
 	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
 
@@ -25,5 +23,15 @@ export class SheetComponent {
 		this.flipped = !this.flipped;
 		this.cdr.detectChanges();
 		this.flippedChange.emit(this.flipped);
+
+		let pageFlipSound;
+		if (this.capa()) {
+			pageFlipSound = (this.frenteCapa()) ? new Audio('/livro/sounds/openCover.mp3') : new Audio('/livro/sounds/closeCover.mp3');
+
+		} else {
+			pageFlipSound = new Audio('/livro/sounds/flipPage.wav');
+		}
+
+		pageFlipSound.play().catch(function (error) { console.error('Erro ao reproduzir áudio', error) });
 	}
 }
