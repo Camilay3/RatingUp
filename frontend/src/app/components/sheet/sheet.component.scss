@@ -66,12 +66,20 @@
 		left: 0;
 		background-image: inherit;
 		background-size: 100% 100%;
+		background-repeat: no-repeat;
 		background-position: center;
+		pointer-events: none;
 		@include tamanho;
 	}
 
 	.frentePage {
+		position: relative;
 		background-image: url('./../../../../public/livro/contracapa.png') !important;
+
+		&::before {
+			transform: scaleX(-1);
+			transform-origin: center;
+		}
 	}
 }
 
@@ -81,7 +89,7 @@
 	}
 
 	.versoPage {
-		box-shadow: inset 0px 0 30px 0px #240a0380, -20px 0px 20px 0px #000000b3;
+		box-shadow: inset 0px 0 30px 0px #240a0380, -20px 0px 20px 10px #00000030;
 		background-image: url('./../../../../public/livro/contracapa.png') !important;
 	}
 }

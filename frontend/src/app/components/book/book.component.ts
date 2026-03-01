@@ -41,7 +41,7 @@ export class BookComponent implements OnInit {
 		if (this.isWaiting) return;
 
 		this.isWaiting = true;
-		setTimeout(() => { this.isWaiting = false; this.cdr.detectChanges(); }, 500);
+		setTimeout(() => { this.isWaiting = false; this.cdr.detectChanges(); }, 600);
 
 		const maiorZIndex = Math.max(...this.zIndexValues);
 		this.zIndexValues[pageIndex] = maiorZIndex + 1;
