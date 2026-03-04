@@ -133,7 +133,7 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
 
 <div align="center" >
 
-  ## *Conheça nosso time* | 👥
+  ## *Conheça nosso time: Equipe Quadcore* | 👥
   
   <table align="center">
       <tr align="center">
@@ -146,7 +146,7 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
             </sub>
           </a>
           <br>
-          <p><br>Designer<br>Front-End<br>Líder Técnica<br></p>
+          <p><br>Front-End<br>Líder Técnica<br>Designer<br></p>
         </td>
         <td>
           <a href="https://github.com/andrey-pereira02">
@@ -168,7 +168,7 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
             </sub>
           </a>
           <br>
-          <p><br>Back-End<br><br><br></p>
+          <p><br>Back-End<br>Lider Técnico<br><br></p>
         </td>
         <td>
           <a href="https://github.com/Mateus-Rocha1">
@@ -176,6 +176,17 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
             <br>
             <sub>
               <b>Mateus Pinheiro</b>
+            </sub>
+          </a>
+          <br>
+          <p><br>Back-End<br><br><br></p>
+        </td>
+		<td>
+          <a href="https://github.com/KalebStonkss">
+            <img src="https://avatars.githubusercontent.com/u/105246557?v=4" width="100px;" alt="Kalebe Ribeiro"/>
+            <br>
+            <sub>
+              <b>Kalebe Ribeiro</b>
             </sub>
           </a>
           <br>
