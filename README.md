@@ -17,8 +17,18 @@
 <br><br>
 
 # Sobre o projeto | ♟️
+O RatingUp é uma plataforma web criada com o propósito de reduzir a lacuna no aprendizado de xadrez na população brasileira, tornando o ensino do jogo mais acessível, moderno e envolvente. Transformamos o aprendizado de xadrez em uma jornada interativa, estruturada e acessível para todos.
 
-[...]
+Sabemos que o xadrez é uma ferramenta poderosa para o desenvolvimento de habilidades como raciocínio lógico, pensamento estratégico, paciência e capacidade de antecipar cenários. Embora existam cursos online disponíveis, muitos são pagos ou de difícil acesso, o que limita o alcance desse conhecimento. O RatingUp surge como uma alternativa gratuita e gamificada, pensada para democratizar o aprendizado do xadrez.
+
+A aplicação foi desenvolvida utilizando Java no backend e Angular no frontend, oferecendo uma experiência interativa e progressiva. O ensino é estruturado em níveis organizados como páginas de um livro digital, onde o usuário avança fase por fase, desbloqueando novos conteúdos conforme evolui.
+
+Ao concluir uma fase, o usuário experimenta um efeito visual de “folhear página”, reforçando a proposta didática e imersiva da plataforma. O sistema combina conteúdos teóricos e práticos com elementos de gamificação, como progressão por níveis e recompensas, tornando o aprendizado mais motivador e eficiente.
+
+Os usuários podem criar uma conta para acompanhar sua evolução ao longo das fases, incentivando o desenvolvimento contínuo e personalizado.
+
+O público-alvo são pessoas que desejam aprender xadrez — especialmente aquelas que não têm acesso fácil a cursos pagos — e que buscam uma abordagem simples, acessível e progressiva para dominar o jogo.
+
 
 <br><br>
 
@@ -29,7 +39,7 @@
 Setor                   | Tecnologia
 ----------------------- | -----------------
 Front-end               | <img src="https://img.shields.io/badge/-Angular-C3002F?logo=angular&logoColor=white&style=for-the-badge" alt="Logo do Angular">
-Back-end                | 
+Back-end                | <img src="https://img.shields.io/badge/-Spring-6cb33e?logo=spring&logoColor=white&style=for-the-badge" alt="Logo do Java">
 Gestão SCRUM do projeto | <img src="https://img.shields.io/badge/clickup-BF6B99?style=for-the-badge&logo=clickup&logoColor=white" height="25"/>
 Design                  | <img src="https://img.shields.io/badge/figma-0078D6?style=for-the-badge&logo=figma&logoColor=white" height="25"/>
 
@@ -95,9 +105,20 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
 
   # Navegar até a pasta
   $ cd RatingUp
+```
+
+<br>
+
+### FrontEnd
+```bash
+  # Navegar até a pasta
+  $ cd frontend
 
   # Instalar dependências 
+  $ npm i
+
   # Iniciar a aplicação
+  $ ng serve
 ```
 
 <br><br>
@@ -112,7 +133,7 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
 
 <div align="center" >
 
-  ## *Conheça nosso time* | 👥
+  ## *Conheça nosso time: Equipe Quadcore* | 👥
   
   <table align="center">
       <tr align="center">
@@ -125,7 +146,7 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
             </sub>
           </a>
           <br>
-          <p><br>Designer<br>Front-End<br>Líder Técnica<br></p>
+          <p><br>Front-End<br>Líder Técnica<br>Designer<br></p>
         </td>
         <td>
           <a href="https://github.com/andrey-pereira02">
@@ -147,7 +168,7 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
             </sub>
           </a>
           <br>
-          <p><br>Back-End<br><br><br></p>
+          <p><br>Back-End<br>Lider Técnico<br><br></p>
         </td>
         <td>
           <a href="https://github.com/Mateus-Rocha1">
@@ -155,6 +176,17 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
             <br>
             <sub>
               <b>Mateus Pinheiro</b>
+            </sub>
+          </a>
+          <br>
+          <p><br>Back-End<br><br><br></p>
+        </td>
+		<td>
+          <a href="https://github.com/KalebStonkss">
+            <img src="https://avatars.githubusercontent.com/u/105246557?v=4" width="100px;" alt="Kalebe Ribeiro"/>
+            <br>
+            <sub>
+              <b>Kalebe Ribeiro</b>
             </sub>
           </a>
           <br>
