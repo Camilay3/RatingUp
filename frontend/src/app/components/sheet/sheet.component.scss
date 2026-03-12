@@ -1,0 +1,140 @@
+@mixin tamanho {
+	width: 100%;
+	height: 100%;
+}
+
+@mixin page {
+	overflow: hidden; // passar futuramente para o componente page
+	height: 96%;
+	width: 97%;
+	margin-top: 2%;
+	background-color: #fdfaf7; // passar futuramente para o componente page
+	border: solid 1px #c4c4c4;
+}
+
+@mixin sheet {
+	backface-visibility: hidden;
+	transform-style: preserve-3d;
+	transition-duration: 1.5s;
+	overflow: hidden;
+	cursor: pointer;
+	@include tamanho();
+}
+
+@mixin capaPage {
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	@include tamanho();
+}
+
+:host {
+	position: absolute;
+	pointer-events: none;
+	@include tamanho();
+}
+
+.flipPage {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	perspective: 2000px;
+	position: relative;
+	transition: transform 1s ease;
+	@include tamanho();
+}
+
+.flipPage.capaPage {
+	.frentePage {
+		border-top-right-radius: 8px;
+		border-bottom-right-radius: 8px;
+		box-shadow: inset 0px 0 30px 0px #240a0380, 20px 0px 20px 0px #00000030;
+		@include capaPage();
+	}
+
+	.versoPage {
+		border-top-left-radius: 8px;
+		border-bottom-left-radius: 8px;
+		box-shadow: inset 0px 0 30px 0px #240a0380, 20px 9px 20px 10px #000000b3;
+		@include capaPage();
+	}
+}
+
+.flipPage.capaPage:not(.frente) {
+	.frentePage::before, .versoPage::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		background-image: inherit;
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+		background-position: center;
+		pointer-events: none;
+		@include tamanho;
+	}
+
+	.frentePage {
+		position: relative;
+		background-image: url('./../../../../public/livro/contracapa.png') !important;
+
+		&::before {
+			transform: scaleX(-1);
+			transform-origin: center;
+		}
+	}
+}
+
+.flipPage.capaPage.frente {
+	.frentePage {
+		box-shadow: inset 0px 0 30px 0px #240a0380, -20px 9px 20px 10px #000000b3;
+	}
+
+	.versoPage {
+		box-shadow: inset 0px 0 30px 0px #240a0380, -20px 0px 20px 10px #00000030;
+		background-image: url('./../../../../public/livro/contracapa.png') !important;
+	}
+}
+
+.versoPage {
+	transform-origin: right;
+	transform: rotateY(180deg);
+	pointer-events: none;
+
+	.page {
+		box-shadow: inset -7px 0 30px -7px #00000066, -10px 10px 15px 0px #0000001f;
+		margin-left: auto;
+		@include page();
+	}
+	@include sheet();
+}
+
+.frentePage {
+	transform-origin: left;
+	pointer-events: all;
+
+	.page {
+		box-shadow: inset 7px 0 30px -7px #00000066, 10px 10px 15px 0px #0000001f;
+		@include page();
+	}
+	@include sheet();
+}
+
+.flipPage.flipped {
+	.frentePage {
+		transform: rotateY(-180deg);
+		pointer-events: none;
+	}
+
+	.versoPage {
+		transform: rotateY(0deg);
+		pointer-events: all;
+	}
+}
+
+/* SE QUISEREM LIVRO NO CENTRO
+.flipPage.firstPage {
+	transform: translateX(calc(50% / -2));
+}
+
+.flipPage.lastPage {
+	transform: translateX(calc(-50% / -2));
+}*/

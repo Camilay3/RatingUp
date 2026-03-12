@@ -1,0 +1,21 @@
+<div class="book-container" style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/livro/background.png');">
+	<div class="page-container pageAnimation">
+		@if (isWaiting) { <div class="blockClick"></div> }
+
+		@for (page of pages; track $index) {
+			<app-sheet
+				[frente]="page.frente"
+				[verso]="page.verso"
+				[capa]="page.capa"
+				[frenteCapa]="page.frenteCapa ?? false"
+				[style.zIndex]="zIndexValues[$index]"
+				(flippedChange)="onFlip($index, $event)"
+				[onFirstPage]="onFirstPage"
+				[onLastPage]="onLastPage"
+			></app-sheet>
+
+		} @empty {
+			<p>Oops! Nenhuma página encontrada.</p>
+		}
+	</div>
+</div>
