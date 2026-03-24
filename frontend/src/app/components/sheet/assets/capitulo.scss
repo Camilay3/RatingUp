@@ -1,3 +1,16 @@
 .page.capitulo {
 	background-color: var(--secondary);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url("/livro/capilar.png");
+
+	display: flex;
+	padding-top: 40%;
+	justify-content: center;
+	text-align: center;
+
+	color: var(--primary);
+	h1 { font-weight: 900; }
+	h2 { font-weight: 600; }
 }
