@@ -23,14 +23,19 @@ export class BookComponent implements OnInit {
 	ngOnInit() {
 		this.pages = [
 			{ capa: 'capa.png', frenteCapa: true },
-			{ frente: 'Página 1', verso: 'Página 2' },
-			{ frente: 'Página 3', verso: 'Página 4' },
-			{ frente: 'Página 5', verso: 'Página 6' },
-			{ frente: 'Página 7', verso: 'Página 8' },
-			{ frente: 'Página 9', verso: 'Página 10' },
-			{ frente: 'Página 11', verso: 'Página 12' },
+			{
+				frente: { tipo: 'capitulo', id: 1, titulo: 'Capítulo 1', subtopicos: [] },
+				verso: { tipo: 'subtopico', id: 1, titulo: 'Subtópico 1.1', imagem: 'subtopico1.png', url: '/subtopico/1' }
+			},
+			{
+				frente: { tipo: 'subtopico', id: 2, titulo: 'Subtópico 1.2', url: '/subtopico/2' },
+				verso: { tipo: 'capitulo', id: 2, titulo: 'Capítulo 2', subtopicos: [] }
+			},
 			{ capa: 'quartaCapa.png' }
 		];
+
+		// isCapitulo = true :: Numeração, Nome
+		// subtópico :: id, Título,
 
 		this.tamanhoLivro = this.pages.length;
 		this.pageFlipStates = new Array(this.tamanhoLivro).fill(false);

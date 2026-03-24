@@ -1,13 +1,17 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ICapitulo, ISubtopico } from '../../interfaces/ICapitulo';
+import { IConteudoPage } from '../../interfaces/IPages';
 
 @Component({
   selector: 'app-sheet',
   templateUrl: './sheet.component.html',
-  styleUrls: ['./sheet.component.scss']
+  styleUrls: ['./sheet.component.scss', './assets/capitulo.scss'],
+  imports: [RouterLink]
 })
 export class SheetComponent {
-	frente = input<string>();
-	verso = input<string>();
+	frente = input<IConteudoPage>();
+	verso = input<IConteudoPage>();
 	capa = input<string>();
 	frenteCapa = input<boolean>(false);
 	onFirstPage = input<boolean>(true);
@@ -22,6 +26,14 @@ export class SheetComponent {
 	constructor( private readonly cdr: ChangeDetectorRef ) {}
 
 	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
+
+	asCapitulo(page: IConteudoPage | undefined): ICapitulo | undefined {
+		return page?.tipo === 'capitulo' ? page : undefined;
+	}
+
+	asSubtopico(page: IConteudoPage | undefined): ISubtopico | undefined {
+		return page?.tipo === 'subtopico' ? page : undefined;
+	}
 
 	virarPagina(): void {
 		this.flipped = !this.flipped;

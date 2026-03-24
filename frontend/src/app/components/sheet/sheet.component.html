@@ -19,13 +19,33 @@
 	} @else {
 		<div (click)="virarPagina()" class="versoPage">
 			<div class="page">
-				<div>{{ verso() }}</div>
+				@if (asCapitulo(verso()); as cap) {
+					<div class="capitulo">
+						<span class="titulo">{{ cap.titulo }}</span>
+					</div>
+				} @else if (asSubtopico(verso()); as sub) {
+					<a class="subtopico" [routerLink]="sub.url">
+						@if (sub.imagem) {
+							<img [src]="sub.imagem" [alt]="sub.titulo">
+						}
+						<span class="titulo">{{ sub.titulo }}</span>
+					</a>
+				}
 			</div>
 		</div>
 
 		<div (click)="virarPagina()" class="frentePage">
-			<div class="page">
-				<div>{{ frente() }}</div>
+			<div class="page" [class.capitulo]="asCapitulo(frente())" [class.subtopico]="asSubtopico(frente())">
+
+				@if (asCapitulo(frente()); as cap) {
+					<span class="titulo">{{ cap.titulo }}</span>
+
+				} @else if (asSubtopico(frente()); as sub) {
+					<a [routerLink]="sub.url">
+						@if (sub.imagem) { <img [src]="sub.imagem" [alt]="sub.titulo"> }
+						<span class="titulo">{{ sub.titulo }}</span>
+					</a>
+				}
 			</div>
 		</div>
   	}
