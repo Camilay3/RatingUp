@@ -1,15 +1,18 @@
 package com.quadcore.Ratingup.model;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String email;
-    private int rating;
-
-    public User(String nome, String email) {
-        this.nome = nome;
-        this.email = email;
-        this.rating = 1200;
-    }
 }
