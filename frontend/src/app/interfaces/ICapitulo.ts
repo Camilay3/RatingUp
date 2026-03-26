@@ -8,7 +8,7 @@ export interface ICapitulo {
 export interface ISubtopico {
     tipo: 'subtopico';
     id: number;
+    idCapitulo: number;
     titulo: string;
-    imagem?: string;
     url: string;
 }

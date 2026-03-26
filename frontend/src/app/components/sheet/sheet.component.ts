@@ -18,6 +18,7 @@ export class SheetComponent {
 	onLastPage = input<boolean>(true);
 	flippedChange = output<boolean>();
 	protected flipped: boolean = false;
+	isBlocked: boolean = false;
 
 	openSound = new Audio('/livro/sounds/openCover.mp3');
 	closeSound = new Audio('/livro/sounds/closeCover.mp3');
@@ -36,6 +37,8 @@ export class SheetComponent {
 	}
 
 	virarPagina(): void {
+		if (this.isBlocked) return;
+
 		this.flipped = !this.flipped;
 		this.cdr.detectChanges();
 		this.flippedChange.emit(this.flipped);

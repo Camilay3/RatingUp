@@ -25,10 +25,10 @@ export class BookComponent implements OnInit {
 			{ capa: 'capa.png', frenteCapa: true },
 			{
 				frente: { tipo: 'capitulo', id: 1, titulo: 'Introdução ao Xadrez', subtopicos: [] },
-				verso: { tipo: 'subtopico', id: 1, titulo: 'Subtópico 1.1', imagem: 'subtopico1.png', url: '/subtopico/1' }
+				verso: { tipo: 'subtopico', id: 1, idCapitulo: 1, titulo: 'O que é o xadrez', url: '/subtopico/1' }
 			},
 			{
-				frente: { tipo: 'subtopico', id: 2, titulo: 'Subtópico 1.2', url: '/subtopico/2' },
+				frente: { tipo: 'subtopico', id: 2, idCapitulo: 1, titulo: 'Objetivo do jogo', url: '/subtopico/2' },
 				verso: { tipo: 'capitulo', id: 2, titulo: 'O Tabuleiro e as Peças', subtopicos: [] }
 			},
 			{ capa: 'quartaCapa.png' }

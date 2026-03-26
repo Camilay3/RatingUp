@@ -25,12 +25,18 @@
 						<h2>{{ cap.titulo }}</h2>
 					</div>
 				} @else if (asSubtopico(verso()); as sub) {
-					<a class="subtopico" [routerLink]="sub.url">
-						@if (sub.imagem) {
-							<img [src]="sub.imagem" [alt]="sub.titulo">
-						}
+					<div class="titulo">
+						<h1>Subtópico {{ sub.idCapitulo }}.{{ sub.id }}</h1>
+						<div class="subtitulo">
+							<span>∾</span><p>{{ sub.titulo }}</p><span>∾</span>
+						</div>
+					</div>
+					<img [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
+					<!-- <a [routerLink]="sub.url">
+						@if (sub.imagem) { <img [src]="sub.imagem" [alt]="sub.titulo"> }
 						<span class="titulo">{{ sub.titulo }}</span>
-					</a>
+					</a> -->
+					<button [routerLink]="sub.url" (click)="isBlocked=true">Acessar nível</button>
 				}
 			</div>
 		</div>
@@ -44,10 +50,14 @@
 					</div>
 
 				} @else if (asSubtopico(frente()); as sub) {
-					<a [routerLink]="sub.url">
-						@if (sub.imagem) { <img [src]="sub.imagem" [alt]="sub.titulo"> }
-						<span class="titulo">{{ sub.titulo }}</span>
-					</a>
+					<div class="titulo">
+						<h1>Subtópico {{ sub.idCapitulo }}.{{ sub.id }}</h1>
+						<div class="subtitulo">
+							<span>∾</span><p>{{ sub.titulo }}</p><span>∾</span>
+						</div>
+					</div>
+					<img [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
+					<button [routerLink]="sub.url" (click)="isBlocked=true">Acessar nível</button>
 				}
 			</div>
 		</div>
