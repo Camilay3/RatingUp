@@ -31,7 +31,7 @@
 							<span>∾</span><p>{{ sub.titulo }}</p><span>∾</span>
 						</div>
 					</div>
-					<img [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
+					<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
 					<!-- <a [routerLink]="sub.url">
 						@if (sub.imagem) { <img [src]="sub.imagem" [alt]="sub.titulo"> }
 						<span class="titulo">{{ sub.titulo }}</span>
@@ -56,7 +56,7 @@
 							<span>∾</span><p>{{ sub.titulo }}</p><span>∾</span>
 						</div>
 					</div>
-					<img [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
+					<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
 					<button [routerLink]="sub.url" (click)="isBlocked=true">Acessar nível</button>
 				}
 			</div>
