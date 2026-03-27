@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,33 +23,27 @@ public class UserController {
 
     private UserDTO conversaoDTO(User user) {
         UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
         dto.setNome(user.getNome());
         dto.setEmail(user.getEmail());
-
         return dto;
     }
 
     @PostMapping
-    public UserDTO criarUsuario(@Valid @RequestBody UserDTO dto) {
-        System.out.println("Chegou aqui");
-
+    public ResponseEntity<UserDTO> criarUsuario(@Valid @RequestBody UserDTO dto) {
         User user = new User();
         user.setNome(dto.getNome());
         user.setEmail(dto.getEmail());
 
-        return conversaoDTO(userService.criarUsuario(user));
+        return userService.criarUsuario(user)
+                .map(u -> ResponseEntity.ok(conversaoDTO(u)))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> buscarPorID(@PathVariable Long id) {
         Optional<User> user = userService.buscarPorID(id);
 
-//        if (user.isEmpty()) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(conversaoDTO(user.get()));
-
-        // Proprio intellij recomendou
         return user
                 .map(value -> ResponseEntity.ok(conversaoDTO(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -59,11 +52,10 @@ public class UserController {
     @GetMapping
     public List<UserDTO> listarUsuarios() {
         List<User> usuarios = userService.listarUsuarios();
-        List<UserDTO> dtos = new ArrayList<>();
 
-        for (User user : usuarios) {
-            dtos.add(conversaoDTO(user));
-        }
+        List<UserDTO> dtos = usuarios.stream()
+                .map(this::conversaoDTO)
+                .collect(Collectors.toList());
 
         return dtos;
     }

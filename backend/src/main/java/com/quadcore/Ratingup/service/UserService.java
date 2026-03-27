@@ -16,8 +16,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User criarUsuario(User user) {
-        return userRepository.save(user);
+    public Optional<User> criarUsuario(User user) {
+        return Optional.of(userRepository.save(user));
     }
 
     public Optional<User> buscarPorID(Long id) {
@@ -49,9 +49,7 @@ public class UserService {
     public Optional<User> deletarUsuario(Long id) {
         Optional<User> user = userRepository.findById(id);
 
-        if (user.isPresent()) {
-            userRepository.delete(user.get());
-        }
+        user.ifPresent(userRepository::delete);
 
         return user;
     }
