@@ -4,6 +4,7 @@ import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,15 +16,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User makeUser(User user) {
+    public User criarUsuario(User user) {
         return userRepository.save(user);
     }
 
-    public Optional<User> findUserByID(Long id) {
+    public Optional<User> buscarPorID(Long id) {
         return userRepository.findById(id);
     }
 
-    public Optional<Object> updateUser(Long id, User data) {
+    public Optional<User> atualizarUsuario(Long id, User data) {
         Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isEmpty()) {
@@ -43,5 +44,19 @@ public class UserService {
         userRepository.save(user);
 
         return Optional.of(user);
+    }
+
+    public Optional<User> deletarUsuario(Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+        }
+
+        return user;
+    }
+
+    public List<User> listarUsuarios() {
+        return userRepository.findAll();
     }
 }
