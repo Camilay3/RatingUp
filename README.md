@@ -121,6 +121,15 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
   $ ng serve
 ```
 
+### BackEnd
+```bash
+  # Navegar até a pasta
+  $ cd backend
+
+  # Baixar e executar as images
+  $ docker compose up -d
+```
+
 <br><br>
 
 # Como contribuir | 🤝
