@@ -14,6 +14,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/***
+* APIRest responsável pela comunicação do cadastro de usuários
+*
+* @author Equipe Quadcore
+* @version 1.0
+* @since 2026-04-05
+* */
+
+
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -23,6 +33,13 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
+    /**
+    * Cria um usuário
+    *
+    * @param dto classe record para manipulação de dados
+    * @return retorna um usuário criado
+    * */
 
     @PostMapping
     public ResponseEntity<ProfileRequestDTO> criarUsuario(@Valid @RequestBody ProfileRequestDTO dto) {
