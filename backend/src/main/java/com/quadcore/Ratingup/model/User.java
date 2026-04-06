@@ -1,18 +1,46 @@
 package com.quadcore.Ratingup.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity(name = "users")
-@Table(name = "users")
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_user_email", columnNames = {"email"}),
+                @UniqueConstraint(name = "uk_user_nickname", columnNames = {"nickname"}),
+                @UniqueConstraint(name = "uk_user_tel", columnNames = {"telefone"})
+        })
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Nome completo obrigatório!")
     private String nome;
+
+    @NotBlank(message = "Nickname obrigatório!")
+    @Size(min = 8, max = 16)
+    private String nickname;
+
+    @NotBlank(message = "Email obrigatório!")
+    @Email(message = "Email em formato inválido!")
     private String email;
+
+    @NotBlank(message = "Telefone obrigatório!")
+    @Size(min = 8, max = 11)
+    private String telefone;
+
+    @NotBlank(message = "Senha obrigatória!")
+    @Size(min = 8, max = 12)
+    private String senha;
+
+    private String role;
+    private int faseAtual;
 }
