@@ -1,6 +1,9 @@
 package com.quadcore.Ratingup.controller;
 
-import com.quadcore.Ratingup.dto.UserDTO;
+import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
+import com.quadcore.Ratingup.dto.profile.ProfileResponseDTO;
+import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
+import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.service.UserService;
 import jakarta.validation.Valid;
@@ -21,55 +24,52 @@ public class UserController {
         this.userService = userService;
     }
 
-    private UserDTO conversaoDTO(User user) {
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setNome(user.getNome());
-        dto.setEmail(user.getEmail());
-        return dto;
-    }
-
     @PostMapping
-    public ResponseEntity<UserDTO> criarUsuario(@Valid @RequestBody UserDTO dto) {
+    public ResponseEntity<ProfileRequestDTO> criarUsuario(@Valid @RequestBody ProfileRequestDTO dto) {
         User user = new User();
-        user.setNome(dto.getNome());
-        user.setEmail(dto.getEmail());
+        user.setNome(dto.nome());
+        user.setNickname(dto.nickname());
+        user.setEmail(dto.email());
+        user.setTelefone(dto.telefone());
+        user.setSenha(dto.senha());
 
         return userService.criarUsuario(user)
-                .map(u -> ResponseEntity.ok(conversaoDTO(u)))
+                .map(u -> ResponseEntity.ok(UserMapper.toRequestDTO(u)))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> buscarPorID(@PathVariable Long id) {
+    public ResponseEntity<ProfileResponseDTO> buscarPorID(@PathVariable Long id) {
         Optional<User> user = userService.buscarPorID(id);
 
         return user
-                .map(value -> ResponseEntity.ok(conversaoDTO(value)))
+                .map(value -> ResponseEntity.ok(UserMapper.toResponseDTO(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public List<UserDTO> listarUsuarios() {
+    public List<ProfileResponseDTO> listarUsuarios() {
         List<User> usuarios = userService.listarUsuarios();
 
-        List<UserDTO> dtos = usuarios.stream()
-                .map(this::conversaoDTO)
+        List<ProfileResponseDTO> dtos = usuarios.stream()
+                .map(UserMapper::toResponseDTO)
                 .collect(Collectors.toList());
 
         return dtos;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
+    public ResponseEntity<ProfileResponseDTO> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody ProfileUpdateDTO dto) {
         User data = new User();
-        data.setNome(dto.getNome());
-        data.setEmail(dto.getEmail());
+        data.setNome(dto.nome());
+        data.setNickname(dto.nickname());
+        data.setEmail(dto.email());
+        data.setTelefone(dto.telefone());
 
         Optional<User> userAtualizado = userService.atualizarUsuario(id, data);
 
         return userAtualizado
-                .map(user -> ResponseEntity.ok(conversaoDTO(user)))
+                .map(user -> ResponseEntity.ok(UserMapper.toResponseDTO(user)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
 
     }
