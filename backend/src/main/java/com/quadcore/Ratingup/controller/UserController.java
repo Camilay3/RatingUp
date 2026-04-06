@@ -9,7 +9,6 @@ import com.quadcore.Ratingup.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,8 +20,6 @@ import java.util.stream.Collectors;
 * @version 1.0
 * @since 2026-04-05
 * */
-
-
 
 @RestController
 @RequestMapping("/users")
@@ -37,10 +34,9 @@ public class UserController {
     /**
     * Cria um usuário
     *
-    * @param dto classe record para manipulação de dados
+    * @param dto JSON com os dados do usuário
     * @return retorna um usuário criado
     * */
-
     @PostMapping
     public ResponseEntity<ProfileRequestDTO> criarUsuario(@Valid @RequestBody ProfileRequestDTO dto) {
         User user = new User();
@@ -55,6 +51,12 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    /**
+     * Busca um usuário pelo id
+     *
+     * @param id id do usuário
+     * @return retorna o usuário correspondente ao id fornecido
+     * */
     @GetMapping("/{id}")
     public ResponseEntity<ProfileResponseDTO> buscarPorID(@PathVariable Long id) {
         Optional<User> user = userService.buscarPorID(id);
@@ -64,6 +66,11 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Lista todos os usuários criados
+     *
+     * @return retorna uma lista dos usuários criados
+     * */
     @GetMapping
     public List<ProfileResponseDTO> listarUsuarios() {
         List<User> usuarios = userService.listarUsuarios();
@@ -75,7 +82,14 @@ public class UserController {
         return dtos;
     }
 
-    @PutMapping("/{id}")
+    /**
+     * Atualiza o usuário pelo id
+     *
+     * @param id id do usuário
+     * @param dto JSON com os dados atualizados do usuário
+     * @return retorna o usuário atualizado
+     * */
+    @PutMapping("meu-perfil/{id}")
     public ResponseEntity<ProfileResponseDTO> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody ProfileUpdateDTO dto) {
         User data = new User();
         data.setNome(dto.nome());
@@ -91,7 +105,12 @@ public class UserController {
 
     }
 
-    @DeleteMapping("/{id}")
+    /**
+     * Deleta o usuário pelo id
+     *
+     * @param id id do usuário
+     * */
+    @DeleteMapping("meu-perfil/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Long id) {
         return userService.deletarUsuario(id)
                 .map(user -> ResponseEntity.noContent().<Void>build())
