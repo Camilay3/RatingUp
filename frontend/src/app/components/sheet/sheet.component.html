@@ -18,14 +18,47 @@
 
 	} @else {
 		<div (click)="virarPagina()" class="versoPage">
-			<div class="page">
-				<div>{{ verso() }}</div>
+			<div class="page" [class.capitulo]="asCapitulo(verso())" [class.subtopico]="asSubtopico(verso())">
+				@if (asCapitulo(verso()); as cap) {
+					<div class="capitulo">
+						<h1>Capítulo {{ cap.id }}</h1>
+						<h2>{{ cap.titulo }}</h2>
+					</div>
+				} @else if (asSubtopico(verso()); as sub) {
+					<div class="titulo">
+						<h1>Subtópico {{ sub.idCapitulo }}.{{ sub.id }}</h1>
+						<div class="subtitulo">
+							<span>∾</span><p>{{ sub.titulo }}</p><span>∾</span>
+						</div>
+					</div>
+					<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
+					<!-- <a [routerLink]="sub.url">
+						@if (sub.imagem) { <img [src]="sub.imagem" [alt]="sub.titulo"> }
+						<span class="titulo">{{ sub.titulo }}</span>
+					</a> -->
+					<button [routerLink]="sub.url" (click)="isBlocked=true">Acessar nível</button>
+				}
 			</div>
 		</div>
 
 		<div (click)="virarPagina()" class="frentePage">
-			<div class="page">
-				<div>{{ frente() }}</div>
+			<div class="page" [class.capitulo]="asCapitulo(frente())" [class.subtopico]="asSubtopico(frente())">
+				@if (asCapitulo(frente()); as cap) {
+					<div class="capitulo">
+						<h1>Capítulo {{ cap.id }}</h1>
+						<h2>{{ cap.titulo }}</h2>
+					</div>
+
+				} @else if (asSubtopico(frente()); as sub) {
+					<div class="titulo">
+						<h1>Subtópico {{ sub.idCapitulo }}.{{ sub.id }}</h1>
+						<div class="subtitulo">
+							<span>∾</span><p>{{ sub.titulo }}</p><span>∾</span>
+						</div>
+					</div>
+					<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
+					<button [routerLink]="sub.url" (click)="isBlocked=true">Acessar nível</button>
+				}
 			</div>
 		</div>
   	}
