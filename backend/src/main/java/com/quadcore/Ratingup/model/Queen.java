@@ -1,20 +1,21 @@
 package com.quadcore.Ratingup.model;
 
-import com.quadcore.Ratingup.model.Piece;
-
 public class Queen extends Piece {
+
+    int start = Integer.parseInt(posStart);
+    int fim = Integer.parseInt(posFinal);
 
     @Override
     public boolean isValidMove(int newX, int newY) {
 
-        int dx = Math.abs(newX - x);
-        int dy = Math.abs(newY - y);
+        int dx = Math.abs(newX - start);
+        int dy = Math.abs(newY - fim);
 
-        if (x == newX) {
+        if (start == newX) {
             return true;
         }
 
-        if (y == newY) {
+        if (fim == newY) {
             return true;
         }
 

@@ -1,6 +1,7 @@
 package com.quadcore.Ratingup.controller;
 
 
+import com.quadcore.Ratingup.service.LessonService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/fase")
 public class LessonController {
 
-    private final LessonController lessonController;
+    private final LessonService lessonService;
 
-    public LessonController(LessonController lessonController) {
-        this.lessonController = lessonController;
+    public LessonController(LessonService lessonService) {
+        this.lessonService = lessonService;
     }
 
 

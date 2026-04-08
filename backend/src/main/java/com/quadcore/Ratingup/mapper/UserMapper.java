@@ -22,25 +22,12 @@ public class UserMapper {
     }
 
     public static ProfileRequestDTO toRequestDTO(User user) {
-        ProfileRequestDTO dto = new ProfileRequestDTO(
-                user.getNome(),
-                user.getNickname(),
-                user.getEmail(),
-                user.getTelefone(),
-                user.getSenha()
-        );
+        ProfileRequestDTO dto = new ProfileRequestDTO(user);
         return dto;
     }
 
     public static ProfileResponseDTO toResponseDTO(User user) {
-        ProfileResponseDTO dto = new ProfileResponseDTO(
-                user.getId(),
-                user.getNome(),
-                user.getNickname(),
-                user.getEmail(),
-                user.getTelefone(),
-                user.getRole()
-        );
+        ProfileResponseDTO dto = new ProfileResponseDTO(user);
         return dto;
     }
 }

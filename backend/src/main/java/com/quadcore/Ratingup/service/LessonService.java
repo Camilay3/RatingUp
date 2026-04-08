@@ -5,8 +5,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LessonService {
-
-    public void ValidaMovimento(Piece piece) {
-
-    }
 }
