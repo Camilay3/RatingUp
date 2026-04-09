@@ -2,12 +2,13 @@ package com.quadcore.Ratingup.model;
 
 public class Pawn extends Piece {
 
-    private int moves = 0;
+    int start = Integer.parseInt(posStart);
+    int fim = Integer.parseInt(posFinal);
 
     @Override
     public boolean isValidMove(int newX, int newY) {
-        int dx = Math.abs(newX - x);
-        int dy = Math.abs(newY - y);
+        int dx = Math.abs(newX - start);
+        int dy = Math.abs(newY - fim);
 
         if (moves == 0) {
                 

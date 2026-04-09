@@ -1,8 +1,9 @@
 package com.quadcore.Ratingup.model;
 
 public abstract class Piece {
-    protected int x;
-    protected int y;
+    protected String posStart;
+    protected String posFinal;
+    protected int moves;
 
     public abstract boolean isValidMove(int newX, int newY);
 }
