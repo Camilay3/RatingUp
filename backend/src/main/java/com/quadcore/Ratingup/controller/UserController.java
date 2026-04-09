@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 * */
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/conta")
 public class UserController {
 
     private final UserService userService;
@@ -37,7 +37,7 @@ public class UserController {
     * @param dto JSON com os dados do usuário
     * @return retorna um usuário criado
     * */
-    @PostMapping
+    @PostMapping("/cadastro")
     public ResponseEntity<ProfileRequestDTO> criarUsuario(@Valid @RequestBody ProfileRequestDTO dto) {
         User user = new User();
         user.setNome(dto.nome());
@@ -57,7 +57,7 @@ public class UserController {
      * @param id id do usuário
      * @return retorna o usuário correspondente ao id fornecido
      * */
-    @GetMapping("/{id}")
+    @GetMapping("/buscar-usuario/{id}")
     public ResponseEntity<ProfileResponseDTO> buscarPorID(@PathVariable Long id) {
         Optional<User> user = userService.buscarPorID(id);
 
@@ -71,7 +71,7 @@ public class UserController {
      *
      * @return retorna uma lista dos usuários criados
      * */
-    @GetMapping
+    @GetMapping("/listar")
     public List<ProfileResponseDTO> listarUsuarios() {
         List<User> usuarios = userService.listarUsuarios();
 
@@ -89,7 +89,7 @@ public class UserController {
      * @param dto JSON com os dados atualizados do usuário
      * @return retorna o usuário atualizado
      * */
-    @PutMapping("meu-perfil/{id}")
+    @PutMapping("meu-perfil/{id}/atualizar")
     public ResponseEntity<ProfileResponseDTO> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody ProfileUpdateDTO dto) {
         User data = new User();
         data.setNome(dto.nome());
@@ -110,7 +110,7 @@ public class UserController {
      *
      * @param id id do usuário
      * */
-    @DeleteMapping("meu-perfil/{id}")
+    @DeleteMapping("meu-perfil/{id}/deletar")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Long id) {
         return userService.deletarUsuario(id)
                 .map(user -> ResponseEntity.noContent().<Void>build())

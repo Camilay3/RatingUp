@@ -36,9 +36,14 @@ public class UserService {
         if (data.getNome() != null) {
             user.setNome(data.getNome());
         }
-
+        if (data.getNickname() != null) {
+            user.setNickname(data.getNickname());
+        }
         if (data.getEmail() != null) {
             user.setEmail(data.getEmail());
+        }
+        if (data.getTelefone() != null) {
+            user.setTelefone(data.getTelefone());
         }
 
         userRepository.save(user);

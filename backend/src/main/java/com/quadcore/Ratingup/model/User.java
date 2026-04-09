@@ -42,5 +42,7 @@ public class User {
     private String senha;
 
     private String role;
-    private int faseAtual;
+
+    @Column(columnDefinition = "integer default 1")
+    private Integer faseAtual;
 }
