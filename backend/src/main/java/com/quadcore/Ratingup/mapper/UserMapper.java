@@ -1,13 +1,11 @@
 package com.quadcore.Ratingup.mapper;
 
+import com.quadcore.Ratingup.dto.profile.PhaseUpdateDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileResponseDTO;
 import com.quadcore.Ratingup.model.User;
 
-public class UserMapper {
-
-    private UserMapper() {
-    }
+public abstract class UserMapper {
 
     public static User toEntity(ProfileRequestDTO dto) {
         User usuario = new User();
@@ -28,6 +26,11 @@ public class UserMapper {
 
     public static ProfileResponseDTO toResponseDTO(User user) {
         ProfileResponseDTO dto = new ProfileResponseDTO(user);
+        return dto;
+    }
+
+    public static PhaseUpdateDTO toPhaseDTO(User user) {
+        PhaseUpdateDTO dto = new PhaseUpdateDTO(user.getFaseAtual());
         return dto;
     }
 }

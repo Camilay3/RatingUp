@@ -28,4 +28,8 @@ public class LessonService {
 
         return Optional.of(user);
     }
+
+    public Optional<User> buscaFaseAtual(Long id) {
+        return userRepository.findById(id);
+    }
 }

@@ -35,4 +35,12 @@ public class LessonController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PhaseUpdateDTO> buscaFaseAtual(@PathVariable Long id) {
+        Optional<User> user = lessonService.buscaFaseAtual(id);
+
+        return user
+                .map(value -> ResponseEntity.ok(UserMapper.toPhaseDTO(value)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
