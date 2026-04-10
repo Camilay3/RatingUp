@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -43,6 +44,7 @@ public class User {
 
     private String role;
 
-    @Column(columnDefinition = "integer default 1")
-    private Integer faseAtual;
+    @ColumnDefault("1")
+    @Column(nullable = false)
+    private Integer faseAtual = 1;
 }
