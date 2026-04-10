@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /***
-* APIRest responsável pela comunicação do cadastro de usuários
+* API Rest responsável pela comunicação do cadastro de usuários
 *
 * @author Equipe Quadcore
 * @version 1.0
