@@ -1,9 +1,17 @@
 package com.quadcore.Ratingup.controller;
 
 
+import com.quadcore.Ratingup.dto.profile.PhaseUpdateDTO;
+import com.quadcore.Ratingup.dto.profile.ProfileResponseDTO;
+import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
+import com.quadcore.Ratingup.mapper.UserMapper;
+import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.service.LessonService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/fase")
@@ -15,5 +23,16 @@ public class LessonController {
         this.lessonService = lessonService;
     }
 
+    @PutMapping("/{id}/resultado")
+    public ResponseEntity<ProfileResponseDTO> atualizaFaseAtual(@PathVariable Long id, @Valid @RequestBody PhaseUpdateDTO dto) {
+        User data = new User();
+        data.setFaseAtual(dto.faseAtual());
+
+        Optional<User> userAtualizado = lessonService.atualizaFaseAtual(id, data);
+
+        return userAtualizado
+                .map(user -> ResponseEntity.ok(UserMapper.toResponseDTO(user)))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
 
 }

@@ -4,6 +4,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public record ProfileUpdateDTO(
+
+        Long id,
+
         @NotBlank(message = "O nome completo não pode ser vazio!")
         String nome,
 
