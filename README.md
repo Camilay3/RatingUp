@@ -105,30 +105,12 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
 
   # Navegar até a pasta
   $ cd RatingUp
+
+  # Iniciar a aplicação (Requisitos: Docker)
+  $ docker compose up --build
 ```
 
 <br>
-
-### FrontEnd
-```bash
-  # Navegar até a pasta
-  $ cd frontend
-
-  # Instalar dependências 
-  $ npm i
-
-  # Iniciar a aplicação
-  $ ng serve
-```
-
-### BackEnd
-```bash
-  # Navegar até a pasta
-  $ cd backend
-
-  # Baixar e executar as images
-  $ docker compose up -d
-```
 
 <br><br>
 
