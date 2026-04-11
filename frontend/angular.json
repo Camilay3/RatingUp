@@ -67,6 +67,11 @@
               "buildTarget": "frontend:build:development"
             }
           },
+		  "options": {
+			"allowedHosts": ["all"],
+			"liveReload": true,
+			"hmr": false
+		  },
           "defaultConfiguration": "development"
         },
         "test": {
