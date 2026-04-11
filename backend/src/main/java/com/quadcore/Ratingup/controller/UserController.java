@@ -8,8 +8,11 @@ import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +42,7 @@ public class UserController {
     * @return retorna um usuário criado
     * */
     @PostMapping("/cadastro")
-    public ResponseEntity<ProfileRequestDTO> criarUsuario(@Valid @RequestBody ProfileRequestDTO dto) {
+    public ResponseEntity<ApiResponse<?>> criarUsuario(@Valid @RequestBody ProfileRequestDTO dto) {
         User user = new User();
         user.setNome(dto.nome());
         user.setNickname(dto.nickname());
@@ -47,9 +50,11 @@ public class UserController {
         user.setTelefone(dto.telefone());
         user.setSenha(dto.senha());
 
-        return userService.criarUsuario(user)
-                .map(u -> ResponseEntity.ok(UserMapper.toRequestDTO(u)))
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+        User newUser = userService.criarUsuario(user);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(newUser)));
     }
 
     /**
@@ -59,10 +64,10 @@ public class UserController {
      * @return retorna o usuário correspondente ao id fornecido
      * */
     @GetMapping("/buscar-usuario/{id}")
-    public ResponseEntity<ApiResponse<ProfileResponseDTO>> buscarPorID(@PathVariable Long id) {
-        Optional<User> user = userService.buscarPorID(id);
+    public ResponseEntity<ApiResponse<?>> buscarPorID(@PathVariable Long id) {
+        User user = userService.buscarPorID(id);
 
-        return ResponseEntity.ok(new ApiResponse<>(true, "Perfil encontrado", UserMapper.toResponseDTO(user.get())));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Perfil encontrado", UserMapper.toResponseDTO(user)));
     }
 
     /**
@@ -71,14 +76,13 @@ public class UserController {
      * @return retorna uma lista dos usuários criados
      * */
     @GetMapping("/listar")
-    public List<ProfileResponseDTO> listarUsuarios() {
-        List<User> usuarios = userService.listarUsuarios();
-
-        List<ProfileResponseDTO> dtos = usuarios.stream()
+    public ResponseEntity<ApiResponse<?>> listarUsuarios() {
+        List<ProfileResponseDTO> dtos = userService.listarUsuarios()
+                .stream()
                 .map(UserMapper::toResponseDTO)
-                .collect(Collectors.toList());
+                .toList();
 
-        return dtos;
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário listados", dtos));
     }
 
     /**
@@ -89,7 +93,7 @@ public class UserController {
      * @return retorna o usuário atualizado
      * */
     @PutMapping("meu-perfil/{id}/atualizar")
-    public ResponseEntity<ProfileResponseDTO> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody ProfileUpdateDTO dto) {
+    public ResponseEntity<ApiResponse<?>> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody ProfileUpdateDTO dto) {
         User data = new User();
         data.setNome(dto.nome());
         data.setNickname(dto.nickname());
@@ -98,9 +102,7 @@ public class UserController {
 
         Optional<User> userAtualizado = userService.atualizarUsuario(id, data);
 
-        return userAtualizado
-                .map(user -> ResponseEntity.ok(UserMapper.toResponseDTO(user)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", userAtualizado));
 
     }
 
@@ -110,9 +112,8 @@ public class UserController {
      * @param id id do usuário
      * */
     @DeleteMapping("meu-perfil/{id}/deletar")
-    public ResponseEntity<Void> deletarUsuario(@PathVariable Long id) {
-        return userService.deletarUsuario(id)
-                .map(user -> ResponseEntity.noContent().<Void>build())
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ApiResponse<?>> deletarUsuario(@PathVariable Long id) {
+        userService.deletarUsuario(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário deletado com sucesso", null));
     }
 }

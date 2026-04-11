@@ -3,6 +3,7 @@ package com.quadcore.Ratingup.service;
 import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,21 +18,18 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> criarUsuario(User user) {
-        return Optional.of(userRepository.save(user));
+    public User criarUsuario(User user) {
+        return userRepository.save(user);
     }
 
-    public Optional<User> buscarPorID(Long id) {
-        return Optional.of(userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
+    public User buscarPorID(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
     }
 
     public Optional<User> atualizarUsuario(Long id, User data) {
-        Optional<User> optionalUser = userRepository.findById(id);
-
-        if (optionalUser.isEmpty()) {
-            return Optional.empty();
-        }
+        Optional<User> optionalUser = Optional.of(userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
 
         User user = optionalUser.get();
 
@@ -54,7 +52,8 @@ public class UserService {
     }
 
     public Optional<User> deletarUsuario(Long id) {
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> user = Optional.of(userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
 
         user.ifPresent(userRepository::delete);
 
