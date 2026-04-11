@@ -1,4 +1,4 @@
-package com.quadcore.Ratingup.dto;
+package com.quadcore.Ratingup.dto.board;
 
 public record MoveRequestDTO(
         String piece,

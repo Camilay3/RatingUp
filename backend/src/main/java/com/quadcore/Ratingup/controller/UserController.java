@@ -3,6 +3,7 @@ package com.quadcore.Ratingup.controller;
 import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileResponseDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
+import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.service.UserService;
@@ -58,12 +59,10 @@ public class UserController {
      * @return retorna o usuário correspondente ao id fornecido
      * */
     @GetMapping("/buscar-usuario/{id}")
-    public ResponseEntity<ProfileResponseDTO> buscarPorID(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ProfileResponseDTO>> buscarPorID(@PathVariable Long id) {
         Optional<User> user = userService.buscarPorID(id);
 
-        return user
-                .map(value -> ResponseEntity.ok(UserMapper.toResponseDTO(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(new ApiResponse<>(true, "Perfil encontrado", UserMapper.toResponseDTO(user.get())));
     }
 
     /**

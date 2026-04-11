@@ -1,7 +1,5 @@
 package com.quadcore.Ratingup.service;
 
-import com.quadcore.Ratingup.dto.MoveRequestDTO;
-import com.quadcore.Ratingup.util.BoardPosition;
 import org.springframework.stereotype.Service;
 
 @Service

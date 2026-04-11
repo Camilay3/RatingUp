@@ -3,7 +3,6 @@ package com.quadcore.Ratingup.controller;
 
 import com.quadcore.Ratingup.dto.profile.PhaseUpdateDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileResponseDTO;
-import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.service.LessonService;

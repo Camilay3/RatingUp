@@ -2,6 +2,7 @@ package com.quadcore.Ratingup.service;
 
 import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,8 @@ public class UserService {
     }
 
     public Optional<User> buscarPorID(Long id) {
-        return userRepository.findById(id);
+        return Optional.of(userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
     }
 
     public Optional<User> atualizarUsuario(Long id, User data) {
