@@ -33,6 +33,9 @@ services:
     container_name: ratingup_front
     ports:
       - "4200:4200"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     networks:
       - front-network
 
