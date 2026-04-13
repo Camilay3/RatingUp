@@ -8,6 +8,7 @@ public record ProfileResponseDTO(
         String nickname,
         String email,
         String telefone,
+        Integer faseAtual,
         String role
 ) {
     public ProfileResponseDTO(User user) {
@@ -17,6 +18,7 @@ public record ProfileResponseDTO(
                 user.getNickname(),
                 user.getEmail(),
                 user.getTelefone(),
+                user.getFaseAtual(),
                 user.getRole()
                 );
     }

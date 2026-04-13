@@ -3,18 +3,22 @@ package com.quadcore.Ratingup.controller;
 import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileResponseDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
+import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /***
-* APIRest responsável pela comunicação do cadastro de usuários
+* API Rest responsável pela comunicação do cadastro de usuários
 *
 * @author Equipe Quadcore
 * @version 1.0
@@ -22,7 +26,7 @@ import java.util.stream.Collectors;
 * */
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/conta")
 public class UserController {
 
     private final UserService userService;
@@ -37,8 +41,8 @@ public class UserController {
     * @param dto JSON com os dados do usuário
     * @return retorna um usuário criado
     * */
-    @PostMapping
-    public ResponseEntity<ProfileRequestDTO> criarUsuario(@Valid @RequestBody ProfileRequestDTO dto) {
+    @PostMapping("/cadastro")
+    public ResponseEntity<ApiResponse<?>> criarUsuario(@Valid @RequestBody ProfileRequestDTO dto) {
         User user = new User();
         user.setNome(dto.nome());
         user.setNickname(dto.nickname());
@@ -46,9 +50,11 @@ public class UserController {
         user.setTelefone(dto.telefone());
         user.setSenha(dto.senha());
 
-        return userService.criarUsuario(user)
-                .map(u -> ResponseEntity.ok(UserMapper.toRequestDTO(u)))
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+        User newUser = userService.criarUsuario(user);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(newUser)));
     }
 
     /**
@@ -57,13 +63,11 @@ public class UserController {
      * @param id id do usuário
      * @return retorna o usuário correspondente ao id fornecido
      * */
-    @GetMapping("/{id}")
-    public ResponseEntity<ProfileResponseDTO> buscarPorID(@PathVariable Long id) {
-        Optional<User> user = userService.buscarPorID(id);
+    @GetMapping("/buscar-usuario/{id}")
+    public ResponseEntity<ApiResponse<?>> buscarPorID(@PathVariable Long id) {
+        User user = userService.buscarPorID(id);
 
-        return user
-                .map(value -> ResponseEntity.ok(UserMapper.toResponseDTO(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(new ApiResponse<>(true, "Perfil encontrado", UserMapper.toResponseDTO(user)));
     }
 
     /**
@@ -71,15 +75,14 @@ public class UserController {
      *
      * @return retorna uma lista dos usuários criados
      * */
-    @GetMapping
-    public List<ProfileResponseDTO> listarUsuarios() {
-        List<User> usuarios = userService.listarUsuarios();
-
-        List<ProfileResponseDTO> dtos = usuarios.stream()
+    @GetMapping("/listar")
+    public ResponseEntity<ApiResponse<?>> listarUsuarios() {
+        List<ProfileResponseDTO> dtos = userService.listarUsuarios()
+                .stream()
                 .map(UserMapper::toResponseDTO)
-                .collect(Collectors.toList());
+                .toList();
 
-        return dtos;
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário listados", dtos));
     }
 
     /**
@@ -89,8 +92,8 @@ public class UserController {
      * @param dto JSON com os dados atualizados do usuário
      * @return retorna o usuário atualizado
      * */
-    @PutMapping("meu-perfil/{id}")
-    public ResponseEntity<ProfileResponseDTO> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody ProfileUpdateDTO dto) {
+    @PutMapping("meu-perfil/{id}/atualizar")
+    public ResponseEntity<ApiResponse<?>> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody ProfileUpdateDTO dto) {
         User data = new User();
         data.setNome(dto.nome());
         data.setNickname(dto.nickname());
@@ -99,9 +102,7 @@ public class UserController {
 
         Optional<User> userAtualizado = userService.atualizarUsuario(id, data);
 
-        return userAtualizado
-                .map(user -> ResponseEntity.ok(UserMapper.toResponseDTO(user)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", userAtualizado));
 
     }
 
@@ -110,10 +111,9 @@ public class UserController {
      *
      * @param id id do usuário
      * */
-    @DeleteMapping("meu-perfil/{id}")
-    public ResponseEntity<Void> deletarUsuario(@PathVariable Long id) {
-        return userService.deletarUsuario(id)
-                .map(user -> ResponseEntity.noContent().<Void>build())
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @DeleteMapping("meu-perfil/{id}/deletar")
+    public ResponseEntity<ApiResponse<?>> deletarUsuario(@PathVariable Long id) {
+        userService.deletarUsuario(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário deletado com sucesso", null));
     }
 }

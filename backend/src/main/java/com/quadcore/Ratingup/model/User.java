@@ -4,11 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
-@Getter
-@Setter
 @Entity(name = "users")
 @Table(name = "users",
         uniqueConstraints = {
@@ -42,5 +39,72 @@ public class User {
     private String senha;
 
     private String role;
-    private int faseAtual;
+
+    @ColumnDefault("1")
+    @Column(nullable = false)
+    private Integer faseAtual = 1;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Integer getFaseAtual() {
+        return faseAtual;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setFaseAtual(Integer faseAtual) {
+        this.faseAtual = faseAtual;
+    }
 }
