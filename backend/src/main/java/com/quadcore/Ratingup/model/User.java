@@ -35,7 +35,6 @@ public class User {
     private String telefone;
 
     @NotBlank(message = "Senha obrigatória!")
-    @Size(min = 8, max = 12)
     private String senha;
 
     private String role;

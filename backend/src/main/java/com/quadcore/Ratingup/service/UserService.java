@@ -4,21 +4,39 @@ import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.coyote.BadRequestException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
 
+    private final PasswordEncoder passwordEncoder;
+
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User criarUsuario(User user) {
+        String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
+
+        if(user.getSenha() == null || user.getSenha().isEmpty()){
+            throw new RuntimeException("A senha não pode ser nula");
+        }
+        if(!user.getSenha().matches(senhaPadrao)){
+            throw new RuntimeException("Senha inválida! A senha precisa ter entre 8 a 12 caracteres, que tenham letras maiúsculas, minúsculas, números e símbolos");
+        }
+
+        System.out.println("Senha antes: " + user.getSenha());
+        String senhaCriptografada = passwordEncoder.encode(user.getSenha());
+        user.setSenha(senhaCriptografada);
+        System.out.println("Senha depois:" + user.getSenha());
         return userRepository.save(user);
     }
 
