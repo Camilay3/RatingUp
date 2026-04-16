@@ -26,7 +26,7 @@
 					</div>
 				} @else if (asSubtopico(verso()); as sub) {
 					<div class="titulo">
-						<h1>Subtópico {{ sub.idCapitulo }}.{{ sub.id }}</h1>
+						<h1>Nível {{ sub.idCapitulo }}.{{ sub.id }}</h1>
 						<div class="subtitulo">
 							<span>∾</span><p>{{ sub.titulo }}</p><span>∾</span>
 						</div>
@@ -36,8 +36,14 @@
 						@if (sub.imagem) { <img [src]="sub.imagem" [alt]="sub.titulo"> }
 						<span class="titulo">{{ sub.titulo }}</span>
 					</a> -->
-					<button [routerLink]="sub.url" (click)="isBlocked=true">Acessar nível</button>
+					<button [routerLink]="sub.url" (click)="isBlocked=true">Acessar</button>
 				}
+
+				<div class="controls">
+					<svg class="arrow-icon" width="48" height="41" viewBox="0 0 68 61" fill="none" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg">
+						<path fill="currentColor" style="pointer-events: all;" d="M67.9211 42.1558V18.6558C67.9211 16.4466 66.1303 14.6558 63.9211 14.6558H33.4211V4.00828C33.4211 0.417438 29.0563 -1.35465 26.5532 1.21996L1.132 27.3674C-0.377357 28.9199 -0.377358 31.3916 1.132 32.9441L26.5532 59.0916C29.0563 61.6662 33.4211 59.8941 33.4211 56.3032V46.1558H63.9211C66.1303 46.1558 67.9211 44.3649 67.9211 42.1558Z"/>
+					</svg>
+				</div>
 			</div>
 		</div>
 
@@ -51,14 +57,20 @@
 
 				} @else if (asSubtopico(frente()); as sub) {
 					<div class="titulo">
-						<h1>Subtópico {{ sub.idCapitulo }}.{{ sub.id }}</h1>
+						<h1>Nível {{ sub.idCapitulo }}.{{ sub.id }}</h1>
 						<div class="subtitulo">
 							<span>∾</span><p>{{ sub.titulo }}</p><span>∾</span>
 						</div>
 					</div>
 					<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
-					<button [routerLink]="sub.url" (click)="isBlocked=true">Acessar nível</button>
+					<button [routerLink]="sub.url" (click)="isBlocked=true">Acessar</button>
 				}
+
+				<div class="controls right">
+					<svg class="arrow-icon" width="48" height="41" viewBox="0 0 68 61" fill="none" style="pointer-events: none;" transform="scale(-1 1)" xmlns="http://www.w3.org/2000/svg">
+						<path fill="currentColor" style="pointer-events: all;" d="M67.9211 42.1558V18.6558C67.9211 16.4466 66.1303 14.6558 63.9211 14.6558H33.4211V4.00828C33.4211 0.417438 29.0563 -1.35465 26.5532 1.21996L1.132 27.3674C-0.377357 28.9199 -0.377358 31.3916 1.132 32.9441L26.5532 59.0916C29.0563 61.6662 33.4211 59.8941 33.4211 56.3032V46.1558H63.9211C66.1303 46.1558 67.9211 44.3649 67.9211 42.1558Z"/>
+					</svg>
+				</div>
 			</div>
 		</div>
   	}

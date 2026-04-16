@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, HostListener, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ICapitulo, ISubtopico } from '../../interfaces/ICapitulo';
 import { IConteudoPage } from '../../interfaces/IPages';
@@ -35,6 +35,11 @@ export class SheetComponent {
 	asSubtopico(page: IConteudoPage | undefined): ISubtopico | undefined {
 		return page?.tipo === 'subtopico' ? page : undefined;
 	}
+
+	/* @HostListener('window:keydown.arrowleft')
+	onArrowLeft() {
+		this.virarPagina();
+	} */
 
 	virarPagina(): void {
 		if (this.isBlocked) return;
