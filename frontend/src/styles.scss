@@ -33,6 +33,10 @@ p, span, a, button {
 	font-family: var(--font-family);
 }
 
+img::selection {
+	background-color: transparent;
+}
+
 * {
 	margin: 0;
 	padding: 0;

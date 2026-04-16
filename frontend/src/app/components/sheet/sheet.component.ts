@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ICapitulo, ISubtopico } from '../../interfaces/ICapitulo';
 import { IConteudoPage } from '../../interfaces/IPages';
 
@@ -7,7 +7,6 @@ import { IConteudoPage } from '../../interfaces/IPages';
   selector: 'app-sheet',
   templateUrl: './sheet.component.html',
   styleUrls: ['./sheet.component.scss', './assets/capitulo.scss'],
-  imports: [RouterLink]
 })
 export class SheetComponent {
 	frente = input<IConteudoPage>();
@@ -16,31 +15,24 @@ export class SheetComponent {
 	frenteCapa = input<boolean>(false);
 	onFirstPage = input<boolean>(true);
 	onLastPage = input<boolean>(true);
-	isBlocked = input<boolean>(false);
 	flippedChange = output<boolean>();
 	protected flipped: boolean = false;
 
 	openSound = new Audio('/livro/sounds/openCover.mp3');
 	closeSound = new Audio('/livro/sounds/closeCover.mp3');
 	pageFlipSound = new Audio('/livro/sounds/flipPage.wav');
-
-	constructor( private readonly cdr: ChangeDetectorRef ) {}
-
 	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
+
+	constructor( private readonly cdr: ChangeDetectorRef, private readonly router: Router ) {}
 
 	asCapitulo(page: IConteudoPage | undefined): ICapitulo | undefined {
 		return page?.tipo === 'capitulo' ? page : undefined;
 	}
-
 	asSubtopico(page: IConteudoPage | undefined): ISubtopico | undefined {
 		return page?.tipo === 'subtopico' ? page : undefined;
 	}
 
-	_isBlocked = false; // temporário até ter link nos botões, ou deixar por "segurança"
 	virarPagina(): void {
-		// if (this.isBlocked()) return;
-		if (this.isBlocked() || this._isBlocked) return; // função temporária até ter link nos botões, ou deixar por "segurança"
-
 		this.flipped = !this.flipped;
 		this.cdr.detectChanges();
 		this.flippedChange.emit(this.flipped);
@@ -51,5 +43,11 @@ export class SheetComponent {
 		} else {
 			this.pageFlipSound.play();
 		}
+	}
+
+	acessarNivel(capitulo: number, nivel: number) {
+		this.router.navigate(['/nivel'], {
+            state: { capitulo, nivel }
+        });
 	}
 }

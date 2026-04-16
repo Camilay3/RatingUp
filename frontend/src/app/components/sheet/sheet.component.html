@@ -32,11 +32,7 @@
 						</div>
 					</div>
 					<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
-					<!-- <a [routerLink]="sub.url">
-						@if (sub.imagem) { <img [src]="sub.imagem" [alt]="sub.titulo"> }
-						<span class="titulo">{{ sub.titulo }}</span>
-					</a> -->
-					<button [routerLink]="sub.url" (click)="_isBlocked=true">Acessar</button>
+					<button (click)="acessarNivel(sub.idCapitulo, sub.id)">Acessar</button>
 				}
 
 				<div class="controls">
@@ -63,7 +59,7 @@
 						</div>
 					</div>
 					<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
-					<button [routerLink]="sub.url" (click)="_isBlocked=true">Acessar</button>
+					<button (click)="acessarNivel(sub.idCapitulo, sub.id)">Acessar</button>
 				}
 
 				<div class="controls right">
