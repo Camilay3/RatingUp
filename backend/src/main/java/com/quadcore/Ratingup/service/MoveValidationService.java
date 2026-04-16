@@ -1,9 +1,26 @@
 package com.quadcore.Ratingup.service;
 
+import com.github.bhlangonijr.chesslib.Board;
+import com.github.bhlangonijr.chesslib.Piece;
+import com.github.bhlangonijr.chesslib.Square;
+import com.github.bhlangonijr.chesslib.move.Move;
+import com.quadcore.Ratingup.dto.board.MoveRequestDTO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MoveValidationService {
+
+    public Boolean validarMovimento(MoveRequestDTO movimento){
+        Board board = new Board();
+        board.loadFromFen(movimento.fen());
+        Move move = new Move(movimento.posInicial(),movimento.posFinal(),movimento.piece());
+        List<Move> moveList = board.legalMoves();
+        return moveList.contains(move);
+    }
+
+
 
 //    public boolean validateMove(MoveRequestDTO move) {
 //
