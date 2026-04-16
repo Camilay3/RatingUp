@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, HostListener, input, output } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ICapitulo, ISubtopico } from '../../interfaces/ICapitulo';
 import { IConteudoPage } from '../../interfaces/IPages';
@@ -16,9 +16,9 @@ export class SheetComponent {
 	frenteCapa = input<boolean>(false);
 	onFirstPage = input<boolean>(true);
 	onLastPage = input<boolean>(true);
+	isBlocked = input<boolean>(false);
 	flippedChange = output<boolean>();
 	protected flipped: boolean = false;
-	isBlocked: boolean = false;
 
 	openSound = new Audio('/livro/sounds/openCover.mp3');
 	closeSound = new Audio('/livro/sounds/closeCover.mp3');
@@ -36,13 +36,10 @@ export class SheetComponent {
 		return page?.tipo === 'subtopico' ? page : undefined;
 	}
 
-	/* @HostListener('window:keydown.arrowleft')
-	onArrowLeft() {
-		this.virarPagina();
-	} */
-
+	_isBlocked = false; // temporário até ter link nos botões, ou deixar por "segurança"
 	virarPagina(): void {
-		if (this.isBlocked) return;
+		// if (this.isBlocked()) return;
+		if (this.isBlocked() || this._isBlocked) return; // função temporária até ter link nos botões, ou deixar por "segurança"
 
 		this.flipped = !this.flipped;
 		this.cdr.detectChanges();
