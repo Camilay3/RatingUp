@@ -1,8 +1,9 @@
 .page {
 	display: flex;
 	text-align: center;
-	color: var(--primary);
 	position: relative;
+	p, span, svg { color: var(--primary); }
+	p, span, h1, h2 { &::selection { background-color: transparent; } } // Ainda seria captado no Ctrl A
 }
 
 .page.capitulo {
@@ -37,7 +38,6 @@
 .page.subtopico {
 	flex-direction: column;
 	justify-content: space-between;
-	// align-items: center;
 	padding: 16%;
 
 	.titulo {
@@ -66,27 +66,5 @@
 	img {
 		border: 8px ridge var(--primary);
 		border-radius: 8px;
-	}
-
-	button {
-		background-color: var(--primary);
-		box-shadow: 0px 0px 4px 0px var(--neutral);
-		border-radius: 1rem;
-		padding: 1.2rem;
-		font-size: 1rem;
-		font-weight: 900;
-		color: var(--white);
-		cursor: pointer;
-
-		width: 15.2rem;
-		margin: 0 auto;
-
-		&:hover {
-			background-color: var(--primaryHover);
-		}
-
-		&:active {
-			background-color: var(--primaryActive);
-		}
 	}
 }
