@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
 import { IPages } from '../../interfaces/IPages';
 
@@ -42,6 +42,22 @@ export class BookComponent implements OnInit {
 		for (let i = 0; i < this.tamanhoLivro; i++) this.zIndexValues.push(this.tamanhoLivro - i + 1);
 	}
 
+	@ViewChildren(SheetComponent) sheets!: QueryList<SheetComponent>;
+	paginaAtual: number = 0;
+
+	@HostListener('window:keydown.arrowright')
+	onArrowRight() {
+		if (this.isWaiting) return;
+		this.sheets.get(this.paginaAtual)?.virarPagina();
+	}
+
+	@HostListener('window:keydown.arrowleft')
+	onArrowLeft() {
+		if (this.isWaiting) return;
+		const anterior = this.paginaAtual - 1;
+		if (anterior >= 0) this.sheets.get(anterior)?.virarPagina();
+	}
+
 	onFlip(pageIndex: number, flipped: boolean) {
 		if (this.isWaiting) return;
 
@@ -52,6 +68,7 @@ export class BookComponent implements OnInit {
 		this.zIndexValues[pageIndex] = maiorZIndex + 1;
 		this.pageFlipStates[pageIndex] = flipped;
 		this.checkPagesFlipped();
+		this.paginaAtual = flipped ? pageIndex + 1 : pageIndex;
 	}
 
 	checkPagesFlipped() {

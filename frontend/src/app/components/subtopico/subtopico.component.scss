@@ -1,0 +1,78 @@
+@mixin size {
+	display: flex;
+	width: 100%;
+	min-height: 100%;
+}
+
+:host {
+	padding: 4rem 12rem 0 12rem;
+	background-color: var(--primary);
+	@include size;
+}
+
+.leasson {
+	position: relative;
+	padding: 4rem 8rem;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	background-color: var(--secondary);
+	box-shadow: 2px 2px 8px 4px var(--neutral);
+	@include size;
+
+	visibility: hidden;
+    transform: translateY(4rem);
+    animation: slideUpFade 1s ease forwards 0.1s;
+
+	button { margin-right: 0; }
+	h1, h2 { font-weight: 800; }
+	p, h1, h2 { &::selection {
+		background-color: var(--primaryHover);
+		color: var(--secondary);
+		text-shadow: 2px 2px 4px var(--primary);
+	} }
+
+	p {
+		text-indent: 2rem;
+		line-height: 1.7;
+		text-align: justify;
+		hyphens: auto;
+		overflow-wrap: break-word;
+	}
+
+	section {
+		margin-top: 4rem;
+		flex-direction: column;
+		display: flex;
+		gap: 4rem;
+	}
+}
+
+@keyframes slideUpFade {
+    to {
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
+header {
+	display: flex;
+	left: 2rem;
+	right: 2rem;
+	top: 2rem;
+	color: var(--primary);
+	position: absolute;
+	font-size: 1.2rem;
+	font-weight: bold;
+	justify-content: space-between;
+
+	span {
+		&::selection { background-color: transparent; } // Ainda seria captado no Ctrl A
+		span { margin: 1rem; }
+
+		&.link {
+			cursor: pointer;
+			&:hover { color: var(--primaryHover); }
+		}
+	}
+}
