@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
-import { Router } from '@angular/router';
-import { ICapitulo, ISubtopico } from '../../interfaces/ICapitulo';
 import { IConteudoPage } from '../../interfaces/IPages';
+import { PageComponent } from '../page/page.component';
 
 @Component({
   selector: 'app-sheet',
   templateUrl: './sheet.component.html',
-  styleUrls: ['./sheet.component.scss', './assets/capitulo.scss'],
+  imports: [ PageComponent ],
+  styleUrls: ['./sheet.component.scss'],
 })
 export class SheetComponent {
 	frente = input<IConteudoPage>();
@@ -23,14 +23,7 @@ export class SheetComponent {
 	pageFlipSound = new Audio('/livro/sounds/flipPage.wav');
 	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
 
-	constructor( private readonly cdr: ChangeDetectorRef, private readonly router: Router ) {}
-
-	asCapitulo(page: IConteudoPage | undefined): ICapitulo | undefined {
-		return page?.tipo === 'capitulo' ? page : undefined;
-	}
-	asSubtopico(page: IConteudoPage | undefined): ISubtopico | undefined {
-		return page?.tipo === 'subtopico' ? page : undefined;
-	}
+	constructor( private readonly cdr: ChangeDetectorRef ) {}
 
 	virarPagina(): void {
 		this.flipped = !this.flipped;
@@ -43,11 +36,5 @@ export class SheetComponent {
 		} else {
 			this.pageFlipSound.play();
 		}
-	}
-
-	acessarNivel(capitulo: number, nivel: number) {
-		this.router.navigate(['/nivel'], {
-            state: { capitulo, nivel }
-        });
 	}
 }

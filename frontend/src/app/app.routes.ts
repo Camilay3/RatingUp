@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { NivelComponent } from './components/nivel/nivel.component';
+import { SubtopicoComponent } from './components/subtopico/subtopico.component';
 import { BookComponent } from './components/book/book.component';
 
 export const routes: Routes = [
 
 	{ path: '', component: BookComponent },
-    { path: 'nivel', component: NivelComponent },
+    { path: 'subtopico', component: SubtopicoComponent },
     // { path: '**', component: Page404Component }
 
 ];

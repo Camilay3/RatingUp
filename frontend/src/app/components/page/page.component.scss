@@ -1,9 +1,39 @@
+:host-context(.versoPage) .page {
+	box-shadow: inset -7px 0 30px -7px #00000066, -10px 10px 15px 0px #0000001f;
+	margin-left: auto !important;
+
+	.controls { left: 1rem; }
+}
+
+:host-context(.frentePage) .page {
+	box-shadow: inset 7px 0 30px -7px #00000066, 10px 10px 15px 0px #0000001f;
+
+	.controls {
+		right: 1rem;
+		left: auto;
+		svg { transform: scale(-1, 1); }
+	}
+}
+
 .page {
 	display: flex;
 	text-align: center;
 	position: relative;
 	p, span, svg { color: var(--primary); }
 	p, span, h1, h2 { &::selection { background-color: transparent; } } // Ainda seria captado no Ctrl A
+
+	overflow: hidden;
+	height: 96%;
+	width: 97%;
+	margin-top: 2%;
+	background-color: var(--secondary);
+	border: solid 1px #c4c4c4;
+
+	.controls {
+		position: absolute;
+		bottom: 1rem;
+		.arrow-icon:hover { color: var(--primaryHover); }
+	}
 }
 
 .page.capitulo {
@@ -18,21 +48,6 @@
 
 	h1 { font-weight: 900; }
 	h2 { font-weight: 600; }
-}
-
-.controls {
-	position: absolute;
-	bottom: 1rem;
-	left: 1rem;
-
-	.arrow-icon:hover {
-		color: var(--primaryHover);
-	}
-
-	&.right {
-		right: 1rem;
-		left: auto;
-	}
 }
 
 .page.subtopico {

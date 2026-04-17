@@ -3,15 +3,6 @@
 	height: 100%;
 }
 
-@mixin page {
-	overflow: hidden; // passar futuramente para o componente page
-	height: 96%;
-	width: 97%;
-	margin-top: 2%;
-	background-color: var(--secondary); // passar futuramente para o componente page
-	border: solid 1px #c4c4c4;
-}
-
 @mixin sheet {
 	backface-visibility: hidden;
 	transform-style: preserve-3d;
@@ -98,23 +89,12 @@
 	transform-origin: right;
 	transform: rotateY(180deg);
 	pointer-events: none;
-
-	.page {
-		box-shadow: inset -7px 0 30px -7px #00000066, -10px 10px 15px 0px #0000001f;
-		margin-left: auto;
-		@include page();
-	}
 	@include sheet();
 }
 
 .frentePage {
 	transform-origin: left;
 	pointer-events: all;
-
-	.page {
-		box-shadow: inset 7px 0 30px -7px #00000066, 10px 10px 15px 0px #0000001f;
-		@include page();
-	}
 	@include sheet();
 }
 
