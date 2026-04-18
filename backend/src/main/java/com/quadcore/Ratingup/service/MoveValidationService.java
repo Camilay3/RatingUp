@@ -20,6 +20,17 @@ public class MoveValidationService {
         return moveList.contains(move);
     }
 
+    public String executarMovimento(MoveRequestDTO movimento) {
+        Board board = new Board();
+        board.loadFromFen(movimento.fen());
+        Move move = new Move(movimento.posInicial(), movimento.posFinal(), movimento.piece());
+        List<Move> moveList = board.legalMoves();
+        if (!moveList.contains(move)) {
+            throw new IllegalArgumentException("Movimento inválido!");
+        }
+        board.doMove(move);
+        return board.getFen();
+    }
 
 
 //    public boolean validateMove(MoveRequestDTO move) {
@@ -37,13 +48,6 @@ public class MoveValidationService {
 //        int colDiff = Math.abs(end.col() - start.col());
 //        int rowDiff = end.row() - start.row();
 //    }
-//
-//
-//
-//
-//
-//
-//
 //
 //    public boolean isValidQueenMove(int newX, int newY) {
 //
