@@ -5,6 +5,7 @@ import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 import com.quadcore.Ratingup.dto.board.MoveRequestDTO;
+import com.quadcore.Ratingup.dto.board.MoveResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,16 +21,31 @@ public class MoveValidationService {
         return moveList.contains(move);
     }
 
-    public String executarMovimento(MoveRequestDTO movimento) {
+    public MoveResponseDTO executarMovimento(MoveRequestDTO movimento) {
         Board board = new Board();
         board.loadFromFen(movimento.fen());
         Move move = new Move(movimento.posInicial(), movimento.posFinal(), movimento.piece());
+
         List<Move> moveList = board.legalMoves();
         if (!moveList.contains(move)) {
             throw new IllegalArgumentException("Movimento inválido!");
         }
+
         board.doMove(move);
-        return board.getFen();
+
+        return new MoveResponseDTO(board.getFen(), verificarStatus(board));
+    }
+
+    private String verificarStatus(Board board) {
+        if (board.isMated()) {
+            return "CHECKMATE";
+        } else if (board.isDraw()) {
+            return "DRAW";
+        } else if (board.isKingAttacked()) {
+            return "CHECK";
+        } else {
+            return "NORMAL";
+        }
     }
 
 

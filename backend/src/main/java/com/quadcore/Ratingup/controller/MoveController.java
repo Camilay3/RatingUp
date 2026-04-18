@@ -1,6 +1,7 @@
 package com.quadcore.Ratingup.controller;
 
 import com.quadcore.Ratingup.dto.board.MoveRequestDTO;
+import com.quadcore.Ratingup.dto.board.MoveResponseDTO;
 import com.quadcore.Ratingup.service.MoveValidationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class MoveController {
     }
 
     @PostMapping("/execute")
-    public ResponseEntity<String> executarMovimento(@RequestBody @Valid MoveRequestDTO movimentoDto) {
-        String novoFen = moveValidationService.executarMovimento(movimentoDto);
-        return ResponseEntity.ok(novoFen);
+    public ResponseEntity<MoveResponseDTO> executarMovimento(@RequestBody @Valid MoveRequestDTO movimentoDto) {
+        MoveResponseDTO response = moveValidationService.executarMovimento(movimentoDto);
+        return ResponseEntity.ok(response);
     }
 }
