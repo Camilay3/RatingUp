@@ -1,6 +1,5 @@
 package com.quadcore.Ratingup.dto.progresso;
-import com.quadcore.Ratingup.model.Progresso;
-import com.quadcore.Ratingup.model.User;
+import com.quadcore.Ratingup.model.profile.Progresso;
 
 public record ProgressoResponseDTO(
         Long userId,

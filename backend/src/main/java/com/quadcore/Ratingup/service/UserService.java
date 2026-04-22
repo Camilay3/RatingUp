@@ -1,7 +1,7 @@
 package com.quadcore.Ratingup.service;
 
-import com.quadcore.Ratingup.model.Progresso;
-import com.quadcore.Ratingup.model.User;
+import com.quadcore.Ratingup.model.profile.Progresso;
+import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressoRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;

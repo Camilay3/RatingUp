@@ -1,9 +1,7 @@
-package com.quadcore.Ratingup.model;
+package com.quadcore.Ratingup.model.profile;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Size;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity(name = "progresso")
 @Table(name = "progresso")
@@ -18,11 +16,9 @@ public class Progresso {
     private User user;
 
     @Max(9)
-//    @ColumnDefault("1")
     @Column(nullable = false)
     private Integer capitulo = 1;
 
-//    @ColumnDefault("1")
     @Column(nullable = false)
     private Integer subtopico = 1;
 

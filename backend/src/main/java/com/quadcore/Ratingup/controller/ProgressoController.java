@@ -1,7 +1,7 @@
 package com.quadcore.Ratingup.controller;
 import com.quadcore.Ratingup.dto.progresso.ProgressoResponseDTO;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
-import com.quadcore.Ratingup.model.Progresso;
+import com.quadcore.Ratingup.model.profile.Progresso;
 import com.quadcore.Ratingup.service.ProgressoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.quadcore.Ratingup.model;
+package com.quadcore.Ratingup.model.profile;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
