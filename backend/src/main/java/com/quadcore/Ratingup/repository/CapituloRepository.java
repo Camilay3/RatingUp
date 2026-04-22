@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface CapituloRepository extends JpaRepository<Capitulo, Long> {
 
-    @Query("SELECT c FROM Capitulo c LEFT JOIN FETCH c.subtopicos")
+    @Query("SELECT c FROM Capitulo c LEFT JOIN FETCH c.subtopicos ORDER BY c.ordem ASC")
     List<Capitulo> findAllByOrderbyOrdemAsc();
 }
