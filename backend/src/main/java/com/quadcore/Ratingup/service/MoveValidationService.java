@@ -1,9 +1,53 @@
 package com.quadcore.Ratingup.service;
 
+import com.github.bhlangonijr.chesslib.Board;
+import com.github.bhlangonijr.chesslib.Piece;
+import com.github.bhlangonijr.chesslib.Square;
+import com.github.bhlangonijr.chesslib.move.Move;
+import com.quadcore.Ratingup.dto.board.MoveRequestDTO;
+import com.quadcore.Ratingup.dto.board.MoveResponseDTO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MoveValidationService {
+
+    public Boolean validarMovimento(MoveRequestDTO movimento){
+        Board board = new Board();
+        board.loadFromFen(movimento.fen());
+        Move move = new Move(movimento.posInicial(),movimento.posFinal(),movimento.piece());
+        List<Move> moveList = board.legalMoves();
+        return moveList.contains(move);
+    }
+
+    public MoveResponseDTO executarMovimento(MoveRequestDTO movimento) {
+        Board board = new Board();
+        board.loadFromFen(movimento.fen());
+        Move move = new Move(movimento.posInicial(), movimento.posFinal(), movimento.piece());
+
+        List<Move> moveList = board.legalMoves();
+        if (!moveList.contains(move)) {
+            throw new IllegalArgumentException("Movimento inválido!");
+        }
+
+        board.doMove(move);
+
+        return new MoveResponseDTO(board.getFen(), verificarStatus(board));
+    }
+
+    private String verificarStatus(Board board) {
+        if (board.isMated()) {
+            return "CHECKMATE";
+        } else if (board.isDraw()) {
+            return "DRAW";
+        } else if (board.isKingAttacked()) {
+            return "CHECK";
+        } else {
+            return "NORMAL";
+        }
+    }
+
 
 //    public boolean validateMove(MoveRequestDTO move) {
 //
@@ -20,13 +64,6 @@ public class MoveValidationService {
 //        int colDiff = Math.abs(end.col() - start.col());
 //        int rowDiff = end.row() - start.row();
 //    }
-//
-//
-//
-//
-//
-//
-//
 //
 //    public boolean isValidQueenMove(int newX, int newY) {
 //

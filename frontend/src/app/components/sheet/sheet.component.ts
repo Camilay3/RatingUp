@@ -1,13 +1,12 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ICapitulo, ISubtopico } from '../../interfaces/ICapitulo';
 import { IConteudoPage } from '../../interfaces/IPages';
+import { PageComponent } from '../page/page.component';
 
 @Component({
   selector: 'app-sheet',
   templateUrl: './sheet.component.html',
-  styleUrls: ['./sheet.component.scss', './assets/capitulo.scss'],
-  imports: [RouterLink]
+  imports: [ PageComponent ],
+  styleUrls: ['./sheet.component.scss'],
 })
 export class SheetComponent {
 	frente = input<IConteudoPage>();
@@ -18,27 +17,15 @@ export class SheetComponent {
 	onLastPage = input<boolean>(true);
 	flippedChange = output<boolean>();
 	protected flipped: boolean = false;
-	isBlocked: boolean = false;
 
 	openSound = new Audio('/livro/sounds/openCover.mp3');
 	closeSound = new Audio('/livro/sounds/closeCover.mp3');
 	pageFlipSound = new Audio('/livro/sounds/flipPage.wav');
+	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
 
 	constructor( private readonly cdr: ChangeDetectorRef ) {}
 
-	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
-
-	asCapitulo(page: IConteudoPage | undefined): ICapitulo | undefined {
-		return page?.tipo === 'capitulo' ? page : undefined;
-	}
-
-	asSubtopico(page: IConteudoPage | undefined): ISubtopico | undefined {
-		return page?.tipo === 'subtopico' ? page : undefined;
-	}
-
 	virarPagina(): void {
-		if (this.isBlocked) return;
-
 		this.flipped = !this.flipped;
 		this.cdr.detectChanges();
 		this.flippedChange.emit(this.flipped);
