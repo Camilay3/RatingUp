@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.service;
 
+import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -33,10 +34,8 @@ public class UserService {
             throw new RuntimeException("Senha inválida! A senha precisa ter entre 8 a 12 caracteres, que tenham letras maiúsculas, minúsculas, números e símbolos");
         }
 
-        System.out.println("Senha antes: " + user.getSenha());
         String senhaCriptografada = passwordEncoder.encode(user.getSenha());
         user.setSenha(senhaCriptografada);
-        System.out.println("Senha depois:" + user.getSenha());
         return userRepository.save(user);
     }
 
@@ -45,13 +44,15 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
     }
 
-    public Optional<User> atualizarUsuario(Long id, User data) {
+    public Optional<User> atualizarUsuario(Long id, User data, PasswordChangeDTO dto) {
         Optional<User> optionalUser = Optional.of(userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
 
         User user = optionalUser.get();
 
-        if (data.getNome() != null) {
+        String senhaAntiga = user.getSenha();
+
+        if (data.getNome() != null) {git
             user.setNome(data.getNome());
         }
         if (data.getNickname() != null) {
@@ -62,6 +63,14 @@ public class UserService {
         }
         if (data.getTelefone() != null) {
             user.setTelefone(data.getTelefone());
+        }
+
+
+        if(dto.senhaNova() != null && !dto.senhaNova().isEmpty()){
+            this.alterarSenha(user,dto);
+        }
+        else {
+            throw new RuntimeException("Erro: A senha foi recebida como null");
         }
 
         userRepository.save(user);
@@ -80,5 +89,18 @@ public class UserService {
 
     public List<User> listarUsuarios() {
         return userRepository.findAll();
+    }
+
+    private void alterarSenha(User user, PasswordChangeDTO dto){
+
+        if(!passwordEncoder.matches(dto.senhaAntiga(), user.getSenha())){
+            throw new RuntimeException("As senhas não combinam");
+        }
+
+        String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
+        if(!dto.senhaNova().matches(senhaPadrao)){
+            throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
+        }
+        user.setSenha(passwordEncoder.encode(dto.senhaNova()));
     }
 }
