@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.service;
 
+import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.repository.UserRepository;
@@ -18,10 +19,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
+    private final TokenGenerator tokenGenerator;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.tokenGenerator = tokenGenerator;
     }
 
     public User criarUsuario(User user) {
@@ -52,7 +55,7 @@ public class UserService {
 
         String senhaAntiga = user.getSenha();
 
-        if (data.getNome() != null) {git
+        if (data.getNome() != null) {
             user.setNome(data.getNome());
         }
         if (data.getNickname() != null) {
@@ -102,5 +105,16 @@ public class UserService {
             throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
         }
         user.setSenha(passwordEncoder.encode(dto.senhaNova()));
+    }
+
+    public String loginUsuario(String email, String senha){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if(passwordEncoder.matches(senha, user.getSenha())){
+            return tokenGenerator.gerarToken(user);
+        }
+
+        throw new RuntimeException("Senha inválida");
     }
 }

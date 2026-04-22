@@ -65,6 +65,18 @@ public class UserController {
     }
 
     /**
+     * Realiza o login do usuário por meio do email e da senha
+     *
+     * @param dto JSON com os dados necessários para o login (email e senha)
+     * @return retorna o token do login, caso seja bem sucedido
+     * */
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<?>> logarUsuario(@RequestBody ProfileRequestDTO dto){
+        String token = userService.loginUsuario(dto.email(),dto.senha());
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário realizou login com sucesso", token));
+    }
+    /**
      * Busca um usuário pelo id
      *
      * @param id id do usuário
