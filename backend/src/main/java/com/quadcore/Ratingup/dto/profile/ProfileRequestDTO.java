@@ -1,6 +1,6 @@
 package com.quadcore.Ratingup.dto.profile;
 
-import com.quadcore.Ratingup.model.User;
+import com.quadcore.Ratingup.model.profile.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

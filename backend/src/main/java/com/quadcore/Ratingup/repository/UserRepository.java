@@ -1,6 +1,6 @@
 package com.quadcore.Ratingup.repository;
 
-import com.quadcore.Ratingup.model.User;
+import com.quadcore.Ratingup.model.profile.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

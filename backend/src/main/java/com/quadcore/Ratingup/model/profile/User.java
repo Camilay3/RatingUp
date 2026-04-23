@@ -1,10 +1,9 @@
-package com.quadcore.Ratingup.model;
+package com.quadcore.Ratingup.model.profile;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity(name = "users")
 @Table(name = "users",
@@ -39,9 +38,8 @@ public class User {
 
     private String role;
 
-    @ColumnDefault("1")
-    @Column(nullable = false)
-    private Integer faseAtual = 1;
+    @OneToOne(mappedBy = "user")
+    private Progresso progresso;
 
     public Long getId() {
         return id;
@@ -71,8 +69,8 @@ public class User {
         return role;
     }
 
-    public Integer getFaseAtual() {
-        return faseAtual;
+    public Progresso getProgresso() {
+        return progresso;
     }
 
     public void setId(Long id) {
@@ -103,7 +101,7 @@ public class User {
         this.role = role;
     }
 
-    public void setFaseAtual(Integer faseAtual) {
-        this.faseAtual = faseAtual;
+    public void setProgresso(Progresso progresso) {
+        this.progresso = progresso;
     }
 }

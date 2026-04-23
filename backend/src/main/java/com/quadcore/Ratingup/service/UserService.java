@@ -3,13 +3,14 @@ package com.quadcore.Ratingup.service;
 import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 import com.quadcore.Ratingup.model.User;
+import com.quadcore.Ratingup.model.profile.Progresso;
+import com.quadcore.Ratingup.model.profile.User;
+import com.quadcore.Ratingup.repository.ProgressoRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.coyote.BadRequestException;
+import jakarta.persistence.Transient;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +21,16 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final TokenGenerator tokenGenerator;
+    private final ProgressoRepository progressoRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressoRepository progressoRepository, TokenGenerator tokenGenerator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
+        this.progressoRepository = progressoRepository;
     }
 
+    @Transient
     public User criarUsuario(User user) {
         String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
 
@@ -39,7 +43,14 @@ public class UserService {
 
         String senhaCriptografada = passwordEncoder.encode(user.getSenha());
         user.setSenha(senhaCriptografada);
-        return userRepository.save(user);
+
+        User savedUser = userRepository.save(user);
+        Progresso progresso = new Progresso();
+        progresso.setUser(savedUser);
+        savedUser.setProgresso(progresso);
+        progressoRepository.save(progresso);
+
+        return savedUser;
     }
 
     public User buscarPorID(Long id) {

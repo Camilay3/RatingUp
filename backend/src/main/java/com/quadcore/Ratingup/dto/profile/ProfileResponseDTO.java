@@ -1,6 +1,6 @@
 package com.quadcore.Ratingup.dto.profile;
 
-import com.quadcore.Ratingup.model.User;
+import com.quadcore.Ratingup.model.profile.User;
 
 public record ProfileResponseDTO(
         Long id,
@@ -8,8 +8,9 @@ public record ProfileResponseDTO(
         String nickname,
         String email,
         String telefone,
-        Integer faseAtual,
-        String role
+        String role,
+        Integer capitulo,
+        Integer subtopico
 ) {
     public ProfileResponseDTO(User user) {
         this(
@@ -18,8 +19,9 @@ public record ProfileResponseDTO(
                 user.getNickname(),
                 user.getEmail(),
                 user.getTelefone(),
-                user.getFaseAtual(),
-                user.getRole()
+                user.getRole(),
+                user.getProgresso().getCapitulo(),
+                user.getProgresso().getSubtopico()
                 );
     }
 }
