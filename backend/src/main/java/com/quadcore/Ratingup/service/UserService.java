@@ -2,7 +2,7 @@ package com.quadcore.Ratingup.service;
 
 import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
-import com.quadcore.Ratingup.model.User;
+
 import com.quadcore.Ratingup.model.profile.Progresso;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressoRepository;
