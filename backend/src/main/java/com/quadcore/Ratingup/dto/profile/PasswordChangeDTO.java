@@ -1,4 +1,4 @@
 package com.quadcore.Ratingup.dto.profile;
 
-public record PasswordChangeDTO() {
+public record PasswordChangeDTO(String senhaAntiga, String senhaNova) {
 }

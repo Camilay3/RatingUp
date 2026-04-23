@@ -18,6 +18,10 @@ public record ProfileUpdateDTO(
         String email,
 
         @NotBlank(message = "Telefone não pode ser vazio!")
-        String telefone
+        String telefone,
+
+        String senhaAntiga,
+
+        String senhaNova
 ) {
 }
