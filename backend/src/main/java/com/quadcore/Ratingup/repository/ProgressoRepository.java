@@ -1,6 +1,6 @@
 package com.quadcore.Ratingup.repository;
 
-import com.quadcore.Ratingup.model.Progresso;
+import com.quadcore.Ratingup.model.profile.Progresso;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

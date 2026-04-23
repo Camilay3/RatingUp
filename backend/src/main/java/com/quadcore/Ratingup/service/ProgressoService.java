@@ -1,12 +1,10 @@
 package com.quadcore.Ratingup.service;
 
-import com.quadcore.Ratingup.model.Progresso;
-import com.quadcore.Ratingup.model.User;
+import com.quadcore.Ratingup.model.profile.Progresso;
 import com.quadcore.Ratingup.repository.ProgressoRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 
 @Service
 public class ProgressoService {
