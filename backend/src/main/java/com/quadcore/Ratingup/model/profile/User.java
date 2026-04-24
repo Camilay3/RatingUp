@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.model.profile;
 
+import com.quadcore.Ratingup.enums.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -36,7 +37,9 @@ public class User {
     @NotBlank(message = "Senha obrigatória!")
     private String senha;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Roles role;
 
     @OneToOne(mappedBy = "user")
     private Progresso progresso;
@@ -65,7 +68,7 @@ public class User {
         return senha;
     }
 
-    public String getRole() {
+    public Roles getRole() {
         return role;
     }
 
@@ -97,7 +100,7 @@ public class User {
         this.senha = senha;
     }
 
-    public void setRole(String role) {
+    public void setRole(Roles role) {
         this.role = role;
     }
 

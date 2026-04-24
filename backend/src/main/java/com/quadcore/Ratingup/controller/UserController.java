@@ -7,7 +7,6 @@ import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.User;
-import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.repository.UserRepository;
 import com.quadcore.Ratingup.service.UserService;
 import jakarta.validation.Valid;
@@ -31,12 +30,10 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -54,6 +51,7 @@ public class UserController {
         user.setEmail(dto.email());
         user.setTelefone(dto.telefone());
         user.setSenha(dto.senha());
+        user.setRole(dto.role());
 
         User newUser = userService.criarUsuario(user);
 
@@ -109,19 +107,20 @@ public class UserController {
      * @param dto JSON com os dados atualizados do usuário
      * @return retorna o usuário atualizado
      * */
-    @PutMapping("meu-perfil/{id}/atualizar")
+    @PatchMapping("meu-perfil/{id}/atualizar")
     public ResponseEntity<ApiResponse<?>> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody ProfileUpdateDTO dto) {
         User data = new User();
         data.setNome(dto.nome());
         data.setNickname(dto.nickname());
         data.setEmail(dto.email());
         data.setTelefone(dto.telefone());
-        data.setSenha(dto.senhaNova());
+        data.setRole(dto.role());
+        data.setTelefone(dto.telefone());
 
         PasswordChangeDTO passwordDto = new PasswordChangeDTO(dto.senhaAntiga(), dto.senhaNova());
         Optional<User> userAtualizado = userService.atualizarUsuario(id, data, passwordDto);
 
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", userAtualizado));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", userAtualizado.map(UserMapper::toResponseDTO)));
 
     }
 

@@ -1,27 +1,18 @@
 package com.quadcore.Ratingup.dto.profile;
 
+import com.quadcore.Ratingup.enums.Roles;
+import com.quadcore.Ratingup.model.profile.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public record ProfileUpdateDTO(
-
         Long id,
-
-        @NotBlank(message = "O nome completo não pode ser vazio!")
         String nome,
-
-        @NotBlank(message = "O nickname não pode ser vazio!")
         String nickname,
-
-        @NotBlank(message = "Email não pode ser vazio!")
         @Email(message = "Formato de email inválido!")
         String email,
-
-        @NotBlank(message = "Telefone não pode ser vazio!")
         String telefone,
-
+        Roles role,
         String senhaAntiga,
-
         String senhaNova
-) {
-}
+) {}

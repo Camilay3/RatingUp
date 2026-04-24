@@ -78,13 +78,13 @@ public class UserService {
         if (data.getTelefone() != null) {
             user.setTelefone(data.getTelefone());
         }
+        if (data.getRole() != null) {
+            user.setRole(data.getRole());
+        }
 
 
         if(dto.senhaNova() != null && !dto.senhaNova().isEmpty()){
             this.alterarSenha(user,dto);
-        }
-        else {
-            throw new RuntimeException("Erro: A senha foi recebida como null");
         }
 
         userRepository.save(user);
