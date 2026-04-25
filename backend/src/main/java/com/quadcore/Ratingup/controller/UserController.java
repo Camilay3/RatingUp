@@ -7,7 +7,6 @@ import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.User;
-import com.quadcore.Ratingup.model.User;
 import com.quadcore.Ratingup.repository.UserRepository;
 import com.quadcore.Ratingup.service.UserService;
 import jakarta.validation.Valid;
