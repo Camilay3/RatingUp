@@ -30,13 +30,9 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     /**

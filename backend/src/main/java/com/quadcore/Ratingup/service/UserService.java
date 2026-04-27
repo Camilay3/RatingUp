@@ -3,6 +3,7 @@ package com.quadcore.Ratingup.service;
 import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 
+import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
 import com.quadcore.Ratingup.model.profile.Progresso;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressoRepository;
@@ -11,6 +12,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Transient;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -127,5 +130,24 @@ public class UserService {
         }
 
         throw new RuntimeException("Senha inválida");
+    }
+
+    public void resetPassword(PasswordResetDTO dto){
+        User user = userRepository.findByResetToken(dto.token())
+                .orElseThrow(() -> new RuntimeException("Token inválido"));
+
+        if(user.getResetTokenExpiry().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("Esse token está expirado");
+        }
+
+        String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
+        if(!dto.newPassword().matches(regex)){
+            throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
+        }
+
+        user.setSenha(passwordEncoder.encode(dto.newPassword()));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        userRepository.save(user);
     }
 }

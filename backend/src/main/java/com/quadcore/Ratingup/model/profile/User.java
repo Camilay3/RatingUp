@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity(name = "users")
 @Table(name = "users",
         uniqueConstraints = {
@@ -41,6 +43,10 @@ public class User {
 
     @NotBlank(message = "Senha obrigatória!")
     private String senha;
+
+    private String resetToken;
+
+    private LocalDateTime resetTokenExpiry;
 
     private String role;
 
