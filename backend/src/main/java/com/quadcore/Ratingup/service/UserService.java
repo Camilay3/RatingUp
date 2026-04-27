@@ -53,11 +53,6 @@ public class UserService {
         return savedUser;
     }
 
-    public User buscarPorID(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
-    }
-
     public Optional<User> atualizarUsuario(Long id, User data, PasswordChangeDTO dto) {
         Optional<User> optionalUser = Optional.of(userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
@@ -71,9 +66,6 @@ public class UserService {
         }
         if (data.getNickname() != null) {
             user.setNickname(data.getNickname());
-        }
-        if (data.getEmail() != null) {
-            user.setEmail(data.getEmail());
         }
         if (data.getTelefone() != null) {
             user.setTelefone(data.getTelefone());
@@ -99,10 +91,6 @@ public class UserService {
         user.ifPresent(userRepository::delete);
 
         return user;
-    }
-
-    public List<User> listarUsuarios() {
-        return userRepository.findAll();
     }
 
     private void alterarSenha(User user, PasswordChangeDTO dto){

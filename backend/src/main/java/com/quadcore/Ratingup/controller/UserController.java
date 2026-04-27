@@ -72,33 +72,6 @@ public class UserController {
 
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuário realizou login com sucesso", token));
     }
-    /**
-     * Busca um usuário pelo id
-     *
-     * @param id id do usuário
-     * @return retorna o usuário correspondente ao id fornecido
-     * */
-    @GetMapping("/buscar-usuario/{id}")
-    public ResponseEntity<ApiResponse<?>> buscarPorID(@PathVariable Long id) {
-        User user = userService.buscarPorID(id);
-
-        return ResponseEntity.ok(new ApiResponse<>(true, "Perfil encontrado", UserMapper.toResponseDTO(user)));
-    }
-
-    /**
-     * Lista todos os usuários criados
-     *
-     * @return retorna uma lista dos usuários criados
-     * */
-    @GetMapping("/listar")
-    public ResponseEntity<ApiResponse<?>> listarUsuarios() {
-        List<ProfileResponseDTO> dtos = userService.listarUsuarios()
-                .stream()
-                .map(UserMapper::toResponseDTO)
-                .toList();
-
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário listados", dtos));
-    }
 
     /**
      * Atualiza o usuário pelo id
@@ -112,7 +85,6 @@ public class UserController {
         User data = new User();
         data.setNome(dto.nome());
         data.setNickname(dto.nickname());
-        data.setEmail(dto.email());
         data.setTelefone(dto.telefone());
         data.setRole(dto.role());
         data.setTelefone(dto.telefone());

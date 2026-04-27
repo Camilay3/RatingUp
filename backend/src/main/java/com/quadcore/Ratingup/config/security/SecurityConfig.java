@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.config.security;
 
+import com.quadcore.Ratingup.enums.Roles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/admin/contas/**").hasRole(Roles.ADMIN.name())
+//                        .requestMatchers("/conta/**").authenticated()
+//                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().permitAll()
                 );
 

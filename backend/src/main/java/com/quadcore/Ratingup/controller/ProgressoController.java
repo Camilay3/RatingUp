@@ -1,8 +1,11 @@
 package com.quadcore.Ratingup.controller;
+import com.quadcore.Ratingup.dto.progresso.AtualizaProgressoDTO;
 import com.quadcore.Ratingup.dto.progresso.ProgressoResponseDTO;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
+import com.quadcore.Ratingup.mapper.ProgressoMapper;
 import com.quadcore.Ratingup.model.profile.Progresso;
 import com.quadcore.Ratingup.service.ProgressoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,5 +27,11 @@ public class ProgressoController {
                 progresso.getCapitulo(),
                 progresso.getSubtopico());
         return ResponseEntity.ok(new ApiResponse<>(true, "Progresso encontrado", dto));
+    }
+
+    @PostMapping("/{id}/atualiza-fase")
+    public ResponseEntity<ApiResponse<?>> atualizaFase(@PathVariable Long id, @Valid @RequestBody AtualizaProgressoDTO dto) {
+        Progresso atualizado = progressoService.atualizaFaseAtual(id, dto);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Progresso atualizado", ProgressoMapper.toResponse(atualizado)));
     }
 }
