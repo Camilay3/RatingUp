@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.*;
 
 @Entity(name = "users")
 @Table(name = "users",
@@ -13,6 +14,11 @@ import jakarta.validation.constraints.Size;
                 @UniqueConstraint(name = "uk_user_nickname", columnNames = {"nickname"}),
                 @UniqueConstraint(name = "uk_user_tel", columnNames = {"telefone"})
         })
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class User {
 
     @Id
@@ -44,67 +50,4 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Progresso progresso;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public Roles getRole() {
-        return role;
-    }
-
-    public Progresso getProgresso() {
-        return progresso;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public void setRole(Roles role) {
-        this.role = role;
-    }
-
-    public void setProgresso(Progresso progresso) {
-        this.progresso = progresso;
-    }
 }

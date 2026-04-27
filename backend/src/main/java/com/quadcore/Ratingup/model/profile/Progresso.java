@@ -2,9 +2,15 @@ package com.quadcore.Ratingup.model.profile;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
+import lombok.*;
 
 @Entity(name = "progresso")
 @Table(name = "progresso")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Progresso {
 
     @Id
@@ -22,35 +28,4 @@ public class Progresso {
     @Column(nullable = false)
     private Integer subtopico = 1;
 
-    public Long getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Integer getCapitulo() {
-        return capitulo;
-    }
-
-    public Integer getSubtopico() {
-        return subtopico;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setCapitulo(Integer capitulo) {
-        this.capitulo = capitulo;
-    }
-
-    public void setSubtopico(Integer subtopico) {
-        this.subtopico = subtopico;
-    }
 }
