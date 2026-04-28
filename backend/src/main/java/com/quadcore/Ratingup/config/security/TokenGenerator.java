@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.UserRepository;
 import com.quadcore.Ratingup.service.UserService;
@@ -36,5 +37,20 @@ public class TokenGenerator{
 
     private Instant gerarDataExpiracao(){
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    public String getSubject(String tokenJWT){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+
+            return JWT.require(algorithm)
+                    .withIssuer("login-basico")
+                    .build()
+                    .verify(tokenJWT)
+                    .getSubject();
+        }
+        catch (JWTVerificationException exception){
+            throw new RuntimeException("Token JWT inválido ou expirado",exception);
+        }
     }
 }

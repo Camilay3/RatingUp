@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -25,12 +26,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final TokenGenerator tokenGenerator;
     private final ProgressoRepository progressoRepository;
+    private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressoRepository progressoRepository, TokenGenerator tokenGenerator) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressoRepository progressoRepository, TokenGenerator tokenGenerator, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
         this.progressoRepository = progressoRepository;
+        this.emailService = emailService;
     }
 
     @Transient
@@ -132,6 +135,17 @@ public class UserService {
         throw new RuntimeException("Senha inválida");
     }
 
+    public void PasswordRecoverRequest(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("E-mail não encontrado"));
+
+        String token = UUID.randomUUID().toString();
+        user.setResetToken(token);
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
+        userRepository.save(user);
+
+        emailService.sendRecoverMail(user.getEmail(), token);
+    }
     public void resetPassword(PasswordResetDTO dto){
         User user = userRepository.findByResetToken(dto.token())
                 .orElseThrow(() -> new RuntimeException("Token inválido"));
