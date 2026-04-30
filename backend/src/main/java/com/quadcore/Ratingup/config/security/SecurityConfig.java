@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.config.security;
 
+import com.quadcore.Ratingup.enums.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

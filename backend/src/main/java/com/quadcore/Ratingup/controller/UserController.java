@@ -30,12 +30,10 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -53,6 +51,7 @@ public class UserController {
         user.setEmail(dto.email());
         user.setTelefone(dto.telefone());
         user.setSenha(dto.senha());
+        user.setRole(dto.role());
 
         User newUser = userService.criarUsuario(user);
 
@@ -73,33 +72,6 @@ public class UserController {
 
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuário realizou login com sucesso", token));
     }
-    /**
-     * Busca um usuário pelo id
-     *
-     * @param id id do usuário
-     * @return retorna o usuário correspondente ao id fornecido
-     * */
-    @GetMapping("/buscar-usuario/{id}")
-    public ResponseEntity<ApiResponse<?>> buscarPorID(@PathVariable Long id) {
-        User user = userService.buscarPorID(id);
-
-        return ResponseEntity.ok(new ApiResponse<>(true, "Perfil encontrado", UserMapper.toResponseDTO(user)));
-    }
-
-    /**
-     * Lista todos os usuários criados
-     *
-     * @return retorna uma lista dos usuários criados
-     * */
-    @GetMapping("/listar")
-    public ResponseEntity<ApiResponse<?>> listarUsuarios() {
-        List<ProfileResponseDTO> dtos = userService.listarUsuarios()
-                .stream()
-                .map(UserMapper::toResponseDTO)
-                .toList();
-
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário listados", dtos));
-    }
 
     /**
      * Atualiza o usuário pelo id
@@ -108,19 +80,19 @@ public class UserController {
      * @param dto JSON com os dados atualizados do usuário
      * @return retorna o usuário atualizado
      * */
-    @PutMapping("meu-perfil/{id}/atualizar")
+    @PatchMapping("meu-perfil/{id}/atualizar")
     public ResponseEntity<ApiResponse<?>> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody ProfileUpdateDTO dto) {
         User data = new User();
         data.setNome(dto.nome());
         data.setNickname(dto.nickname());
-        data.setEmail(dto.email());
         data.setTelefone(dto.telefone());
-        data.setSenha(dto.senhaNova());
+        data.setRole(dto.role());
+        data.setTelefone(dto.telefone());
 
         PasswordChangeDTO passwordDto = new PasswordChangeDTO(dto.senhaAntiga(), dto.senhaNova());
         Optional<User> userAtualizado = userService.atualizarUsuario(id, data, passwordDto);
 
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", userAtualizado));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", userAtualizado.map(UserMapper::toResponseDTO)));
 
     }
 
