@@ -27,7 +27,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             var tokenJWT = recuperarToken(request);
 
             if (tokenJWT != null){
-                var subject = tokenService.getSubject(tokenJWT); //nessa parte aq precisa da função de autenticação que ta sendo feita pelo kalebe
+                var subject = tokenService.getSubject(tokenJWT); //nessa parte aq precisa da função de autenticação que ta sendo feita pelo kalebe (Kalebe aqui: Concluí essa parte)
                 var usuario = repository.findByEmail(subject);
 
                 var authentication = new UsernamePasswordAuthenticationToken(usuario,null,usuario.getAuthorities()); //roles sendo configuradas pelo davi
