@@ -59,11 +59,6 @@ public class UserService {
         return savedUser;
     }
 
-    public User buscarPorID(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
-    }
-
     public Optional<User> atualizarUsuario(Long id, User data, PasswordChangeDTO dto) {
         Optional<User> optionalUser = Optional.of(userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
@@ -78,19 +73,16 @@ public class UserService {
         if (data.getNickname() != null) {
             user.setNickname(data.getNickname());
         }
-        if (data.getEmail() != null) {
-            user.setEmail(data.getEmail());
-        }
         if (data.getTelefone() != null) {
             user.setTelefone(data.getTelefone());
+        }
+        if (data.getRole() != null) {
+            user.setRole(data.getRole());
         }
 
 
         if(dto.senhaNova() != null && !dto.senhaNova().isEmpty()){
             this.alterarSenha(user,dto);
-        }
-        else {
-            throw new RuntimeException("Erro: A senha foi recebida como null");
         }
 
         userRepository.save(user);
@@ -105,10 +97,6 @@ public class UserService {
         user.ifPresent(userRepository::delete);
 
         return user;
-    }
-
-    public List<User> listarUsuarios() {
-        return userRepository.findAll();
     }
 
     private void alterarSenha(User user, PasswordChangeDTO dto){

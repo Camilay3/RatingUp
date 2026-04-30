@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.model.profile;
 
+import com.quadcore.Ratingup.enums.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -44,11 +45,14 @@ public class User {
     @NotBlank(message = "Senha obrigatória!")
     private String senha;
 
-    private String resetToken;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Roles role;
 
+
+    private String resetToken;
     private LocalDateTime resetTokenExpiry;
 
-    private String role;
 
     @OneToOne(mappedBy = "user")
     private Progresso progresso;

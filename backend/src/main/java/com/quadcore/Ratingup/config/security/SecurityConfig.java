@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.config.security;
 
+import com.quadcore.Ratingup.enums.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private SecurityFilter securityFilter;
+//    @Autowired
+//    private SecurityFilter securityFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,9 +32,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/recover-password").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/reset-password").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
-                        .anyRequest().authenticated()
-                ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                        .anyRequest().authenticated()).build();
+//                ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+//                .build();
     }
 
     @Bean
