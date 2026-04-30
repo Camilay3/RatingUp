@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity(name = "users")
 @Table(name = "users",
         uniqueConstraints = {
@@ -46,6 +48,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Roles role;
+
+
+    private String resetToken;
+    private LocalDateTime resetTokenExpiry;
+
 
     @OneToOne(mappedBy = "user")
     private Progresso progresso;

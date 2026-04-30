@@ -30,11 +30,9 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -85,9 +83,11 @@ public class UserController {
         User data = new User();
         data.setNome(dto.nome());
         data.setNickname(dto.nickname());
+        data.setEmail(dto.email()); //Vou colocar esses campos em outro controller no meu próximo pr (Kalebe)
         data.setTelefone(dto.telefone());
         data.setRole(dto.role());
         data.setTelefone(dto.telefone());
+        data.setSenha(dto.senhaNova()); //Vou colocar esses campos em outro controller no meu próximo pr (Kalebe)
 
         PasswordChangeDTO passwordDto = new PasswordChangeDTO(dto.senhaAntiga(), dto.senhaNova());
         Optional<User> userAtualizado = userService.atualizarUsuario(id, data, passwordDto);
