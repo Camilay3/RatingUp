@@ -9,17 +9,19 @@ import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressoRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Transient;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
@@ -36,7 +38,7 @@ public class UserService {
         this.emailService = emailService;
     }
 
-    @Transient
+    @Transactional
     public User criarUsuario(User user) {
         String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
 
@@ -151,5 +153,12 @@ public class UserService {
         user.setResetToken(null);
         user.setResetTokenExpiry(null);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
     }
 }
