@@ -1,9 +1,6 @@
 package com.quadcore.Ratingup.controller;
 
-import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
-import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
-import com.quadcore.Ratingup.dto.profile.ProfileResponseDTO;
-import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
+import com.quadcore.Ratingup.dto.profile.*;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.User;
@@ -12,6 +9,7 @@ import com.quadcore.Ratingup.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -65,21 +63,15 @@ public class UserController {
      * @return retorna o token do login, caso seja bem sucedido
      * */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<?>> logarUsuario(@RequestBody ProfileRequestDTO dto){
+    public ResponseEntity<ApiResponse<?>> logarUsuario(@RequestBody LoginRequestDTO dto){
         String token = userService.loginUsuario(dto.email(),dto.senha());
 
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuário realizou login com sucesso", token));
     }
 
-    /**
-     * Atualiza o usuário pelo id
-     *
-     * @param id id do usuário
-     * @param dto JSON com os dados atualizados do usuário
-     * @return retorna o usuário atualizado
-     * */
-    @PatchMapping("meu-perfil/{id}/atualizar")
-    public ResponseEntity<ApiResponse<?>> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody ProfileUpdateDTO dto) {
+
+    @PatchMapping("meu-perfil/atualizar") //tirando o id da url,pq se n qlqr usuario pode atualizar o perfl de outro ao mudar o id
+    public ResponseEntity<ApiResponse<?>> atualizarUsuario(@AuthenticationPrincipal User logado, @Valid @RequestBody ProfileUpdateDTO dto) {
         User data = new User();
         data.setNome(dto.nome());
         data.setNickname(dto.nickname());
@@ -87,23 +79,19 @@ public class UserController {
         data.setTelefone(dto.telefone());
         data.setRole(dto.role());
         data.setTelefone(dto.telefone());
-        data.setSenha(dto.senhaNova()); //Vou colocar esses campos em outro controller no meu próximo pr (Kalebe)
+//        data.setSenha(dto.senhaNova()); //Vou colocar esses campos em outro controller no meu próximo pr (Kalebe) //comentei pq a linha logo a baixo ja cuida da senha
 
         PasswordChangeDTO passwordDto = new PasswordChangeDTO(dto.senhaAntiga(), dto.senhaNova());
-        Optional<User> userAtualizado = userService.atualizarUsuario(id, data, passwordDto);
+        Optional<User> userAtualizado = userService.atualizarUsuario(logado.getId(), data, passwordDto);
 
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", userAtualizado.map(UserMapper::toResponseDTO)));
 
     }
 
-    /**
-     * Deleta o usuário pelo id
-     *
-     * @param id id do usuário
-     * */
-    @DeleteMapping("meu-perfil/{id}/deletar")
-    public ResponseEntity<ApiResponse<?>> deletarUsuario(@PathVariable Long id) {
-        userService.deletarUsuario(id);
+
+    @DeleteMapping("meu-perfil/deletar")
+    public ResponseEntity<ApiResponse<?>> deletarUsuario(@AuthenticationPrincipal User logado) {
+        userService.deletarUsuario(logado.getId());
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuário deletado com sucesso", null));
     }
 
