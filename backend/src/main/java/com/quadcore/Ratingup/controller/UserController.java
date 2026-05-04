@@ -2,17 +2,15 @@ package com.quadcore.Ratingup.controller;
 
 import com.quadcore.Ratingup.dto.profile.*;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
+import com.quadcore.Ratingup.enums.Roles;
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.User;
-import com.quadcore.Ratingup.repository.UserRepository;
 import com.quadcore.Ratingup.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 import java.util.Optional;
 
 /***
@@ -40,16 +38,16 @@ public class UserController {
     * @return retorna um usuário criado
     * */
     @PostMapping("/cadastro")
-    public ResponseEntity<ApiResponse<?>> criarUsuario(@Valid @RequestBody ProfileRequestDTO dto) {
+    public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody ProfileRequestDTO dto) {
         User user = new User();
         user.setNome(dto.nome());
         user.setNickname(dto.nickname());
         user.setEmail(dto.email());
         user.setTelefone(dto.telefone());
         user.setSenha(dto.senha());
-        user.setRole(dto.role());
+        user.setRole(Roles.USER);
 
-        User newUser = userService.criarUsuario(user);
+        User newUser = userService.registerUser(user);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -63,37 +61,29 @@ public class UserController {
      * @return retorna o token do login, caso seja bem sucedido
      * */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<?>> logarUsuario(@RequestBody LoginRequestDTO dto){
-        String token = userService.loginUsuario(dto.email(),dto.senha());
+    public ResponseEntity<ApiResponse<?>> loginUser(@Valid @RequestBody LoginRequestDTO dto){
+        String token = userService.loginUser(dto.email(),dto.senha());
 
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuário realizou login com sucesso", token));
     }
 
 
-    @PatchMapping("meu-perfil/atualizar") //tirando o id da url,pq se n qlqr usuario pode atualizar o perfl de outro ao mudar o id
-    public ResponseEntity<ApiResponse<?>> atualizarUsuario(@AuthenticationPrincipal User logado, @Valid @RequestBody ProfileUpdateDTO dto) {
-        User data = new User();
-        data.setNome(dto.nome());
-        data.setNickname(dto.nickname());
-        data.setEmail(dto.email()); //Vou colocar esses campos em outro controller no meu próximo pr (Kalebe)
-        data.setTelefone(dto.telefone());
-        data.setRole(dto.role());
-        data.setTelefone(dto.telefone());
-//        data.setSenha(dto.senhaNova()); //Vou colocar esses campos em outro controller no meu próximo pr (Kalebe) //comentei pq a linha logo a baixo ja cuida da senha
-
-        PasswordChangeDTO passwordDto = new PasswordChangeDTO(dto.senhaAntiga(), dto.senhaNova());
-        Optional<User> userAtualizado = userService.atualizarUsuario(logado.getId(), data, passwordDto);
-
+    @PatchMapping("me/atualizar")
+    public ResponseEntity<ApiResponse<?>> updateUser(@AuthenticationPrincipal User logado, @Valid @RequestBody ProfileUpdateDTO dto) {
+        Optional<User> userAtualizado = userService.updateUser(logado.getEmail(), dto);
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", userAtualizado.map(UserMapper::toResponseDTO)));
-
     }
 
 
-    @DeleteMapping("meu-perfil/deletar")
-    public ResponseEntity<ApiResponse<?>> deletarUsuario(@AuthenticationPrincipal User logado) {
-        userService.deletarUsuario(logado.getId());
+    @DeleteMapping("me/deletar")
+    public ResponseEntity<ApiResponse<?>> deleteUser(@AuthenticationPrincipal User logado) {
+        userService.deleteUser(logado.getEmail());
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuário deletado com sucesso", null));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<?>> showUser(@AuthenticationPrincipal User logado) {
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário encontrado", UserMapper.toResponseDTO(logado)));
+    }
 
 }

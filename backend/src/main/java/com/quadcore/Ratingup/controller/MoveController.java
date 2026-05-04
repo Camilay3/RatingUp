@@ -19,14 +19,14 @@ public class MoveController {
     MoveValidationService moveValidationService;
 
     @PostMapping
-    public ResponseEntity<Boolean> validarMovimento(@RequestBody @Valid MoveRequestDTO movimentoDto){
-        Boolean isPossible = moveValidationService.validarMovimento(movimentoDto);
+    public ResponseEntity<Boolean> validateMovement(@RequestBody @Valid MoveRequestDTO movimentoDto){
+        Boolean isPossible = moveValidationService.validateMovement(movimentoDto);
         return ResponseEntity.ok(isPossible);
     }
 
     @PostMapping("/execute")
-    public ResponseEntity<MoveResponseDTO> executarMovimento(@RequestBody @Valid MoveRequestDTO movimentoDto) {
-        MoveResponseDTO response = moveValidationService.executarMovimento(movimentoDto);
+    public ResponseEntity<MoveResponseDTO> performMoviment(@RequestBody @Valid MoveRequestDTO movimentoDto) {
+        MoveResponseDTO response = moveValidationService.performMovement(movimentoDto);
         return ResponseEntity.ok(response);
     }
 }

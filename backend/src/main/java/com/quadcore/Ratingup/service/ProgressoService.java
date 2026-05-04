@@ -16,12 +16,12 @@ public class ProgressoService {
         this.progressoRepository = progressoRepository;
     }
 
-    public Progresso getFaseDisponivel(Long userId) {
-        return progressoRepository.findByUserId(userId).orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
+    public Progresso allowedPhases(String userEmail) {
+        return progressoRepository.findByUserEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
     }
 
-    public Progresso atualizaFaseAtual(Long userId, AtualizaProgressoDTO dto) {
-        Progresso progressoUser = progressoRepository.findByUserId(userId)
+    public Progresso updateCurrentPhase(String userEmail, AtualizaProgressoDTO dto) {
+        Progresso progressoUser = progressoRepository.findByUserEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
 
         progressoUser.setCapitulo(dto.capitulo());

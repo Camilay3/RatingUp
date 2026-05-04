@@ -4,6 +4,7 @@ import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 
 import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
+import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
 import com.quadcore.Ratingup.model.profile.Progresso;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressoRepository;
@@ -39,7 +40,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User criarUsuario(User user) {
+    public User registerUser(User user) {
         String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
 
         if(user.getSenha() == null || user.getSenha().isEmpty()){
@@ -61,30 +62,20 @@ public class UserService implements UserDetailsService {
         return savedUser;
     }
 
-    public Optional<User> atualizarUsuario(Long id, User data, PasswordChangeDTO dto) {
-        Optional<User> optionalUser = Optional.of(userRepository.findById(id)
+    public Optional<User> updateUser(String email, ProfileUpdateDTO data) {
+        Optional<User> optionalUser = Optional.of(userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
 
         User user = optionalUser.get();
 
-        String senhaAntiga = user.getSenha();
-
-        if (data.getNome() != null) {
-            user.setNome(data.getNome());
+        if (data.nome() != null) {
+            user.setNome(data.nome());
         }
-        if (data.getNickname() != null) {
-            user.setNickname(data.getNickname());
+        if (data.nickname() != null) {
+            user.setNickname(data.nickname());
         }
-        if (data.getTelefone() != null) {
-            user.setTelefone(data.getTelefone());
-        }
-        if (data.getRole() != null) {
-            user.setRole(data.getRole());
-        }
-
-
-        if(dto.senhaNova() != null && !dto.senhaNova().isEmpty()){
-            this.alterarSenha(user,dto);
+        if (data.telefone() != null) {
+            user.setTelefone(data.telefone());
         }
 
         userRepository.save(user);
@@ -92,8 +83,8 @@ public class UserService implements UserDetailsService {
         return Optional.of(user);
     }
 
-    public Optional<User> deletarUsuario(Long id) {
-        Optional<User> user = Optional.of(userRepository.findById(id)
+    public Optional<User> deleteUser(String email) {
+        Optional<User> user = Optional.of(userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
 
         user.ifPresent(userRepository::delete);
@@ -101,7 +92,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    private void alterarSenha(User user, PasswordChangeDTO dto){
+    private void updatePassword(User user, PasswordChangeDTO dto){
 
         if(!passwordEncoder.matches(dto.senhaAntiga(), user.getSenha())){
             throw new RuntimeException("As senhas não combinam");
@@ -114,7 +105,7 @@ public class UserService implements UserDetailsService {
         user.setSenha(passwordEncoder.encode(dto.senhaNova()));
     }
 
-    public String loginUsuario(String email, String senha){
+    public String loginUser(String email, String senha){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 

@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class MoveValidationService {
 
-    public Boolean validarMovimento(MoveRequestDTO movimento){
+    public Boolean validateMovement(MoveRequestDTO movimento){
         Board board = new Board();
         board.loadFromFen(movimento.fen());
         Move move = new Move(movimento.posInicial(),movimento.posFinal(),movimento.piece());
@@ -21,7 +21,7 @@ public class MoveValidationService {
         return moveList.contains(move);
     }
 
-    public MoveResponseDTO executarMovimento(MoveRequestDTO movimento) {
+    public MoveResponseDTO performMovement(MoveRequestDTO movimento) {
         Board board = new Board();
         board.loadFromFen(movimento.fen());
         Move move = new Move(movimento.posInicial(), movimento.posFinal(), movimento.piece());
@@ -33,10 +33,10 @@ public class MoveValidationService {
 
         board.doMove(move);
 
-        return new MoveResponseDTO(board.getFen(), verificarStatus(board));
+        return new MoveResponseDTO(board.getFen(), checkStatus(board));
     }
 
-    private String verificarStatus(Board board) {
+    private String checkStatus(Board board) {
         if (board.isMated()) {
             return "CHECKMATE";
         } else if (board.isDraw()) {

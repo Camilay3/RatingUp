@@ -20,7 +20,7 @@ public class BookService {
         this.capituloRepository = capituloRepository;
     }
 
-    public LivroDTO montarLivro() {
+    public LivroDTO buildBook() {
         List<Capitulo> capitulos = capituloRepository.findAllByOrderbyOrdemAsc();
 
         List<ConteudoPaginaDTO> conteudos = new ArrayList<>();
