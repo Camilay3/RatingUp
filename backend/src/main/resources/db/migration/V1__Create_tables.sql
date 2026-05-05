@@ -1,33 +1,35 @@
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     nickname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     telefone VARCHAR(11) NOT NULL,
-    senha VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     role VARCHAR(255),
+    reset_token VARCHAR(255),
+    reset_token_expiry TIMESTAMP,
 
     CONSTRAINT uk_user_email UNIQUE (email),
     CONSTRAINT uk_user_nickname UNIQUE (nickname),
     CONSTRAINT uk_user_tel UNIQUE (telefone)
 );
 
-CREATE TABLE capitulo (
+CREATE TABLE chapters (
     id BIGSERIAL PRIMARY KEY,
-    titulo VARCHAR(255) NOT NULL,
-    ordem INTEGER NOT NULL
+    title VARCHAR(255) NOT NULL,
+    display_order INTEGER NOT NULL
 );
 
-CREATE TABLE progresso (
+CREATE TABLE progress (
     id BIGSERIAL PRIMARY KEY,
-    capitulo INTEGER NOT NULL DEFAULT 1,
-    subtopico INTEGER NOT NULL DEFAULT 1,
+    chapters INTEGER NOT NULL DEFAULT 1,
+    subtopics INTEGER NOT NULL DEFAULT 1,
     user_id BIGINT NOT NULL UNIQUE REFERENCES users(id)
 );
 
-CREATE TABLE subtopico (
+CREATE TABLE subtopics (
     id BIGSERIAL PRIMARY KEY,
-    titulo VARCHAR(255) NOT NULL,
-    ordem INTEGER NOT NULL,
-    capitulo_id BIGINT NOT NULL REFERENCES capitulo(id)
+    title VARCHAR(255) NOT NULL,
+    display_order INTEGER NOT NULL,
+    chapter_id BIGINT NOT NULL REFERENCES chapters(id)
 );

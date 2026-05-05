@@ -45,11 +45,11 @@ public class AdminUserController {
     @PostMapping("/cadastro")
     public ResponseEntity<ApiResponse<?>> registerAdminUser(@Valid @RequestBody ProfileRequestDTO dto) {
         User user = new User();
-        user.setNome(dto.nome());
+        user.setName(dto.name());
         user.setNickname(dto.nickname());
         user.setEmail(dto.email());
         user.setTelefone(dto.telefone());
-        user.setSenha(dto.senha());
+        user.setPassword(dto.password());
         user.setRole(Roles.ADMIN);
 
         User newUser = adminUserService.registerAdminUser(user);

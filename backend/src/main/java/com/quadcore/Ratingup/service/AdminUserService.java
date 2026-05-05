@@ -1,8 +1,8 @@
 package com.quadcore.Ratingup.service;
 
-import com.quadcore.Ratingup.model.profile.Progresso;
+import com.quadcore.Ratingup.model.profile.Progress;
 import com.quadcore.Ratingup.model.profile.User;
-import com.quadcore.Ratingup.repository.ProgressoRepository;
+import com.quadcore.Ratingup.repository.ProgressRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,12 +14,12 @@ import java.util.List;
 public class AdminUserService {
 
     private final UserRepository userRepository;
-    private final ProgressoRepository progressoRepository;
+    private final ProgressRepository progressRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AdminUserService(UserRepository userRepository, ProgressoRepository progressoRepository, PasswordEncoder passwordEncoder) {
+    public AdminUserService(UserRepository userRepository, ProgressRepository progressRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.progressoRepository = progressoRepository;
+        this.progressRepository = progressRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -33,21 +33,21 @@ public class AdminUserService {
     public User registerAdminUser(User user) {
         String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
 
-        if(user.getSenha() == null || user.getSenha().isEmpty()){
+        if(user.getPassword() == null || user.getPassword().isEmpty()){
             throw new RuntimeException("A senha não pode ser nula");
         }
-        if(!user.getSenha().matches(senhaPadrao)){
+        if(!user.getPassword().matches(senhaPadrao)){
             throw new RuntimeException("Senha inválida! A senha precisa ter entre 8 a 12 caracteres, que tenham letras maiúsculas, minúsculas, números e símbolos");
         }
 
-        String senhaCriptografada = passwordEncoder.encode(user.getSenha());
-        user.setSenha(senhaCriptografada);
+        String senhaCriptografada = passwordEncoder.encode(user.getPassword());
+        user.setPassword(senhaCriptografada);
 
         User savedUser = userRepository.save(user);
-        Progresso progresso = new Progresso();
+        Progress progresso = new Progress();
         progresso.setUser(savedUser);
-        savedUser.setProgresso(progresso);
-        progressoRepository.save(progresso);
+        savedUser.setProgress(progresso);
+        progressRepository.save(progresso);
 
         return savedUser;
     }

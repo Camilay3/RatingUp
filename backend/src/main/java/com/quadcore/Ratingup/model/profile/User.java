@@ -34,7 +34,7 @@ public class User implements UserDetails {
     private Long id;
 
     @NotBlank(message = "Nome completo obrigatório!")
-    private String nome;
+    private String name;
 
     @NotBlank(message = "Nickname obrigatório!")
     @Size(min = 8, max = 16)
@@ -49,19 +49,17 @@ public class User implements UserDetails {
     private String telefone;
 
     @NotBlank(message = "Senha obrigatória!")
-    private String senha;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Roles role;
 
-
     private String resetToken;
     private LocalDateTime resetTokenExpiry;
 
-
     @OneToOne(mappedBy = "user")
-    private Progresso progresso;
+    private Progress progress;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -70,7 +68,7 @@ public class User implements UserDetails {
 
     @Override
     public @Nullable String getPassword() {
-        return getSenha();
+        return this.password;
     }
 
     @Override

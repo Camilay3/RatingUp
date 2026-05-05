@@ -1,8 +1,6 @@
 package com.quadcore.Ratingup.service;
 
 import com.github.bhlangonijr.chesslib.Board;
-import com.github.bhlangonijr.chesslib.Piece;
-import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 import com.quadcore.Ratingup.dto.board.MoveRequestDTO;
 import com.quadcore.Ratingup.dto.board.MoveResponseDTO;
@@ -16,7 +14,7 @@ public class MoveValidationService {
     public Boolean validateMovement(MoveRequestDTO movimento){
         Board board = new Board();
         board.loadFromFen(movimento.fen());
-        Move move = new Move(movimento.posInicial(),movimento.posFinal(),movimento.piece());
+        Move move = new Move(movimento.posInitial(),movimento.posFinal(),movimento.piece());
         List<Move> moveList = board.legalMoves();
         return moveList.contains(move);
     }
@@ -24,7 +22,7 @@ public class MoveValidationService {
     public MoveResponseDTO performMovement(MoveRequestDTO movimento) {
         Board board = new Board();
         board.loadFromFen(movimento.fen());
-        Move move = new Move(movimento.posInicial(), movimento.posFinal(), movimento.piece());
+        Move move = new Move(movimento.posInitial(), movimento.posFinal(), movimento.piece());
 
         List<Move> moveList = board.legalMoves();
         if (!moveList.contains(move)) {

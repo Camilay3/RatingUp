@@ -40,11 +40,11 @@ public class UserController {
     @PostMapping("/cadastro")
     public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody ProfileRequestDTO dto) {
         User user = new User();
-        user.setNome(dto.nome());
+        user.setName(dto.name());
         user.setNickname(dto.nickname());
         user.setEmail(dto.email());
         user.setTelefone(dto.telefone());
-        user.setSenha(dto.senha());
+        user.setPassword(dto.password());
         user.setRole(Roles.USER);
 
         User newUser = userService.registerUser(user);
@@ -62,7 +62,7 @@ public class UserController {
      * */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<?>> loginUser(@Valid @RequestBody LoginRequestDTO dto){
-        String token = userService.loginUser(dto.email(),dto.senha());
+        String token = userService.loginUser(dto.email(),dto.password());
 
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuário realizou login com sucesso", token));
     }
