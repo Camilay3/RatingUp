@@ -20,7 +20,7 @@ public class Chapters {
     private Integer displayOrder;
 
     @OneToMany(mappedBy = "chapter", fetch = FetchType.LAZY)
-    @OrderBy("ordem ASC")
+    @OrderBy("display_order ASC")
     private List<Subtopics> subtopics;
 
 }

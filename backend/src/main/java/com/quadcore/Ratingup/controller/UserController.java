@@ -6,6 +6,8 @@ import com.quadcore.Ratingup.enums.Roles;
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.service.UserService;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import java.util.Optional;
 * @since 2026-04-05
 * */
 
+@Tag(name = "Usuário")
 @RestController
 @RequestMapping("/conta")
 public class UserController {
@@ -54,12 +57,12 @@ public class UserController {
                 .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(newUser)));
     }
 
-    /**
-     * Realiza o login do usuário por meio do email e da senha
-     *
-     * @param dto JSON com os dados necessários para o login (email e senha)
-     * @return retorna o token do login, caso seja bem sucedido
-     * */
+    @Schema(example = """
+            {
+                "email": "ratingupadmin@gmail.com",
+                "password": "Ab@12345"
+            }
+            """)
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<?>> loginUser(@Valid @RequestBody LoginRequestDTO dto){
         String token = userService.loginUser(dto.email(),dto.password());

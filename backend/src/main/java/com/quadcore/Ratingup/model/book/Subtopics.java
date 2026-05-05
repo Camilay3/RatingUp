@@ -15,6 +15,8 @@ public class Subtopics {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+
+    @Column(name = "display_order")
     private Integer displayOrder;
 
     @ManyToOne
