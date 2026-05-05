@@ -26,4 +26,10 @@ public class BookController {
     public ResponseEntity<ApiResponse<?>> listPages() {
         return ResponseEntity.ok(new ApiResponse<>(true, "Páginas encontradas", bookService.buildBook()));
     }
+
+    @Operation(summary = "Adiciona mais subtópicos ao livro")
+    @PostMapping("/adicionar")
+    public ResponseEntity<ApiResponse<?>> addSubtopics() {
+        return null;
+    }
 }
