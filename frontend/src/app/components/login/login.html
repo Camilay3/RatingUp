@@ -1,0 +1,64 @@
+<p>login works!</p>
+<div class="login.container" >
+
+    <div class="background">
+        <app-book></app-book>
+    </div>
+
+    <div class="overdelay" ></div>
+
+    <div class="content" >
+
+      <div class="left-col" > 
+
+       <h1 class="title">
+         RatingUp
+       </h1>
+
+       <h3 class="subtitle">
+            @if (isFirstAcess) {
+                Crie sua conta para começar sua jornada de aprendizado
+            } @else {
+                Entre para continuar sua jornada no aprendizado
+            }
+        </h3>
+
+       <!-- <div class="tab-buttons">
+        <button (click)="choseForm(false)" *ngIf="isFirstAcess === true" >Entrar</button>
+        <button (click)="choseForm(true)" *ngIf="isFirstAcess === false" >Cadastro</button>
+       </div>  
+      </div>   -->
+
+        <div *ngIf="isFirstAcess === true"> <!--Parte de Cadastro-->
+
+            <form [formGroup]="RegisterForm" (ngSubmit)="onRegister()">
+
+            <input formControlName="name" type="text" placeholder="Nome completo"/>
+            <input formControlName="nickname" type="text" placeholder="Apelido"/>
+            <input formControlName="telefone" type="text" placeholder="Telefone"/>
+            <input formControlName="email" type="email" placeholder="Email"/>
+            <input formControlName="password" type="password" placeholder="Senha"/>
+
+            <button type="submit"  (click)="onRegister()" >Cadastrar</button>
+            <p class="registre" (click)="choseForm(false)" >Tem conta ? Entrar</p>
+
+            </form>
+        </div>
+
+        <div *ngIf="isFirstAcess === false" > <!--Parte do Login -->
+
+            <form [formGroup]="LoginForm" (ngSubmit)="onLogin()">
+  
+            <input formControlName="email" type="email" placeholder="Email"/>
+            <input formControlName="password" type="password" placeholder="Senha"/>
+
+            <button type="submit" [disabled]="LoginForm.invalid" (click)="onLogin()">Entrar</button>
+            <p class="registre" (click)="choseForm(true)" >Não tem uma conta? Cadastre-se</p>
+            <!-- <button (click)="choseForm(true)" >Cadastro</button> -->
+        </form>
+        </div>
+        
+
+    </div>
+
+</div>
