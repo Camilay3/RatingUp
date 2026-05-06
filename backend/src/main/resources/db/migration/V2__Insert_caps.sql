@@ -1,4 +1,4 @@
-INSERT INTO capitulo (titulo, ordem)
+INSERT INTO chapters (title, display_order)
 VALUES ('Introdução ao Xadrez',1),
         ('O Tabuleiro e as Peças',2),
         ('Movimento das peças',3),

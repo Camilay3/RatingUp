@@ -4,9 +4,10 @@ import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 
 import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
-import com.quadcore.Ratingup.model.profile.Progresso;
+import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
+import com.quadcore.Ratingup.model.profile.Progress;
 import com.quadcore.Ratingup.model.profile.User;
-import com.quadcore.Ratingup.repository.ProgressoRepository;
+import com.quadcore.Ratingup.repository.ProgressRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,64 +28,54 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final TokenGenerator tokenGenerator;
-    private final ProgressoRepository progressoRepository;
+    private final ProgressRepository progressRepository;
     private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressoRepository progressoRepository, TokenGenerator tokenGenerator, EmailService emailService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressRepository progressRepository, TokenGenerator tokenGenerator, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
-        this.progressoRepository = progressoRepository;
+        this.progressRepository = progressRepository;
         this.emailService = emailService;
     }
 
     @Transactional
-    public User criarUsuario(User user) {
+    public User registerUser(User user) {
         String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
 
-        if(user.getSenha() == null || user.getSenha().isEmpty()){
+        if(user.getPassword() == null || user.getPassword().isEmpty()){
             throw new RuntimeException("A senha não pode ser nula");
         }
-        if(!user.getSenha().matches(senhaPadrao)){
+        if(!user.getPassword().matches(senhaPadrao)){
             throw new RuntimeException("Senha inválida! A senha precisa ter entre 8 a 12 caracteres, que tenham letras maiúsculas, minúsculas, números e símbolos");
         }
 
-        String senhaCriptografada = passwordEncoder.encode(user.getSenha());
-        user.setSenha(senhaCriptografada);
+        String senhaCriptografada = passwordEncoder.encode(user.getPassword());
+        user.setPassword(senhaCriptografada);
 
         User savedUser = userRepository.save(user);
-        Progresso progresso = new Progresso();
+        Progress progresso = new Progress();
         progresso.setUser(savedUser);
-        savedUser.setProgresso(progresso);
-        progressoRepository.save(progresso);
+        savedUser.setProgress(progresso);
+        progressRepository.save(progresso);
 
         return savedUser;
     }
 
-    public Optional<User> atualizarUsuario(Long id, User data, PasswordChangeDTO dto) {
-        Optional<User> optionalUser = Optional.of(userRepository.findById(id)
+    public Optional<User> updateUser(String email, ProfileUpdateDTO data) {
+        Optional<User> optionalUser = Optional.of(userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
 
         User user = optionalUser.get();
 
-        String senhaAntiga = user.getSenha();
-
-        if (data.getNome() != null) {
-            user.setNome(data.getNome());
+        if (data.name() != null) {
+            user.setName(data.name());
         }
-        if (data.getNickname() != null) {
-            user.setNickname(data.getNickname());
+        if (data.nickname() != null) {
+            user.setNickname(data.nickname());
         }
-        if (data.getTelefone() != null) {
-            user.setTelefone(data.getTelefone());
-        }
-        if (data.getRole() != null) {
-            user.setRole(data.getRole());
-        }
-
-
-        if(dto.senhaNova() != null && !dto.senhaNova().isEmpty()){
-            this.alterarSenha(user,dto);
+        if (data.telefone() != null) {
+            user.setTelefone(data.telefone());
         }
 
         userRepository.save(user);
@@ -92,8 +83,8 @@ public class UserService implements UserDetailsService {
         return Optional.of(user);
     }
 
-    public Optional<User> deletarUsuario(Long id) {
-        Optional<User> user = Optional.of(userRepository.findById(id)
+    public Optional<User> deleteUser(String email) {
+        Optional<User> user = Optional.of(userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
 
         user.ifPresent(userRepository::delete);
@@ -101,24 +92,24 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    private void alterarSenha(User user, PasswordChangeDTO dto){
+    private void updatePassword(User user, PasswordChangeDTO dto){
 
-        if(!passwordEncoder.matches(dto.senhaAntiga(), user.getSenha())){
+        if(!passwordEncoder.matches(dto.oldPassword(), user.getPassword())){
             throw new RuntimeException("As senhas não combinam");
         }
 
         String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
-        if(!dto.senhaNova().matches(senhaPadrao)){
+        if(!dto.newPassword().matches(senhaPadrao)){
             throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
         }
-        user.setSenha(passwordEncoder.encode(dto.senhaNova()));
+        user.setPassword(passwordEncoder.encode(dto.newPassword()));
     }
 
-    public String loginUsuario(String email, String senha){
+    public String loginUser(String email, String senha){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if(passwordEncoder.matches(senha, user.getSenha())){
+        if(passwordEncoder.matches(senha, user.getPassword())){
             return tokenGenerator.gerarToken(user);
         }
 
@@ -149,7 +140,7 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
         }
 
-        user.setSenha(passwordEncoder.encode(dto.newPassword()));
+        user.setPassword(passwordEncoder.encode(dto.newPassword()));
         user.setResetToken(null);
         user.setResetTokenExpiry(null);
         userRepository.save(user);

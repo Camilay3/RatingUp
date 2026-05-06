@@ -18,7 +18,7 @@ public class BookController {
     }
 
     @GetMapping("/paginas")
-    public ResponseEntity<ApiResponse<?>> getPaginas() {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Páginas encontradas", bookService.montarLivro()));
+    public ResponseEntity<ApiResponse<?>> listPages() {
+        return ResponseEntity.ok(new ApiResponse<>(true, "Páginas encontradas", bookService.buildBook()));
     }
 }

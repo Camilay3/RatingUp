@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/conta/cadastro").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/admin/cadastro").permitAll()
                         .requestMatchers(HttpMethod.POST, "/conta/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/recover-password").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/reset-password").permitAll()

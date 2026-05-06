@@ -1,8 +1,6 @@
 package com.quadcore.Ratingup.service;
 
 import com.github.bhlangonijr.chesslib.Board;
-import com.github.bhlangonijr.chesslib.Piece;
-import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 import com.quadcore.Ratingup.dto.board.MoveRequestDTO;
 import com.quadcore.Ratingup.dto.board.MoveResponseDTO;
@@ -13,18 +11,18 @@ import java.util.List;
 @Service
 public class MoveValidationService {
 
-    public Boolean validarMovimento(MoveRequestDTO movimento){
+    public Boolean validateMovement(MoveRequestDTO movimento){
         Board board = new Board();
         board.loadFromFen(movimento.fen());
-        Move move = new Move(movimento.posInicial(),movimento.posFinal(),movimento.piece());
+        Move move = new Move(movimento.posInitial(),movimento.posFinal(),movimento.piece());
         List<Move> moveList = board.legalMoves();
         return moveList.contains(move);
     }
 
-    public MoveResponseDTO executarMovimento(MoveRequestDTO movimento) {
+    public MoveResponseDTO performMovement(MoveRequestDTO movimento) {
         Board board = new Board();
         board.loadFromFen(movimento.fen());
-        Move move = new Move(movimento.posInicial(), movimento.posFinal(), movimento.piece());
+        Move move = new Move(movimento.posInitial(), movimento.posFinal(), movimento.piece());
 
         List<Move> moveList = board.legalMoves();
         if (!moveList.contains(move)) {
@@ -33,10 +31,10 @@ public class MoveValidationService {
 
         board.doMove(move);
 
-        return new MoveResponseDTO(board.getFen(), verificarStatus(board));
+        return new MoveResponseDTO(board.getFen(), checkStatus(board));
     }
 
-    private String verificarStatus(Board board) {
+    private String checkStatus(Board board) {
         if (board.isMated()) {
             return "CHECKMATE";
         } else if (board.isDraw()) {

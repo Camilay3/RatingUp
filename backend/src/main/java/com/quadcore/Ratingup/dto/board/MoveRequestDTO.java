@@ -12,13 +12,11 @@ public record MoveRequestDTO(
         Piece piece,
         @NotNull
         @Pattern(regexp = "[A-H][1-8]")
-        Square posInicial,
+        Square posInitial,
         @NotNull
         @Pattern(regexp = "[A-H][1-8]")
         Square posFinal,
-
         @NotBlank
         String fen //como ta o tebuleiro
 
-) {
-}
+) {}

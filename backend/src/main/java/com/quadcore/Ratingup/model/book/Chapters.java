@@ -11,16 +11,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Capitulo {
+public class Chapters {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String titulo;
-    private Integer ordem;
+    private String title;
+    private Integer displayOrder;
 
-    @OneToMany(mappedBy = "capitulo", fetch = FetchType.LAZY)
-    @OrderBy("ordem ASC")
-    private List<Subtopico> subtopicos;
+    @OneToMany(mappedBy = "chapter", fetch = FetchType.LAZY)
+    @OrderBy("display_order ASC")
+    private List<Subtopics> subtopics;
 
 }

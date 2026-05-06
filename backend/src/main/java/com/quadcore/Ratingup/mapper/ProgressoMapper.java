@@ -1,18 +1,16 @@
 package com.quadcore.Ratingup.mapper;
 
-import com.quadcore.Ratingup.dto.progresso.AtualizaProgressoDTO;
-import com.quadcore.Ratingup.dto.progresso.ProgressoResponseDTO;
-import com.quadcore.Ratingup.model.profile.Progresso;
+import com.quadcore.Ratingup.dto.progresso.ProgressUpdateDTO;
+import com.quadcore.Ratingup.dto.progresso.ProgressResponseDTO;
+import com.quadcore.Ratingup.model.profile.Progress;
 
 public abstract class ProgressoMapper {
 
-    public static AtualizaProgressoDTO toUpdate(Progresso progresso) {
-        AtualizaProgressoDTO dto = new AtualizaProgressoDTO(progresso);
-        return dto;
+    public static ProgressUpdateDTO toUpdate(Progress progresso) {
+        return new ProgressUpdateDTO(progresso);
     }
 
-    public static ProgressoResponseDTO toResponse(Progresso progresso) {
-        ProgressoResponseDTO dto = new ProgressoResponseDTO(progresso);
-        return dto;
+    public static ProgressResponseDTO toResponse(Progress progresso) {
+        return new ProgressResponseDTO(progresso);
     }
 }

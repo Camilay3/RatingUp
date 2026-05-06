@@ -9,17 +9,17 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Subtopico {
+public class Subtopics {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String titulo;
-    private Integer ordem;
+    private String title;
+
+    @Column(name = "display_order")
+    private Integer displayOrder;
 
     @ManyToOne
-    @JoinColumn(name = "capitulo_id")
-    private Capitulo capitulo;
-
-
+    @JoinColumn(name = "chapter_id")
+    private Chapters chapter;
 }

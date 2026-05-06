@@ -8,21 +8,19 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record ProfileRequestDTO(
-        @NotBlank(message = "Nome é obrigatório") String nome,
+        @NotBlank(message = "Nome é obrigatório") String name,
         @NotBlank(message = "Nickname é obrigatório") String nickname,
         @NotBlank(message = "Email é obrigatório") @Email(message = "Formato de email inválido") String email,
         @NotBlank(message = "Telefone é obrigatório") String telefone,
-        @NotBlank(message = "Senha é obrigatória") @Size(min = 8, max = 12, message = "A senha deve conter entre 8 a 12 caracteres") String senha,
-        @NotNull(message = "Role é obrigatória") Roles role
+        @NotBlank(message = "Senha é obrigatória") @Size(min = 8, max = 12, message = "A senha deve conter entre 8 a 12 caracteres") String password
 ) {
     public ProfileRequestDTO(User user) {
         this(
-                user.getNome(),
+                user.getName(),
                 user.getNickname(),
                 user.getEmail(),
                 user.getTelefone(),
-                user.getSenha(),
-                user.getRole()
+                user.getPassword()
         );
     }
 }

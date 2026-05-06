@@ -5,7 +5,7 @@ import com.quadcore.Ratingup.model.profile.User;
 
 public record ProfileResponseDTO(
         Long id,
-        String nome,
+        String name,
         String nickname,
         String email,
         String telefone,
@@ -14,7 +14,7 @@ public record ProfileResponseDTO(
     public ProfileResponseDTO(User user) {
         this(
                 user.getId(),
-                user.getNome(),
+                user.getName(),
                 user.getNickname(),
                 user.getEmail(),
                 user.getTelefone(),

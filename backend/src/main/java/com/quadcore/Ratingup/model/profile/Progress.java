@@ -4,14 +4,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import lombok.*;
 
-@Entity(name = "progresso")
-@Table(name = "progresso")
+@Entity(name = "progress")
+@Table(name = "progress")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Progresso {
+public class Progress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +23,9 @@ public class Progresso {
 
     @Max(9)
     @Column(nullable = false)
-    private Integer capitulo = 1;
+    private Integer chapters = 1;
 
     @Column(nullable = false)
-    private Integer subtopico = 1;
+    private Integer subtopics = 1;
 
 }

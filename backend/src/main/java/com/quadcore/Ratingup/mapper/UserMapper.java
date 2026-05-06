@@ -10,22 +10,24 @@ public abstract class UserMapper {
     public static User toEntity(ProfileRequestDTO dto) {
         User usuario = new User();
 
-        usuario.setNome(dto.nome());
+        usuario.setName(dto.name());
         usuario.setNickname(dto.nickname());
         usuario.setEmail(dto.email());
         usuario.setTelefone(dto.telefone());
-        usuario.setSenha(dto.senha());
+        usuario.setPassword(dto.password());
 
         return usuario;
     }
 
     public static ProfileRequestDTO toRequestDTO(User user) {
-        ProfileRequestDTO dto = new ProfileRequestDTO(user);
-        return dto;
+        return new ProfileRequestDTO(user);
     }
 
     public static ProfileResponseDTO toResponseDTO(User user) {
-        ProfileResponseDTO dto = new ProfileResponseDTO(user);
-        return dto;
+        return new ProfileResponseDTO(user);
+    }
+
+    public static ProfileUpdateDTO toUpdateDTO(User user) {
+        return new ProfileUpdateDTO(user);
     }
 }
