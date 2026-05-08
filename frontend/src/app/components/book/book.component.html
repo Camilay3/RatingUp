@@ -2,7 +2,7 @@
 	<div class="page-container pageAnimation">
 		@if (isWaiting) { <div class="blockClick"></div> }
 
-		@for (page of pages; track $index) {
+		@for (page of book; track $index) {
 			<app-sheet
 				[frente]="page.frente"
 				[verso]="page.verso"

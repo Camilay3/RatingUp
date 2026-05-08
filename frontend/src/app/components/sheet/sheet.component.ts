@@ -17,15 +17,17 @@ export class SheetComponent {
 	onLastPage = input<boolean>(true);
 	flippedChange = output<boolean>();
 	protected flipped: boolean = false;
+	isPageWaiting: boolean = false;
+
+	constructor( private readonly cdr: ChangeDetectorRef ) {}
 
 	openSound = new Audio('/livro/sounds/openCover.mp3');
 	closeSound = new Audio('/livro/sounds/closeCover.mp3');
 	pageFlipSound = new Audio('/livro/sounds/flipPage.wav');
 	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
 
-	constructor( private readonly cdr: ChangeDetectorRef ) {}
-
 	virarPagina(): void {
+		if (this.isPageWaiting) return;
 		this.flipped = !this.flipped;
 		this.cdr.detectChanges();
 		this.flippedChange.emit(this.flipped);
