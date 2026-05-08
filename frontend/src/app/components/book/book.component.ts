@@ -15,6 +15,7 @@ export class BookComponent implements OnInit {
 	pageFlipStates: boolean[] = [];
 
 	pages: IPages[] = [];
+	book: any[] = [];
 	tamanhoLivro: number = 0;
 	zIndexValues: number[] = [];
 
@@ -22,22 +23,24 @@ export class BookComponent implements OnInit {
 
 	ngOnInit() {
 		this.pages = [
+			{
+				frente: { tipo: 'capitulo', id: 1, titulo: 'Introdução ao Xadrez' },
+				verso: { tipo: 'subtopico', id: 1, idCapitulo: 1, titulo: 'O que é o xadrez' }
+			},
+			{
+				frente: { tipo: 'subtopico', id: 2, idCapitulo: 1, titulo: 'Objetivo do jogo', isBlocked: true },
+				verso: { tipo: 'capitulo', id: 2, titulo: 'O Tabuleiro e as Peças' }
+			},
+		]
+
+		this.book = [
 			{ capa: 'capa.png', frenteCapa: true },
-			{
-				frente: { tipo: 'capitulo', id: 1, titulo: 'Introdução ao Xadrez', subtopicos: [] },
-				verso: { tipo: 'subtopico', id: 1, idCapitulo: 1, titulo: 'O que é o xadrez', url: '/subtopico/1' }
-			},
-			{
-				frente: { tipo: 'subtopico', id: 2, idCapitulo: 1, titulo: 'Objetivo do jogo', url: '/subtopico/2' },
-				verso: { tipo: 'capitulo', id: 2, titulo: 'O Tabuleiro e as Peças', subtopicos: [] }
-			},
+			{ frente: { tipo: 'home', nickname: 'Milay34' }, verso: null },
+			...this.pages,
 			{ capa: 'quartaCapa.png' }
 		];
 
-		// isCapitulo = true :: Numeração, Nome
-		// subtópico :: id, Título,
-
-		this.tamanhoLivro = this.pages.length;
+		this.tamanhoLivro = this.book.length;
 		this.pageFlipStates = new Array(this.tamanhoLivro).fill(false);
 		for (let i = 0; i < this.tamanhoLivro; i++) this.zIndexValues.push(this.tamanhoLivro - i + 1);
 	}

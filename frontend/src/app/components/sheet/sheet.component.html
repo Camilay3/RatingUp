@@ -18,11 +18,11 @@
 
 	} @else {
 		<div (click)="virarPagina()" class="versoPage">
-			<app-page [page]="verso()"></app-page>
+			<app-page [page]="verso()" (isWaiting)="isPageWaiting = $event"></app-page>
 		</div>
 
 		<div (click)="virarPagina()" class="frentePage">
-			<app-page [page]="frente()"></app-page>
+			<app-page [page]="frente()" (isWaiting)="isPageWaiting = $event"></app-page>
 		</div>
   	}
 </div>

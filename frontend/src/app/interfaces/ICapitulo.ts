@@ -2,7 +2,6 @@ export interface ICapitulo {
     tipo: 'capitulo';
     id: number;
     titulo: string;
-    subtopicos: ISubtopico[];
 }
 
 export interface ISubtopico {
@@ -10,5 +9,10 @@ export interface ISubtopico {
     id: number;
     idCapitulo: number;
     titulo: string;
-    url: string;
+	isBlocked?: boolean;
+}
+
+export interface IHome {
+	tipo: 'home';
+	nickname: string;
 }

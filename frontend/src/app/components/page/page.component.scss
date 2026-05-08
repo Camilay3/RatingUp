@@ -34,6 +34,18 @@
 		bottom: 1rem;
 		.arrow-icon:hover { color: var(--primaryHover); }
 	}
+
+	.lock {
+		display: flex;
+		position: absolute;
+		cursor: not-allowed;
+		inset: 0;
+		z-index: 9;
+		background-color: var(--neutralOpacity);
+		justify-content: center;
+		align-items: center;
+		img { border: none; }
+	}
 }
 
 .page.capitulo {
