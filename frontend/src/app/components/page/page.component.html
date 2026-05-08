@@ -1,4 +1,9 @@
 <div class="page" [class.capitulo]="asCapitulo(page())" [class.subtopico]="asSubtopico(page())">
+	@if (pageIsBlocked()) {
+		<div class="lock">
+			<img src="/lock.png" alt="Cadeado" draggable="false">
+		</div>
+	}
 	@if (asCapitulo(page()); as cap) {
 		<div class="capitulo">
 			<h1>Capítulo {{ cap.id }}</h1>
@@ -13,6 +18,8 @@
 		</div>
 		<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
 		<button (click)="acessarSubtopico(sub.idCapitulo, sub.id)">Acessar</button>
+	} @else if (asHome(page()); as home) {
+		<h1>{{ home.nickname }}</h1>
 	}
 
 	<div class="controls">

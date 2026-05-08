@@ -1,9 +1,7 @@
-import { ICapitulo, ISubtopico } from "./ICapitulo";
+import { ICapitulo, ISubtopico, IHome } from "./ICapitulo";
 
-export type IConteudoPage = ICapitulo | ISubtopico;
+export type IConteudoPage = ICapitulo | ISubtopico | IHome | null;
 export interface IPages {
-    capa?: string;
-    frenteCapa?: boolean;
-    frente?: IConteudoPage;
-    verso?: IConteudoPage;
+    frente: IConteudoPage;
+    verso: IConteudoPage;
 }
