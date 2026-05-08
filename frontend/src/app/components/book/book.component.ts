@@ -60,7 +60,6 @@ export class BookComponent implements OnInit {
 
 	onFlip(pageIndex: number, flipped: boolean) {
 		if (this.isWaiting) return;
-
 		this.isWaiting = true;
 		setTimeout(() => { this.isWaiting = false; this.cdr.detectChanges(); }, 600);
 
@@ -69,6 +68,35 @@ export class BookComponent implements OnInit {
 		this.pageFlipStates[pageIndex] = flipped;
 		this.checkPagesFlipped();
 		this.paginaAtual = flipped ? pageIndex + 1 : pageIndex;
+	}
+
+	multiplasPaginas(qnt: number, next: boolean = true) {
+		if (this.isWaiting) return;
+		let viradas = 0;
+
+		const virar = () => {
+			if (viradas >= qnt) return;
+
+			if (next) {
+				if (this.paginaAtual >= this.tamanhoLivro) return;
+				this.sheets.get(this.paginaAtual)?.virarPagina();
+
+			} else {
+				const anterior = this.paginaAtual - 1;
+				if (anterior < 0) return;
+				this.sheets.get(anterior)?.virarPagina();
+			}
+
+			viradas++;
+			if (viradas < qnt) setTimeout(virar, 650);
+		};
+
+		virar();
+
+		/* Exemplo de uso
+			<button (click)="multiplasPaginas(3)">Avançar 3 páginas</button>
+			<button (click)="multiplasPaginas(3, false)">Voltar 3 páginas</button>
+		*/
 	}
 
 	checkPagesFlipped() {
