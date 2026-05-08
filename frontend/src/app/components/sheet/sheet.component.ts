@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
-import { IConteudoPage } from '../../interfaces/IPages';
 import { PageComponent } from '../page/page.component';
+import { IPage, PageData } from '../../interfaces/IBook';
 
 @Component({
   selector: 'app-sheet',
@@ -9,8 +9,8 @@ import { PageComponent } from '../page/page.component';
   styleUrls: ['./sheet.component.scss'],
 })
 export class SheetComponent {
-	frente = input<IConteudoPage>();
-	verso = input<IConteudoPage>();
+	frente = input<PageData>();
+	verso = input<IPage>();
 	capa = input<string>();
 	frenteCapa = input<boolean>(false);
 	onFirstPage = input<boolean>(true);
@@ -20,6 +20,7 @@ export class SheetComponent {
 	isPageWaiting: boolean = false;
 
 	constructor( private readonly cdr: ChangeDetectorRef ) {}
+	navigate = output<{ qnt?: number; next?: boolean }>();
 
 	openSound = new Audio('/livro/sounds/openCover.mp3');
 	closeSound = new Audio('/livro/sounds/closeCover.mp3');

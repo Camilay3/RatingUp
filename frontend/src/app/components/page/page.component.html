@@ -1,25 +1,42 @@
-<div class="page" [class.capitulo]="asCapitulo(page())" [class.subtopico]="asSubtopico(page())">
+<div class="page" [class.home]="asType(page(), 'home')" [class.capitulo]="asType(page(), 'capitulo')" [class.subtopico]="asType(page(), 'subtópico')">
 	@if (pageIsBlocked()) {
 		<div class="lock">
 			<img src="/lock.png" alt="Cadeado" draggable="false">
 		</div>
 	}
-	@if (asCapitulo(page()); as cap) {
-		<div class="capitulo">
-			<h1>Capítulo {{ cap.id }}</h1>
-			<h2>{{ cap.titulo }}</h2>
-		</div>
-	} @else if (asSubtopico(page()); as sub) {
+	@if (asType(page(), 'capitulo'); as cap) {
+		<h1>Capítulo {{ cap.id }}</h1>
+		<h2>{{ cap.title }}</h2>
+	} @else if (asType(page(), 'subtópico'); as sub) {
 		<div class="titulo">
-			<h1>Subtópico {{ sub.idCapitulo }}.{{ sub.id }}</h1>
+			<h1>Subtópico {{ sub.idChapter }}.{{ sub.id }}</h1>
 			<div class="subtitulo">
-				<span>∾</span><p>{{ sub.titulo }}</p><span>∾</span>
+				<span>∾</span><p>{{ sub.title }}</p><span>∾</span>
 			</div>
 		</div>
-		<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
-		<button (click)="acessarSubtopico(sub.idCapitulo, sub.id)">Acessar</button>
-	} @else if (asHome(page()); as home) {
-		<h1>{{ home.nickname }}</h1>
+			<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
+			<button (click)="$event.stopPropagation(); acessarSubtopico(sub.idChapter, sub.id)">Acessar</button>
+	} @else if (asType(page(), 'home'); as home) {
+		<h2>{{ home.nickname }}</h2>
+		<div class="niveis">
+			<h1>Níveis</h1>
+			<span></span>
+			@for (item of home.summary; track $index) {
+				@if (item.front.type == 'capitulo') {
+					<h2>{{item.front.type}} {{item.front.id}}</h2>
+
+				} @else {
+					<p (click)="$event.stopPropagation(); multiplasPaginas(1 + ($index))">{{item.front.id}}. {{item.front.title}}</p>
+				}
+
+				@if (item.verse.type == 'capitulo') {
+					<h2>{{item.verse.type}} {{item.verse.id}}</h2>
+
+				} @else {
+					<p (click)="$event.stopPropagation(); multiplasPaginas(2 + ($index))">{{item.verse.id}}. {{item.verse.title}}</p>
+				}
+			}
+		</div>
 	}
 
 	<div class="controls">

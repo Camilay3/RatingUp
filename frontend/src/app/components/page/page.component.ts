@@ -1,39 +1,38 @@
 import { Component, computed, input, output } from '@angular/core';
 import { Router } from '@angular/router';
-import { ICapitulo, IHome, ISubtopico } from '../../interfaces/ICapitulo';
-import { IConteudoPage } from '../../interfaces/IPages';
+import { IPage, PageData } from '../../interfaces/IBook';
 
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
-  styleUrls: ['./page.component.scss']
+  styleUrls: ['./page.component.scss'],
+  imports: [],
 })
 export class PageComponent {
-	page = input<IConteudoPage>();
+	page = input<PageData | IPage>();
 	isWaiting = output<boolean>();
+	navigate = output<{ qnt?: number; next?: boolean }>();
 
 	constructor( private readonly router: Router ) {}
 
-	private isSubtopicoBlocked(item: IConteudoPage | undefined): boolean {
-		const valid = (item?.tipo === 'subtopico' && item.isBlocked) ?? false;
+	private isSubtopicoBlocked(item: PageData | undefined): boolean {
+		const valid = (item?.type === 'subtópico' && item.isBlocked) ?? false;
 		if (valid) this.isWaiting.emit(valid);
 		return valid;
 	}
 	pageIsBlocked = computed(() => this.isSubtopicoBlocked(this.page()));
 
-	asCapitulo(page: IConteudoPage | undefined): ICapitulo | undefined {
-		return page?.tipo === 'capitulo' ? page : undefined;
-	}
-	asSubtopico(page: IConteudoPage | undefined): ISubtopico | undefined {
-		return page?.tipo === 'subtopico' ? page : undefined;
-	}
-	asHome(page: IConteudoPage | undefined): IHome | undefined {
-		return page?.tipo === 'home' ? page : undefined;
+	asType<T extends PageData['type']>( page: PageData | undefined, type: T): Extract<PageData, { type: T }> | undefined {
+		return page?.type === type ? page as Extract<PageData, { type: T }> : undefined;
 	}
 
 	acessarSubtopico(capitulo: number, subtopico: number) {
 		this.router.navigate(['/subtopico'], {
             state: { capitulo, subtopico }
         });
+	}
+
+	multiplasPaginas(qnt: number = 1, next: boolean = true) {
+		this.navigate.emit({ qnt, next });
 	}
 }

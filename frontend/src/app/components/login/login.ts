@@ -21,7 +21,7 @@ export class Login implements OnInit {
   LoginForm!: FormGroup;
   RegisterForm!: FormGroup;
 
-  
+
 
   isFirstAcess: boolean = false;
 
@@ -75,7 +75,7 @@ export class Login implements OnInit {
 
   this.loginService.login(payload.email, payload.password).subscribe({
     next: (response) => {
-      localStorage.setItem('token', response.token);
+      localStorage.setItem('token', response.data);
       this.router.navigate(['/book']);
     },
     error: (err) => {
@@ -86,18 +86,18 @@ export class Login implements OnInit {
 
 // formatPhone(event: Event): void {
 //   const input = event.target as HTMLInputElement;
-//   let value = input.value.replace(/\D/g, ''); 
+//   let value = input.value.replace(/\D/g, '');
 
 //    if (value.length > 11) {
 //     value = value.slice(0, 11);
 //   }
 
 //   if (value.length <= 8) {
-//     value = value.replace(/(\d{4})(\d)/, '$1-$2');                      
+//     value = value.replace(/(\d{4})(\d)/, '$1-$2');
 //   } else if (value.length <= 10) {
-//     value = value.replace(/(\d{2})(\d{4})(\d)/, '($1) $2-$3');          
+//     value = value.replace(/(\d{2})(\d{4})(\d)/, '($1) $2-$3');
 //   } else {
-//     value = value.replace(/(\d{2})(\d{5})(\d)/, '($1) $2-$3');          
+//     value = value.replace(/(\d{2})(\d{5})(\d)/, '($1) $2-$3');
 //   }
 
 //   input.value = value;

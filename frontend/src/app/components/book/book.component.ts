@@ -1,6 +1,7 @@
+import { BookService } from './services/book.service';
 import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
-import { IPages } from '../../interfaces/IPages';
+import { ISheet } from '../../interfaces/IBook';
 
 @Component({
   selector: 'app-book',
@@ -14,34 +15,37 @@ export class BookComponent implements OnInit {
 	isWaiting: boolean = false;
 	pageFlipStates: boolean[] = [];
 
-	pages: IPages[] = [];
+	pages: ISheet[] = [];
 	book: any[] = [];
 	tamanhoLivro: number = 0;
 	zIndexValues: number[] = [];
 
-	constructor(private readonly cdr: ChangeDetectorRef) {}
+	constructor(private readonly cdr: ChangeDetectorRef, private readonly bookService: BookService) {}
 
 	ngOnInit() {
-		this.pages = [
-			{
-				frente: { tipo: 'capitulo', id: 1, titulo: 'Introdução ao Xadrez' },
-				verso: { tipo: 'subtopico', id: 1, idCapitulo: 1, titulo: 'O que é o xadrez' }
+		this.bookService.getSheets().subscribe({
+			next: (response) => {
+				this.pages = response.data.pages || [];
+				this.buildBookFromPages();
+				this.cdr.detectChanges();
 			},
-			{
-				frente: { tipo: 'subtopico', id: 2, idCapitulo: 1, titulo: 'Objetivo do jogo', isBlocked: true },
-				verso: { tipo: 'capitulo', id: 2, titulo: 'O Tabuleiro e as Peças' }
-			},
-		]
+			error: (e) => {
+				console.error(e.message)
+			}
+		});
+	}
 
+	private buildBookFromPages(): void {
 		this.book = [
 			{ capa: 'capa.png', frenteCapa: true },
-			{ frente: { tipo: 'home', nickname: 'Milay34' }, verso: null },
+			{ front: { type: 'home', nickname: 'Milay34', summary: this.pages }, verse: null },
 			...this.pages,
 			{ capa: 'quartaCapa.png' }
 		];
 
 		this.tamanhoLivro = this.book.length;
 		this.pageFlipStates = new Array(this.tamanhoLivro).fill(false);
+		this.zIndexValues = [];
 		for (let i = 0; i < this.tamanhoLivro; i++) this.zIndexValues.push(this.tamanhoLivro - i + 1);
 	}
 
@@ -95,11 +99,6 @@ export class BookComponent implements OnInit {
 		};
 
 		virar();
-
-		/* Exemplo de uso
-			<button (click)="multiplasPaginas(3)">Avançar 3 páginas</button>
-			<button (click)="multiplasPaginas(3, false)">Voltar 3 páginas</button>
-		*/
 	}
 
 	checkPagesFlipped() {
