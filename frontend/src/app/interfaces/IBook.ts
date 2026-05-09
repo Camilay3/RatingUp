@@ -1,9 +1,9 @@
+import { IResponse } from "./IResponse";
+
 export type IPage = ICapitulo | ISubtopico;
 export type PageData = IPage | IHome;
 
-export interface IBook {
-	status: true | false
-	message: string
+export interface IBook extends IResponse {
 	data: {
 		pages: ISheet[]
 		totalPages: number

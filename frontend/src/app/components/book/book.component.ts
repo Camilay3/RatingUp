@@ -3,6 +3,8 @@ import { BookService } from '../../services/book.service';
 import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
 import { ISheet } from '../../interfaces/IBook';
+import { LoginService } from '../login/services/login.service';
+import { AudioService } from '../../services/audio.service';
 
 @Component({
   selector: 'app-book',
@@ -28,9 +30,11 @@ export class BookComponent implements OnInit {
 		private readonly cdr: ChangeDetectorRef,
 		private readonly bookService: BookService,
 		private readonly homeService: HomeService,
+		private readonly loginService: LoginService,
 	) {}
 
 	ngOnInit() {
+		if (!this.loginService.isLogged()) return;
 		this.bookService.getSheets().subscribe({
 			next: (response) => {
 				this.pages = response.data.pages || [];
@@ -38,7 +42,7 @@ export class BookComponent implements OnInit {
 				this.cdr.detectChanges();
 			},
 			error: (e) => {
-				console.error(e.message);
+				console.error(e);
 			}
 		});
 

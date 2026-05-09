@@ -1,6 +1,6 @@
-export interface IMyUser {
-	status: true | false
-	message: string
+import { IResponse } from "./IResponse"
+
+export interface IMyUser extends IResponse {
 	data: User
 }
 
