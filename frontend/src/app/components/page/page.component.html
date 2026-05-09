@@ -5,17 +5,17 @@
 		</div>
 	}
 	@if (asType(page(), 'capitulo'); as cap) {
-		<h1>Capítulo {{ cap.id }}</h1>
+		<h1>Capítulo {{ cap.displayOrder }}</h1>
 		<h2>{{ cap.title }}</h2>
 	} @else if (asType(page(), 'subtópico'); as sub) {
 		<div class="titulo">
-			<h1>Subtópico {{ sub.idChapter }}.{{ sub.id }}</h1>
+			<h1>Subtópico {{ sub.chapterId }}.{{ sub.displayOrder }}</h1>
 			<div class="subtitulo">
 				<span>∾</span><p>{{ sub.title }}</p><span>∾</span>
 			</div>
 		</div>
-			<img draggable="false" [src]="'/subtopicos/subtopico' + sub.id + '.png'" [alt]="'Img do subtópico' + sub.id">
-			<button (click)="$event.stopPropagation(); acessarSubtopico(sub.idChapter, sub.id)">Acessar</button>
+			<img draggable="false" [src]="'/subtopicos/subtopico' + sub.displayOrder + '.png'" [alt]="'Img do subtópico' + sub.displayOrder">
+			<button (click)="$event.stopPropagation(); acessarSubtopico(sub.chapterId, sub.displayOrder)">Acessar</button>
 	} @else if (asType(page(), 'home'); as home) {
 		<h2>{{ home.nickname }}</h2>
 		<div class="niveis">
@@ -23,17 +23,17 @@
 			<span></span>
 			@for (item of home.summary; track $index) {
 				@if (item.front.type == 'capitulo') {
-					<h2>{{item.front.type}} {{item.front.id}}</h2>
+					<h2>Capítulo {{item.front.displayOrder}}</h2>
 
 				} @else {
-					<p (click)="$event.stopPropagation(); multiplasPaginas(1 + ($index))">{{item.front.id}}. {{item.front.title}}</p>
+					<p (click)="$event.stopPropagation(); multiplasPaginas(1 + ($index))">{{item.front.displayOrder}}. {{item.front.title}}</p>
 				}
 
 				@if (item.verse.type == 'capitulo') {
-					<h2>{{item.verse.type}} {{item.verse.id}}</h2>
+					<h2>Capítulo {{item.verse.displayOrder}}</h2>
 
 				} @else {
-					<p (click)="$event.stopPropagation(); multiplasPaginas(2 + ($index))">{{item.verse.id}}. {{item.verse.title}}</p>
+					<p (click)="$event.stopPropagation(); multiplasPaginas(2 + ($index))">{{item.verse.displayOrder}}. {{item.verse.title}}</p>
 				}
 			}
 		</div>

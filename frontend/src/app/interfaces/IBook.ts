@@ -17,8 +17,8 @@ export interface ISheet {
 
 interface IBasePage {
 	type: 'capitulo' | 'subtópico' | 'home'
-	id: number
-	idChapter: number | null
+	displayOrder: number
+	chapterId: number | null
 	title: string
 }
 
@@ -30,11 +30,11 @@ interface IHome extends IBasePage {
 
 interface ICapitulo extends IBasePage {
 	type: 'capitulo'
-	idChapter: null
+	chapterId: null
 }
 
 interface ISubtopico extends IBasePage {
 	type: 'subtópico'
-	idChapter: number
+	chapterId: number
 	isBlocked: boolean
 }
