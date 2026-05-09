@@ -7,10 +7,10 @@ import { LoginService } from '../login/services/login.service';
 import { AudioService } from '../../services/audio.service';
 
 @Component({
-  selector: 'app-book',
-  templateUrl: './book.component.html',
-  styleUrls: ['./book.component.scss'],
-  imports: [SheetComponent]
+	selector: 'app-book',
+	templateUrl: './book.component.html',
+	styleUrls: ['./book.component.scss'],
+	imports: [SheetComponent]
 })
 export class BookComponent implements OnInit {
 	onFirstPage: boolean = true;
@@ -31,6 +31,7 @@ export class BookComponent implements OnInit {
 		private readonly bookService: BookService,
 		private readonly homeService: HomeService,
 		private readonly loginService: LoginService,
+		private readonly audioService: AudioService,
 	) {}
 
 	ngOnInit() {
@@ -122,15 +123,19 @@ export class BookComponent implements OnInit {
 		if (qnt < 0) qnt = this.paginaAtual - 1;
 		let viradas = 0;
 
+		this.audioService.playFlips();
+		const tempoTotal = (qnt - 1) * 100 + this.duracaoAnimacao;
+		setTimeout(() => { this.audioService.stopFlips(); }, tempoTotal);
+
 		const virar = () => {
 			if (next) {
 				if (this.paginaAtual >= this.tamanhoLivro) return;
-				this.sheets.get(this.paginaAtual)?.virarPagina();
+				this.sheets.get(this.paginaAtual)?.virarPagina(true);
 
 			} else {
 				const anterior = this.paginaAtual - 1;
 				if (anterior < 0) return;
-				this.sheets.get(anterior)?.virarPagina();
+				this.sheets.get(anterior)?.virarPagina(true);
 			}
 			viradas++;
 

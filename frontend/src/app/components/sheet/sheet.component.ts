@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
 import { PageComponent } from '../page/page.component';
 import { IPage, PageData } from '../../interfaces/IBook';
+import { AudioService } from '../../services/audio.service';
 
 @Component({
   selector: 'app-sheet',
@@ -20,15 +21,15 @@ export class SheetComponent {
 	isPageWaiting: boolean = false;
 	isWaiting = output<boolean>();
 
-	constructor( private readonly cdr: ChangeDetectorRef ) {}
+	constructor( private readonly cdr: ChangeDetectorRef, private readonly audioService: AudioService ) {}
 	navigate = output<{ qnt?: number; next?: boolean }>();
 
-	openSound = new Audio('/livro/sounds/openCover.mp3');
+	/* openSound = new Audio('/livro/sounds/openCover.mp3');
 	closeSound = new Audio('/livro/sounds/closeCover.mp3');
-	pageFlipSound = new Audio('/livro/sounds/flipPage.wav');
+	pageFlipSound = new Audio('/livro/sounds/flipPage.wav'); */
 	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
 
-	virarPagina(): void {
+	virarPagina(multiplas: boolean = false): void {
 		if (this.isPageWaiting) return;
 		this.isPageWaiting = true;
 		this.isWaiting.emit(this.isPageWaiting);
@@ -38,10 +39,11 @@ export class SheetComponent {
 		this.flippedChange.emit(this.flipped);
 
 		if (this.capa()) {
-			(this.frenteCapa()) ? this.openSound.play() : this.closeSound.play();
+			// (this.frenteCapa()) ? this.openSound.play() : this.closeSound.play();
+			(this.frenteCapa()) ? this.audioService.playOpen() : this.audioService.playClose();
 
-		} else {
-			this.pageFlipSound.play();
+		} else if (!multiplas) {
+			this.audioService.playFlip();
 		}
 
 		const duracao = Number.parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duracao'));

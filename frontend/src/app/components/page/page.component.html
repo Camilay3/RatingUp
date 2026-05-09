@@ -22,6 +22,7 @@
 			<span (click)="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</span>
 		</div>
 		<div class="niveis">
+			<!-- <p (click)="$event.stopPropagation(); multiplasPaginas(1 + home.summary.length)">Ir para o final</p> -->
 			<h1>Níveis</h1>
 			<span></span>
 			@for (item of home.summary; track $index) {
