@@ -10,6 +10,7 @@
 				[frenteCapa]="page.frenteCapa ?? false"
 				[style.zIndex]="zIndexValues[$index]"
 				(flippedChange)="onFlip($index, $event)"
+				(isWaiting)="isWaiting = $event"
 				(navigate)="multiplasPaginas($event.qnt ?? 1, $event.next ?? true)"
 				[onFirstPage]="onFirstPage"
 				[onLastPage]="onLastPage"

@@ -6,7 +6,7 @@
 @mixin sheet {
 	backface-visibility: hidden;
 	transform-style: preserve-3d;
-	transition-duration: 1.5s;
+	transition: transform var(--duracao) ease-in-out;
 	overflow: hidden;
 	cursor: pointer;
 	@include tamanho();
@@ -31,6 +31,8 @@
 	position: relative;
 	transition: transform 1s ease;
 	@include tamanho();
+
+	will-change: transform;
 }
 
 .flipPage.capaPage {
@@ -86,6 +88,7 @@
 }
 
 .versoPage {
+	will-change: transform;
 	transform-origin: right;
 	transform: rotateY(180deg);
 	pointer-events: none;
@@ -93,6 +96,7 @@
 }
 
 .frentePage {
+	will-change: transform;
 	transform-origin: left;
 	pointer-events: all;
 	@include sheet();

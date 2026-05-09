@@ -18,6 +18,7 @@ export class SheetComponent {
 	flippedChange = output<boolean>();
 	protected flipped: boolean = false;
 	isPageWaiting: boolean = false;
+	isWaiting = output<boolean>();
 
 	constructor( private readonly cdr: ChangeDetectorRef ) {}
 	navigate = output<{ qnt?: number; next?: boolean }>();
@@ -29,6 +30,9 @@ export class SheetComponent {
 
 	virarPagina(): void {
 		if (this.isPageWaiting) return;
+		this.isPageWaiting = true;
+		this.isWaiting.emit(this.isPageWaiting);
+
 		this.flipped = !this.flipped;
 		this.cdr.detectChanges();
 		this.flippedChange.emit(this.flipped);
@@ -39,5 +43,11 @@ export class SheetComponent {
 		} else {
 			this.pageFlipSound.play();
 		}
+
+		const duracao = Number.parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duracao'));
+		setTimeout(() => {
+			this.isPageWaiting = false;
+			this.isWaiting.emit(this.isPageWaiting);
+		 }, duracao);
 	}
 }

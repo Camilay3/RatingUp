@@ -18,6 +18,7 @@ export class BookComponent implements OnInit {
 	pages: ISheet[] = [];
 	book: any[] = [];
 	tamanhoLivro: number = 0;
+	duracaoAnimacao: number = 1000;
 	zIndexValues: number[] = [];
 
 	constructor(private readonly cdr: ChangeDetectorRef, private readonly bookService: BookService) {}
@@ -66,24 +67,30 @@ export class BookComponent implements OnInit {
 	}
 
 	onFlip(pageIndex: number, flipped: boolean) {
-		if (this.isWaiting) return;
-		this.isWaiting = true;
-		setTimeout(() => { this.isWaiting = false; this.cdr.detectChanges(); }, 600);
+		if (flipped) this.zIndexValues[pageIndex] = Math.max(...this.zIndexValues) + 1;
 
-		const maiorZIndex = Math.max(...this.zIndexValues);
-		this.zIndexValues[pageIndex] = maiorZIndex + 1;
 		this.pageFlipStates[pageIndex] = flipped;
 		this.checkPagesFlipped();
 		this.paginaAtual = flipped ? pageIndex + 1 : pageIndex;
+
+		if (!flipped) {
+			setTimeout(() => { this.reordenarZIndex(); }, this.duracaoAnimacao);
+		}
+	}
+
+	reordenarZIndex() {
+		this.zIndexValues = this.pageFlipStates.map((flipped, index) => {
+			return flipped ? index + 1 : this.tamanhoLivro - index;
+		});
 	}
 
 	multiplasPaginas(qnt: number, next: boolean = true) {
-		if (this.isWaiting) return;
+		this.isWaiting = true;
+		this.duracaoAnimacao = 160;
+		this.setVelocidade(this.duracaoAnimacao);
 		let viradas = 0;
 
 		const virar = () => {
-			if (viradas >= qnt) return;
-
 			if (next) {
 				if (this.paginaAtual >= this.tamanhoLivro) return;
 				this.sheets.get(this.paginaAtual)?.virarPagina();
@@ -93,12 +100,24 @@ export class BookComponent implements OnInit {
 				if (anterior < 0) return;
 				this.sheets.get(anterior)?.virarPagina();
 			}
-
 			viradas++;
-			if (viradas < qnt) setTimeout(virar, 650);
+
+			if (viradas >= qnt) {
+				setTimeout(() => {
+					this.duracaoAnimacao = 1000;
+					this.setVelocidade(this.duracaoAnimacao);
+				}, this.duracaoAnimacao);
+				this.isWaiting = false;
+				return;
+			}
+			setTimeout(virar, 100);
 		};
 
 		virar();
+	}
+
+	setVelocidade(valor: number) {
+		document.documentElement.style.setProperty('--duracao', `${valor}ms`);
 	}
 
 	checkPagesFlipped() {
