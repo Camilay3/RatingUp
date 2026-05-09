@@ -9,11 +9,11 @@ import { environment } from '../../../../environments/environment';
 export class LoginService {
 
   constructor(
-    private http : HttpClient,
-    private router : Router
+    private readonly http : HttpClient,
+    private readonly router : Router
   ){}
 
-  private apiUrl = environment.apiUrl;
+  private readonly apiUrl = environment.apiUrl;
 
   login(email: string, password: string) {
     return this.http.post<{ data: string }>(`${this.apiUrl}/conta/login`, { email, password });
@@ -25,7 +25,7 @@ export class LoginService {
 
   logout() {
     localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    this.router.navigateByUrl('/');
   }
 
   isLogged(): boolean {

@@ -1,6 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { IPage, PageData } from '../../interfaces/IBook';
+import { LoginService } from '../login/services/login.service';
 
 @Component({
   selector: 'app-page',
@@ -10,10 +11,14 @@ import { IPage, PageData } from '../../interfaces/IBook';
 })
 export class PageComponent {
 	page = input<PageData | IPage>();
+	side = input<'frente' | 'verso'>();
 	isWaiting = output<boolean>();
 	navigate = output<{ qnt?: number; next?: boolean }>();
 
-	constructor( private readonly router: Router ) {}
+	constructor(
+		private readonly router: Router,
+		private readonly loginService: LoginService,
+	) {}
 
 	private isSubtopicoBlocked(item: PageData | undefined): boolean {
 		const valid = (item?.type === 'subtópico' && item.isBlocked) ?? false;
@@ -34,5 +39,13 @@ export class PageComponent {
 
 	multiplasPaginas(qnt: number = 1, next: boolean = true) {
 		this.navigate.emit({ qnt, next });
+	}
+
+	onImageError(event: Event) {
+		(event.target as HTMLImageElement).src = '/subtopicos/default.png';
+	}
+
+	logout() {
+		this.loginService.logout();
 	}
 }

@@ -1,4 +1,5 @@
-import { BookService } from './services/book.service';
+import { HomeService } from './../../services/home.service';
+import { BookService } from '../../services/book.service';
 import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
 import { ISheet } from '../../interfaces/IBook';
@@ -16,12 +17,18 @@ export class BookComponent implements OnInit {
 	pageFlipStates: boolean[] = [];
 
 	pages: ISheet[] = [];
+	home: any[] = [];
 	book: any[] = [];
 	tamanhoLivro: number = 0;
 	duracaoAnimacao: number = 1000;
 	zIndexValues: number[] = [];
+	nickname: string = '';
 
-	constructor(private readonly cdr: ChangeDetectorRef, private readonly bookService: BookService) {}
+	constructor(
+		private readonly cdr: ChangeDetectorRef,
+		private readonly bookService: BookService,
+		private readonly homeService: HomeService,
+	) {}
 
 	ngOnInit() {
 		this.bookService.getSheets().subscribe({
@@ -31,15 +38,35 @@ export class BookComponent implements OnInit {
 				this.cdr.detectChanges();
 			},
 			error: (e) => {
-				console.error(e.message)
+				console.error(e.message);
 			}
 		});
+
+		this.homeService.getMyUser().subscribe({
+			next: (response) => {
+				this.nickname = response.data.nickname;
+			},
+			error: (e) => {
+				console.error(e.message);
+			}
+		})
 	}
 
 	private buildBookFromPages(): void {
+		const home = [
+			{
+				front: {
+					type: 'home',
+					nickname: this.nickname,
+					summary: this.pages
+				},
+				verse: null
+			}
+		];
+
 		this.book = [
 			{ capa: 'capa.png', frenteCapa: true },
-			{ front: { type: 'home', nickname: 'Milay34', summary: this.pages }, verse: null },
+			...home,
 			...this.pages,
 			{ capa: 'quartaCapa.png' }
 		];
@@ -88,6 +115,7 @@ export class BookComponent implements OnInit {
 		this.isWaiting = true;
 		this.duracaoAnimacao = 160;
 		this.setVelocidade(this.duracaoAnimacao);
+		if (qnt < 0) qnt = this.paginaAtual - 1;
 		let viradas = 0;
 
 		const virar = () => {
