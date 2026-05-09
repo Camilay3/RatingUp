@@ -7,6 +7,8 @@ import com.quadcore.Ratingup.enums.Roles;
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.service.AdminUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Administrador", description = "Endpoints para gerenciamento dos usuários admins")
 @RestController
 @RequestMapping("/admin")
 public class AdminUserController {
@@ -25,6 +28,7 @@ public class AdminUserController {
         this.adminUserService = adminUserService;
     }
 
+    @Operation(summary = "Lista todas as contas registradas no banco")
     @GetMapping("/contas/listar")
     public ResponseEntity<ApiResponse<?>> listUsers() {
         List<ProfileResponseDTO> dtos = adminUserService.listUsers()
@@ -35,6 +39,7 @@ public class AdminUserController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuários listados", dtos));
     }
 
+    @Operation(summary = "Busca um usuário pelo id")
     @GetMapping("/contas/buscar/{id}")
     public ResponseEntity<ApiResponse<?>> serarchUserById(@PathVariable Long id) {
         User user = adminUserService.searchUserById(id);
@@ -42,6 +47,7 @@ public class AdminUserController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Perfil encontrado", UserMapper.toResponseDTO(user)));
     }
 
+    @Operation(summary = "Cadastra um usuário admin")
     @PostMapping("/cadastro")
     public ResponseEntity<ApiResponse<?>> registerAdminUser(@Valid @RequestBody ProfileRequestDTO dto) {
         User user = new User();
@@ -59,6 +65,7 @@ public class AdminUserController {
                 .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(newUser)));
     }
 
+    @Operation(summary = "Retorna os dados do usuáiro admin")
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<?>> showUserAdmin(@AuthenticationPrincipal User adminLogado) {
         return ResponseEntity.ok(new ApiResponse<>(true, "Administrador encontrado", UserMapper.toResponseDTO(adminLogado)));
