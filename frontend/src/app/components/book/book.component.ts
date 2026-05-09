@@ -1,6 +1,8 @@
+import { HomeService } from './../../services/home.service';
+import { BookService } from '../../services/book.service';
 import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
-import { IPages } from '../../interfaces/IPages';
+import { ISheet } from '../../interfaces/IBook';
 
 @Component({
   selector: 'app-book',
@@ -14,34 +16,64 @@ export class BookComponent implements OnInit {
 	isWaiting: boolean = false;
 	pageFlipStates: boolean[] = [];
 
-	pages: IPages[] = [];
+	pages: ISheet[] = [];
+	home: any[] = [];
 	book: any[] = [];
 	tamanhoLivro: number = 0;
+	duracaoAnimacao: number = 1000;
 	zIndexValues: number[] = [];
+	nickname: string = '';
 
-	constructor(private readonly cdr: ChangeDetectorRef) {}
+	constructor(
+		private readonly cdr: ChangeDetectorRef,
+		private readonly bookService: BookService,
+		private readonly homeService: HomeService,
+	) {}
 
 	ngOnInit() {
-		this.pages = [
-			{
-				frente: { tipo: 'capitulo', id: 1, titulo: 'Introdução ao Xadrez' },
-				verso: { tipo: 'subtopico', id: 1, idCapitulo: 1, titulo: 'O que é o xadrez' }
+		this.bookService.getSheets().subscribe({
+			next: (response) => {
+				this.pages = response.data.pages || [];
+				this.buildBookFromPages();
+				this.cdr.detectChanges();
 			},
-			{
-				frente: { tipo: 'subtopico', id: 2, idCapitulo: 1, titulo: 'Objetivo do jogo', isBlocked: true },
-				verso: { tipo: 'capitulo', id: 2, titulo: 'O Tabuleiro e as Peças' }
+			error: (e) => {
+				console.error(e.message);
+			}
+		});
+
+		this.homeService.getMyUser().subscribe({
+			next: (response) => {
+				this.nickname = response.data.nickname;
 			},
-		]
+			error: (e) => {
+				console.error(e.message);
+			}
+		})
+	}
+
+	private buildBookFromPages(): void {
+		const home = [
+			{
+				front: {
+					type: 'home',
+					nickname: this.nickname,
+					summary: this.pages
+				},
+				verse: null
+			}
+		];
 
 		this.book = [
 			{ capa: 'capa.png', frenteCapa: true },
-			{ frente: { tipo: 'home', nickname: 'Milay34' }, verso: null },
+			...home,
 			...this.pages,
 			{ capa: 'quartaCapa.png' }
 		];
 
 		this.tamanhoLivro = this.book.length;
 		this.pageFlipStates = new Array(this.tamanhoLivro).fill(false);
+		this.zIndexValues = [];
 		for (let i = 0; i < this.tamanhoLivro; i++) this.zIndexValues.push(this.tamanhoLivro - i + 1);
 	}
 
@@ -62,16 +94,58 @@ export class BookComponent implements OnInit {
 	}
 
 	onFlip(pageIndex: number, flipped: boolean) {
-		if (this.isWaiting) return;
+		if (flipped) this.zIndexValues[pageIndex] = Math.max(...this.zIndexValues) + 1;
 
-		this.isWaiting = true;
-		setTimeout(() => { this.isWaiting = false; this.cdr.detectChanges(); }, 600);
-
-		const maiorZIndex = Math.max(...this.zIndexValues);
-		this.zIndexValues[pageIndex] = maiorZIndex + 1;
 		this.pageFlipStates[pageIndex] = flipped;
 		this.checkPagesFlipped();
 		this.paginaAtual = flipped ? pageIndex + 1 : pageIndex;
+
+		if (!flipped) {
+			setTimeout(() => { this.reordenarZIndex(); }, this.duracaoAnimacao);
+		}
+	}
+
+	reordenarZIndex() {
+		this.zIndexValues = this.pageFlipStates.map((flipped, index) => {
+			return flipped ? index + 1 : this.tamanhoLivro - index;
+		});
+	}
+
+	multiplasPaginas(qnt: number, next: boolean = true) {
+		this.isWaiting = true;
+		this.duracaoAnimacao = 160;
+		this.setVelocidade(this.duracaoAnimacao);
+		if (qnt < 0) qnt = this.paginaAtual - 1;
+		let viradas = 0;
+
+		const virar = () => {
+			if (next) {
+				if (this.paginaAtual >= this.tamanhoLivro) return;
+				this.sheets.get(this.paginaAtual)?.virarPagina();
+
+			} else {
+				const anterior = this.paginaAtual - 1;
+				if (anterior < 0) return;
+				this.sheets.get(anterior)?.virarPagina();
+			}
+			viradas++;
+
+			if (viradas >= qnt) {
+				setTimeout(() => {
+					this.duracaoAnimacao = 1000;
+					this.setVelocidade(this.duracaoAnimacao);
+				}, this.duracaoAnimacao);
+				this.isWaiting = false;
+				return;
+			}
+			setTimeout(virar, 100);
+		};
+
+		virar();
+	}
+
+	setVelocidade(valor: number) {
+		document.documentElement.style.setProperty('--duracao', `${valor}ms`);
 	}
 
 	checkPagesFlipped() {

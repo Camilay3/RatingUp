@@ -4,12 +4,14 @@
 
 		@for (page of book; track $index) {
 			<app-sheet
-				[frente]="page.frente"
-				[verso]="page.verso"
+				[frente]="page.front"
+				[verso]="page.verse"
 				[capa]="page.capa"
 				[frenteCapa]="page.frenteCapa ?? false"
 				[style.zIndex]="zIndexValues[$index]"
 				(flippedChange)="onFlip($index, $event)"
+				(isWaiting)="isWaiting = $event"
+				(navigate)="multiplasPaginas($event.qnt ?? 1, $event.next ?? true)"
 				[onFirstPage]="onFirstPage"
 				[onLastPage]="onLastPage"
 			></app-sheet>
