@@ -1,10 +1,10 @@
-import { HomeService } from './../../services/home.service';
-import { BookService } from '../../services/book.service';
 import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
 import { ISheet } from '../../interfaces/IBook';
-import { LoginService } from '../login/services/login.service';
+
+import { BookService } from '../../services/book.service';
 import { AudioService } from '../../services/audio.service';
+import { AuthService } from './../../services/auth.service';
 
 @Component({
 	selector: 'app-book',
@@ -29,13 +29,11 @@ export class BookComponent implements OnInit {
 	constructor(
 		private readonly cdr: ChangeDetectorRef,
 		private readonly bookService: BookService,
-		private readonly homeService: HomeService,
-		private readonly loginService: LoginService,
+		private readonly authService: AuthService,
 		private readonly audioService: AudioService,
 	) {}
 
 	ngOnInit() {
-		if (!this.loginService.isLogged()) return;
 		this.bookService.getSheets().subscribe({
 			next: (response) => {
 				this.pages = response.data.pages || [];
@@ -46,15 +44,6 @@ export class BookComponent implements OnInit {
 				console.error(e);
 			}
 		});
-
-		this.homeService.getMyUser().subscribe({
-			next: (response) => {
-				this.nickname = response.data.nickname;
-			},
-			error: (e) => {
-				console.error(e.message);
-			}
-		})
 	}
 
 	private buildBookFromPages(): void {
@@ -62,7 +51,7 @@ export class BookComponent implements OnInit {
 			{
 				front: {
 					type: 'home',
-					nickname: this.nickname,
+					nickname: this.authService.getMyUser()?.data.nickname,
 					summary: this.pages
 				},
 				verse: null

@@ -61,7 +61,6 @@ export class Login implements OnInit {
    const payload: IUser = this.RegisterForm.value
    this.loginService.register(payload).subscribe({
     next: (response: any) => {
-      localStorage.setItem('token', response.token);
       this.router.navigate(['/book']);
     },
     error: (err) => {
@@ -75,7 +74,6 @@ export class Login implements OnInit {
 
   this.loginService.login(payload.email, payload.password).subscribe({
     next: (response) => {
-      localStorage.setItem('token', response.data);
       this.router.navigate(['/book']);
     },
     error: (err) => {
