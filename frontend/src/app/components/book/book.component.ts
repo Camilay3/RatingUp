@@ -99,15 +99,11 @@ export class BookComponent implements OnInit {
 	}
 
 	onFlip(pageIndex: number, flipped: boolean) {
-		if (flipped) this.zIndexValues[pageIndex] = Math.max(...this.zIndexValues) + 1;
-
+		this.zIndexValues[pageIndex] = Math.max(...this.zIndexValues) + 1;
 		this.pageFlipStates[pageIndex] = flipped;
 		this.checkPagesFlipped();
 		this.paginaAtual = flipped ? pageIndex + 1 : pageIndex;
-
-		if (!flipped) {
-			setTimeout(() => { this.reordenarZIndex(); }, this.duracaoAnimacao);
-		}
+		if (!flipped) setTimeout(() => { this.reordenarZIndex(); }, this.duracaoAnimacao);
 	}
 
 	reordenarZIndex() {

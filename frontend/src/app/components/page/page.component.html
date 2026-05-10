@@ -14,7 +14,7 @@
 				<span>∾</span><p>{{ sub.title }}</p><span>∾</span>
 			</div>
 		</div>
-			<img draggable="false" [src]="'/subtopicos/subtopico' + sub.displayOrder + '.png'" [alt]="'Img do subtópico' + sub.displayOrder" (error)="onImageError($event)">
+			<img draggable="false" [src]="'/subtopicos/' + sub.chapterId + '.' + sub.displayOrder + '.png'" [alt]="'Img do subtópico' + sub.displayOrder" (error)="onImageError($event)">
 			<button (click)="$event.stopPropagation(); acessarSubtopico(sub.chapterId, sub.displayOrder)">Acessar</button>
 	} @else if (asType(page(), 'home'); as home) {
 		<div class="header">
