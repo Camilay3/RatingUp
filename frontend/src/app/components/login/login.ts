@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { BookComponent } from '../book/book.component';
 import { CommonModule } from '@angular/common';
-import { LoginService } from './services/login.service';
 import { Router } from '@angular/router';
 import { IUser, ILoginPayload } from '../../interfaces/iuser';
+import { LoginService } from '../../services/user/login.service';
 
 @Component({
   selector: 'app-login',
@@ -17,18 +17,14 @@ import { IUser, ILoginPayload } from '../../interfaces/iuser';
   styleUrls: ['./login.scss'],
 })
 export class Login implements OnInit {
-
   LoginForm!: FormGroup;
   RegisterForm!: FormGroup;
-
-
-
   isFirstAcess: boolean = false;
 
   constructor(
-    private fb :FormBuilder,
-    private loginService : LoginService,
-    private router : Router
+    private readonly fb :FormBuilder,
+    private readonly loginService : LoginService,
+    private readonly router : Router
   ){}
 
   ngOnInit(): void {

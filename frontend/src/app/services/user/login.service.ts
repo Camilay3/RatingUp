@@ -1,17 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-
-  constructor(
-    private readonly http : HttpClient,
-    private readonly router : Router
-  ){}
+  constructor( private readonly http : HttpClient ){}
 
   private readonly apiUrl = environment.apiUrl;
 
@@ -21,15 +16,6 @@ export class LoginService {
 
   register(data: any) {
     return this.http.post(`${this.apiUrl}/conta/cadastro`, data);
-  }
-
-  logout() {
-    localStorage.removeItem('token');
-    this.router.navigateByUrl('/');
-  }
-
-  isLogged(): boolean {
-    return !!localStorage.getItem('token');
   }
 
   // Atualizar perfil
