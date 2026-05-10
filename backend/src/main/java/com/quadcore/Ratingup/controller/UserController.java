@@ -9,12 +9,17 @@ import com.quadcore.Ratingup.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
+
+import org.springframework.http.HttpHeaders;
+import java.time.Duration;
 
 /***
 * API Rest responsável pela comunicação do cadastro de usuários
@@ -54,11 +59,38 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<?>> loginUser(@Valid @RequestBody LoginRequestDTO dto){
-        String token = userService.loginUser(dto.email(),dto.password());
+	public ResponseEntity<ApiResponse<?>> loginUser(
+		@Valid @RequestBody LoginRequestDTO dto,
+		HttpServletResponse response
+	) {
 
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário realizou login com sucesso", token));
-    }
+		String token = userService.loginUser(
+				dto.email(),
+				dto.password()
+		);
+
+		ResponseCookie cookie = ResponseCookie
+				.from("token", token)
+				.httpOnly(true)
+				.secure(false)
+				.path("/")
+				.sameSite("Lax")
+				.maxAge(Duration.ofDays(7))
+				.build();
+
+		response.addHeader(
+				HttpHeaders.SET_COOKIE,
+				cookie.toString()
+		);
+
+		return ResponseEntity.ok(
+				new ApiResponse<>(
+						true,
+						"Usuário realizou login com sucesso",
+						null
+				)
+		);
+	}
 
 
     @Operation(summary = "Atualiza parcialmente os dados do usuário")
