@@ -1,7 +1,7 @@
+import { AuthService } from '../../services/user/auth.service';
 import { Component, computed, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { IPage, PageData } from '../../interfaces/IBook';
-import { LoginService } from '../login/services/login.service';
 
 @Component({
   selector: 'app-page',
@@ -17,7 +17,7 @@ export class PageComponent {
 
 	constructor(
 		private readonly router: Router,
-		private readonly loginService: LoginService,
+		private readonly authService: AuthService,
 	) {}
 
 	private isSubtopicoBlocked(item: PageData | undefined): boolean {
@@ -46,6 +46,6 @@ export class PageComponent {
 	}
 
 	logout() {
-		this.loginService.logout();
+		this.authService.logout();
 	}
 }

@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChil
 import { SheetComponent } from "../sheet/sheet.component";
 import { ISheet } from '../../interfaces/IBook';
 
-import { BookService } from '../../services/book.service';
-import { AudioService } from '../../services/audio.service';
-import { AuthService } from './../../services/auth.service';
+import { BookService } from '../../services/book/book.service';
+import { AudioService } from '../../services/book/audio.service';
+import { AuthService } from '../../services/user/auth.service';
 
 @Component({
 	selector: 'app-book',

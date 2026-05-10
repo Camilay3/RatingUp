@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
 import { PageComponent } from '../page/page.component';
 import { IPage, PageData } from '../../interfaces/IBook';
-import { AudioService } from '../../services/audio.service';
+import { AudioService } from '../../services/book/audio.service';
 
 @Component({
   selector: 'app-sheet',
