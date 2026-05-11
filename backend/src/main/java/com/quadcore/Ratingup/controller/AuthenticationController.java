@@ -63,7 +63,7 @@ public class AuthenticationController {
     @DeleteMapping("/logout")
     public ResponseEntity<ApiResponse<?>> logoutUser(HttpServletResponse response){
         ResponseCookie cookie = ResponseCookie
-                .from("token"," ")
+                .from("token", "")
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
