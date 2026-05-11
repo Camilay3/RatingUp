@@ -13,9 +13,8 @@ public class EmailService {
 
 
     private final JavaMailSender mailSender;
-    private static final String EMAIL_ORIGEM = "seuemail@gmail.com";
+    private static final String EMAIL_ORIGEM = "enviadorratingup@gmail.com";
     private static final String NOME_ENVIADOR = "RatingUp";
-    public static final String URL_BASE = "http://localhost:8080";
 
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -25,7 +24,7 @@ public class EmailService {
         String conteudo = """
         <p>Olá,</p>
         <p>Recebemos uma solicitação para redefinir sua senha.</p>
-        <p>Use o token abaixo para redefinir sua senha (expira em 30 minutos):</p>
+        <p>Use o código abaixo para redefinir sua senha (expira em 30 minutos):</p>
         <h3>%s</h3>
         <p>Se não foi você, ignore este e-mail.</p>
         <br>
