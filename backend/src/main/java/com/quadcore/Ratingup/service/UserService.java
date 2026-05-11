@@ -124,7 +124,8 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("E-mail não encontrado"));
 
-        String token = UUID.randomUUID().toString();
+//        String token = UUID.randomUUID().toString(); //codigo de verificação grande
+        String token = String.format("%05d", new java.util.Random().nextInt(100000)); //codigo de verificação pequeno
         user.setResetToken(token);
         user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
         userRepository.save(user);
