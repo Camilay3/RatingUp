@@ -41,15 +41,6 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User registerUser(User user) {
-        String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
-
-        if(user.getPassword() == null || user.getPassword().isEmpty()){
-            throw new RuntimeException("A senha não pode ser nula");
-        }
-        if(!user.getPassword().matches(senhaPadrao)){
-            throw new RuntimeException("Senha inválida! A senha precisa ter entre 8 a 12 caracteres, que tenham letras maiúsculas, minúsculas, números e símbolos");
-        }
-
         String senhaCriptografada = passwordEncoder.encode(user.getPassword());
         user.setPassword(senhaCriptografada);
 
