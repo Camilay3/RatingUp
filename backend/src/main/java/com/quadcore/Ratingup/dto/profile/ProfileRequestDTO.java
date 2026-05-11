@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 
 public record ProfileRequestDTO(
         @NotBlank(message = "Nome é obrigatório") String name,
-        @NotBlank(message = "Nickname é obrigatório") String nickname,
+        @NotBlank(message = "Nickname é obrigatório") @Size(min= 8, max =12, message = "o nickname deve ter entre 8 a 16 caracteres")String nickname,
         @NotBlank(message = "Email é obrigatório") @Email(message = "Formato de email inválido") String email,
         @NotBlank(message = "Telefone é obrigatório") String telefone,
         @NotBlank(message = "Senha é obrigatória") @Size(min = 8, max = 12, message = "A senha deve conter entre 8 a 12 caracteres") String password

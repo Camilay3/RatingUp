@@ -50,7 +50,6 @@ public class UserController {
         user.setTelefone(dto.telefone());
         user.setPassword(dto.password());
         user.setRole(Roles.USER);
-
         User newUser = userService.registerUser(user);
 
         return ResponseEntity
