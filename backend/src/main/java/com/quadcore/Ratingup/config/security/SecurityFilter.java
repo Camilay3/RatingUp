@@ -31,10 +31,8 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println(">>> REQUEST: " + request.getMethod() + " " + request.getRequestURI());
 
         var tokenJWT = recuperarToken(request);
-        System.out.println(">>> TOKEN: " + tokenJWT);
 
         if (tokenJWT != null) {
             try {
@@ -45,8 +43,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
-                //SecurityContextHolder.clearContext();
-                System.out.println(">>> ERRO NO TOKEN: " + e.getMessage());
+                SecurityContextHolder.clearContext();
             }
         }
 
