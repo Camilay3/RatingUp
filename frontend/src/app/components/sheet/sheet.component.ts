@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
 import { PageComponent } from '../page/page.component';
 import { IPage, PageData } from '../../interfaces/IBook';
-import { AudioService } from '../../services/audio.service';
+import { AudioService } from '../../services/book/audio.service';
 
 @Component({
   selector: 'app-sheet',
@@ -23,10 +23,6 @@ export class SheetComponent {
 
 	constructor( private readonly cdr: ChangeDetectorRef, private readonly audioService: AudioService ) {}
 	navigate = output<{ qnt?: number; next?: boolean }>();
-
-	/* openSound = new Audio('/livro/sounds/openCover.mp3');
-	closeSound = new Audio('/livro/sounds/closeCover.mp3');
-	pageFlipSound = new Audio('/livro/sounds/flipPage.wav'); */
 	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
 
 	virarPagina(multiplas: boolean = false): void {
@@ -39,7 +35,6 @@ export class SheetComponent {
 		this.flippedChange.emit(this.flipped);
 
 		if (this.capa()) {
-			// (this.frenteCapa()) ? this.openSound.play() : this.closeSound.play();
 			(this.frenteCapa()) ? this.audioService.playOpen() : this.audioService.playClose();
 
 		} else if (!multiplas) {

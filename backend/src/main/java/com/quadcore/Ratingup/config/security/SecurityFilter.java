@@ -3,6 +3,7 @@ package com.quadcore.Ratingup.config.security;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +47,13 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private String recuperarToken(HttpServletRequest request) {
-        var authorizationHeader = request.getHeader("Authorization");
-        if(authorizationHeader != null){
-            return authorizationHeader.replace("Bearer ","").trim();
-        }
-        return null;
-    }
+		Cookie[] cookies = request.getCookies();
+		if (cookies == null) return null;
+
+		for (Cookie cookie : cookies) {
+			if ("token".equals(cookie.getName())) return cookie.getValue();
+		}
+
+		return null;
+	}
 }
