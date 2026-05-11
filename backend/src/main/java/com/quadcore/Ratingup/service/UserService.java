@@ -92,7 +92,9 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    private void updatePassword(User user, PasswordChangeDTO dto){
+    public void changePassword(String email, PasswordChangeDTO dto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         if(!passwordEncoder.matches(dto.oldPassword(), user.getPassword())){
             throw new RuntimeException("As senhas não combinam");
@@ -102,7 +104,9 @@ public class UserService implements UserDetailsService {
         if(!dto.newPassword().matches(senhaPadrao)){
             throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
         }
+
         user.setPassword(passwordEncoder.encode(dto.newPassword()));
+        userRepository.save(user);
     }
 
     public String loginUser(String email, String senha){
