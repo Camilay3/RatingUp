@@ -1,15 +1,18 @@
 package com.quadcore.Ratingup.controller;
 
 
+import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
 import com.quadcore.Ratingup.dto.profile.PasswordResetRequestDTO;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,5 +33,10 @@ public class AuthenticationController {
     public ResponseEntity<ApiResponse<?>> resetPassword(@RequestBody PasswordResetDTO dto){
         userService.resetPassword(dto);
         return ResponseEntity.ok(new ApiResponse<>(true,"Senha redefinida com sucesso!",null));
+    }
+    @PutMapping("/change-password")
+    public ResponseEntity<ApiResponse<?>> changePassword(@RequestBody PasswordChangeDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
+        userService.changePassword(userDetails.getUsername(), dto);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Senha alterada com sucesso!", null));
     }
 }

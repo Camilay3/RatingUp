@@ -37,7 +37,6 @@ public class User implements UserDetails {
     private String name;
 
     @NotBlank(message = "Nickname obrigatório!")
-    @Size(min = 8, max = 16)
     private String nickname;
 
     @NotBlank(message = "Email obrigatório!")
