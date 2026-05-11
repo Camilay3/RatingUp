@@ -1,18 +1,21 @@
 package com.quadcore.Ratingup.controller;
 
 
-import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
-import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
-import com.quadcore.Ratingup.dto.profile.PasswordResetRequestDTO;
+import com.quadcore.Ratingup.dto.profile.*;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,6 +24,55 @@ public class AuthenticationController {
 
     public AuthenticationController (UserService userService){
         this.userService = userService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<?>> loginUser(
+            @Valid @RequestBody LoginRequestDTO dto,
+            HttpServletResponse response
+    ) {
+
+        String token = userService.loginUser(
+                dto.email(),
+                dto.password()
+        );
+
+        ResponseCookie cookie = ResponseCookie
+                .from("token", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(Duration.ofDays(7))
+                .build();
+
+        response.addHeader(
+                HttpHeaders.SET_COOKIE,
+                cookie.toString()
+        );
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Usuário realizou login com sucesso",
+                        null
+                )
+        );
+    }
+
+    @DeleteMapping("/logout")
+    public ResponseEntity<ApiResponse<?>> logoutUser(HttpServletResponse response){
+        ResponseCookie cookie = ResponseCookie
+                .from("token"," ")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(0)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.ok(new ApiResponse<>(true,"Usuário deslogado com sucesso",null));
     }
 
     @PostMapping("/recover-password")

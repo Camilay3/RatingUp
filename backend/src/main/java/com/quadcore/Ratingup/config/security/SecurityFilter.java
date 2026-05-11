@@ -25,6 +25,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println(">>> SECURITY CONFIG PERMITALL CHECK: " + request.getRequestURI());
         System.out.println(">>> REQUEST: " + request.getMethod() + " " + request.getRequestURI());
 
         var tokenJWT = recuperarToken(request);
