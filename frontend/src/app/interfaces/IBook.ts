@@ -24,6 +24,8 @@ interface IBasePage {
 
 interface IHome extends IBasePage {
 	type: 'home'
+	isFirstHome: boolean
+	chunkOffset: number
 	nickname: string
 	summary: ISheet[]
 }

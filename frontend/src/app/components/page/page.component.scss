@@ -69,6 +69,10 @@
 	}
 
 	.niveis {
+		height: 95%;
+		&.continuation {
+			height: 95%;
+		}
 		h1 {
 			align-self: center;
 			margin-top: 4rem;
