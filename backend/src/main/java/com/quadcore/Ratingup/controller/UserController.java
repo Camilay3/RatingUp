@@ -58,41 +58,6 @@ public class UserController {
                 .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(newUser)));
     }
 
-    @PostMapping("/login")
-	public ResponseEntity<ApiResponse<?>> loginUser(
-		@Valid @RequestBody LoginRequestDTO dto,
-		HttpServletResponse response
-	) {
-
-		String token = userService.loginUser(
-				dto.email(),
-				dto.password()
-		);
-
-		ResponseCookie cookie = ResponseCookie
-				.from("token", token)
-				.httpOnly(true)
-				.secure(false)
-				.path("/")
-				.sameSite("Lax")
-				.maxAge(Duration.ofDays(7))
-				.build();
-
-		response.addHeader(
-				HttpHeaders.SET_COOKIE,
-				cookie.toString()
-		);
-
-		return ResponseEntity.ok(
-				new ApiResponse<>(
-						true,
-						"Usuário realizou login com sucesso",
-						null
-				)
-		);
-	}
-
-
     @Operation(summary = "Atualiza parcialmente os dados do usuário")
     @PatchMapping("me/atualizar")
     public ResponseEntity<ApiResponse<?>> updateUser(@AuthenticationPrincipal User logado, @Valid @RequestBody ProfileUpdateDTO dto) {
