@@ -1,4 +1,4 @@
-import { IResponse } from "./IResponse";
+import { IResponse } from "../IResponse";
 
 export type IPage = ICapitulo | ISubtopico;
 export type PageData = IPage | IHome;

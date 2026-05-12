@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { BookComponent } from '../book/book.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { IUser, ILoginPayload } from '../../interfaces/iuser';
+import { IUser, ILoginPayload } from '../../interfaces/user/iuser';
 import { LoginService } from '../../services/user/login.service';
 
 @Component({
