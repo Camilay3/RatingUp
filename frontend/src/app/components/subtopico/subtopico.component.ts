@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/user/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
@@ -11,7 +12,10 @@ export class SubtopicoComponent implements OnInit {
 	capitulo: number;
 	subtopico: number;
 
-	constructor( private readonly router: Router ) {
+	constructor(
+		private readonly router: Router,
+		private readonly authService: AuthService,
+	) {
 		this.capitulo = history.state?.capitulo;
 		this.subtopico = history.state?.subtopico;
 	}
@@ -21,7 +25,12 @@ export class SubtopicoComponent implements OnInit {
 	}
 
 	concluirSubtopico() {
-		this.router.navigate(['']);
+		this.authService.atualizarProgresso(this.capitulo, this.subtopico).subscribe({
+			next: () => {
+				this.router.navigate(['']);
+			},
+			error: (e) => console.error(e)
+		});
 	}
 
 	content = {

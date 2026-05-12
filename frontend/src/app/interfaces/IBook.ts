@@ -33,7 +33,7 @@ interface ICapitulo extends IBasePage {
 	chapterId: null
 }
 
-interface ISubtopico extends IBasePage {
+export interface ISubtopico extends IBasePage {
 	type: 'subtópico'
 	chapterId: number
 	isBlocked: boolean
