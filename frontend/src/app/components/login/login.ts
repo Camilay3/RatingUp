@@ -5,13 +5,19 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { IUser, ILoginPayload } from '../../interfaces/iuser';
 import { LoginService } from '../../services/user/login.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @Component({
   selector: 'app-login',
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    BookComponent
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
   ],
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
@@ -51,6 +57,12 @@ export class Login implements OnInit {
 
   choseForm(value : boolean): void{
     this.isFirstAcess = value;
+
+    if(this.isFirstAcess === true){
+      this.RegisterForm.reset();
+    }else if(this.isFirstAcess === false){
+      this.LoginForm.reset();
+    }
   }
 
   onRegister(): void {

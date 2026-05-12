@@ -14,11 +14,27 @@
   z-index: 0;
   overflow: hidden;
 
-  app-book {
+  /*app-book {
     position: absolute;
     inset: 0;          // adiciona isso
     overflow: hidden;
     pointer-events: none;
+  }*/
+
+  .livro-fundo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // cobre o fundo todo
+  }
+
+  .livro-capa {
+    position: relative;
+    height: 90vh;      // ajuste o tamanho conforme precisar
+    width: auto;
+    z-index: 1;
+    object-fit: contain;
   }
 }
 
@@ -63,7 +79,6 @@
     flex-direction: column;  // empilhados verticalmente
     gap: 12px;
 
-
     button {
       width: 140px;
       padding: 12px 0;
@@ -88,6 +103,11 @@
         border-color: rgba(197, 155, 80, 0.9);
       }
     }
+
+    mat-form-field {
+    width: 300px; // largura definida no field, não no input
+  }
+
   }
 
   // Coluna da direita — formulário
@@ -96,8 +116,8 @@
     flex-direction: column;
     align-items: center;
     gap: 12px;
-
-    input {
+    
+    /*input {
       width: 300px;
       padding: 10px 16px;
       border: none;
@@ -119,7 +139,7 @@
         background: rgba(197, 155, 80, 0.25);
         border-bottom-color: rgba(197, 155, 80, 0.7);
       }
-    }
+    }*/
 
     button[type="submit"] {
       margin-top: 8px;

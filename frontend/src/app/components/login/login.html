@@ -2,7 +2,9 @@
 <div class="login.container" >
 
     <div class="background">
-        <app-book></app-book>
+        <!--<app-book></app-book>-->
+        <img src="livro/background.png" alt="" class="livro-fundo">
+        <img src="livro/capa.png" alt="" class="livro-capa">
     </div>
 
     <div class="overdelay" ></div>
@@ -33,13 +35,32 @@
 
             <form [formGroup]="RegisterForm" (ngSubmit)="onRegister()">
 
-            <input formControlName="name" type="text" placeholder="Nome completo"/>
-            <input formControlName="nickname" type="text" placeholder="Apelido"/>
-            <input formControlName="telefone" type="text" placeholder="Telefone"/>
-            <input formControlName="email" type="email" placeholder="Email"/>
-            <input formControlName="password" type="password" placeholder="Senha"/>
+            <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-label>Nome completo</mat-label>
+      <input matInput type="text" placeholder="João Silva" formControlName="name">
+    </mat-form-field>
 
-            <button type="submit"  (click)="onRegister()" >Cadastrar</button>
+    <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-label>Apelido</mat-label>
+      <input matInput type="text" placeholder="joao123" formControlName="nickname">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-label>Telefone</mat-label>
+      <input matInput type="text" placeholder="(85) 99999-9999" formControlName="telefone">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-label>E-mail</mat-label>
+      <input matInput type="email" placeholder="seu@email.com" formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-label>Senha</mat-label>
+      <input matInput type="password" placeholder="Mínimo 8 caracteres" formControlName="password">
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Cadastrar</button>
             <p class="registre" (click)="choseForm(false)" >Tem conta ? Entrar</p>
 
             </form>
@@ -47,13 +68,21 @@
 
         <div *ngIf="isFirstAcess === false" > <!--Parte do Login -->
 
-            <form [formGroup]="LoginForm" (ngSubmit)="onLogin()">
+        <form [formGroup]="LoginForm" (ngSubmit)="onLogin()">
   
-            <input formControlName="email" type="email" placeholder="Email"/>
-            <input formControlName="password" type="password" placeholder="Senha"/>
+            <!-- login.component.html -->
+        <mat-form-field appearance="outline" floatLabel="auto">
+          <mat-label>E-mail</mat-label>
+          <input matInput type="email" placeholder="seu@email.com" formControlName="email">
+        </mat-form-field>
 
-            <button type="submit" [disabled]="LoginForm.invalid" (click)="onLogin()">Entrar</button>
-            <p class="registre" (click)="choseForm(true)" >Não tem uma conta? Cadastre-se</p>
+        <mat-form-field appearance="outline" floatLabel="auto" >
+            <mat-label>Senha</mat-label>
+            <input matInput type="password" placeholder="Digite sua senha" formControlName="password">
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit">Entrar</button>
+        <p class="registre" (click)="choseForm(true)" >Não tem uma conta? Cadastre-se</p>
             <!-- <button (click)="choseForm(true)" >Cadastro</button> -->
         </form>
         </div>
