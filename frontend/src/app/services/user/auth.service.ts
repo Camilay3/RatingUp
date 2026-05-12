@@ -1,7 +1,7 @@
 import { Injectable, signal } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
-import { IMyUser, IProgresso } from "../../interfaces/IMyUser";
+import { IMyUser, IProgresso } from "../../interfaces/user/IMyUser";
 import { tap } from "rxjs";
 import { Router } from "@angular/router";
 

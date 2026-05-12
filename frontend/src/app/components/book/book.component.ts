@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
-import { ISheet } from '../../interfaces/IBook';
+import { ISheet } from '../../interfaces/book/IBook';
 
 import { BookService } from '../../services/book/book.service';
 import { AudioService } from '../../services/book/audio.service';

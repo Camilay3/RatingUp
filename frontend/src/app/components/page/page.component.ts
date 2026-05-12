@@ -1,7 +1,7 @@
 import { AuthService } from '../../services/user/auth.service';
 import { Component, computed, input, output } from '@angular/core';
 import { Router } from '@angular/router';
-import { IPage, ISheet, ISubtopico, PageData } from '../../interfaces/IBook';
+import { IPage, ISheet, ISubtopico, PageData } from '../../interfaces/book/IBook';
 
 @Component({
   selector: 'app-page',
