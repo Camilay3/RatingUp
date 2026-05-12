@@ -18,6 +18,9 @@ export class BookComponent implements OnInit {
 	isWaiting: boolean = false;
 	pageFlipStates: boolean[] = [];
 
+	capituloAtual: number = 1;
+	subtopicoAtual: number = 1;
+
 	pages: ISheet[] = [];
 	home: any[] = [];
 	book: any[] = [];
@@ -34,15 +37,39 @@ export class BookComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
+		this.authService.getProgresso().subscribe({
+			next: (response) => {
+				this.capituloAtual = response.data.chapter;
+				this.subtopicoAtual = response.data.subtopic;
+			},
+			error: (e) => console.error(e)
+		});
+
 		this.bookService.getSheets().subscribe({
 			next: (response) => {
-				this.pages = response.data.pages || [];
+				this.pages = response.data.pages.map(page => {
+					let currentItem = false;
+
+					(['front', 'verse'] as const).forEach(side => {
+						const current = page[side];
+
+						if (current.type == 'subtópico') {
+							const isAfterCurrentChapter = current.chapterId > this.capituloAtual;
+							const isAfterCurrentSubtopic =
+								current.chapterId === this.capituloAtual &&
+								current.displayOrder > this.subtopicoAtual;
+
+							currentItem = isAfterCurrentChapter || isAfterCurrentSubtopic;
+							page[side] = { ...current, isBlocked: currentItem };
+						}
+					});
+					return page;
+				}) || [];
+
 				this.buildBookFromPages();
 				this.cdr.detectChanges();
 			},
-			error: (e) => {
-				console.error(e);
-			}
+			error: (e) => console.error(e)
 		});
 	}
 
@@ -101,11 +128,15 @@ export class BookComponent implements OnInit {
 		});
 	}
 
-	multiplasPaginas(qnt: number, next: boolean = true) {
+	multiplasPaginas(qnt: number) {
+		let next = true;
 		this.isWaiting = true;
 		this.duracaoAnimacao = 160;
 		this.setVelocidade(this.duracaoAnimacao);
-		if (qnt < 0) qnt = this.paginaAtual - 1;
+		if (qnt < 0) {
+			qnt = this.paginaAtual - 1
+			next = false;
+		};
 		let viradas = 0;
 
 		this.audioService.playFlips();

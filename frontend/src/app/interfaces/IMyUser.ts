@@ -4,6 +4,13 @@ export interface IMyUser extends IResponse {
 	data: User
 }
 
+export interface IProgresso extends IResponse {
+	data: {
+		chapter: number
+		subtopic: number
+	}
+}
+
 interface User {
 	id: number
     name: string

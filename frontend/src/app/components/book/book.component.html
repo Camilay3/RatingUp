@@ -11,7 +11,7 @@
 				[style.zIndex]="zIndexValues[$index]"
 				(flippedChange)="onFlip($index, $event)"
 				(isWaiting)="isWaiting = $event"
-				(navigate)="multiplasPaginas($event.qnt ?? 1, $event.next ?? true)"
+				(navigate)="multiplasPaginas($event.qnt ?? 1)"
 				[onFirstPage]="onFirstPage"
 				[onLastPage]="onLastPage"
 			></app-sheet>
