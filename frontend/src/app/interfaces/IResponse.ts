@@ -1,5 +1,5 @@
 export interface IResponse {
-	status: true | false
+	status: boolean
 	message: string
 	data: any
 }

@@ -25,22 +25,22 @@ public class BookService {
     }
 
     public BookDTO buildBook() {
-        List<Chapters> capitulos = chaptersRepository.findAllByOrderbyOrderAsc();
+        List<Chapters> chapters = chaptersRepository.findAllByOrderbyOrderAsc();
 
-        List<PageContentDTO> conteudos = new ArrayList<>();
+        List<PageContentDTO> contents = new ArrayList<>();
 
-        for (Chapters cap : capitulos) {
-            conteudos.add(new PageContentDTO("capitulo", cap.getId(), null, cap.getTitle(), cap.getDisplayOrder()));
+        for (Chapters cap : chapters) {
+            contents.add(new PageContentDTO("capitulo", cap.getId(), null, cap.getTitle(), cap.getDisplayOrder()));
 
             for (Subtopics sub : cap.getSubtopics()) {
-                conteudos.add(new PageContentDTO("subtópico", sub.getId(), cap.getId(), sub.getTitle(), sub.getDisplayOrder()));
+                contents.add(new PageContentDTO("subtópico", sub.getId(), cap.getId(), sub.getTitle(), sub.getDisplayOrder()));
             }
         }
 
         List<PageDTO> paginas = new ArrayList<>();
-        for (int i = 0; i < conteudos.size() - 1; i += 2) {
-            PageContentDTO verso = (i + 1 < conteudos.size()) ? conteudos.get(i+1) : null;
-            paginas.add(new PageDTO(conteudos.get(i), verso));
+        for (int i = 0; i < contents.size() - 1; i += 2) {
+            PageContentDTO verso = (i + 1 < contents.size()) ? contents.get(i+1) : null;
+            paginas.add(new PageDTO(contents.get(i), verso));
         }
 
         return new BookDTO(paginas, paginas.size());

@@ -91,6 +91,11 @@
 		p {
 			width: fit-content;
 			&:hover { font-weight: bold; }
+			&.blocked {
+				color: var(--neutralOpacity);
+				cursor: default;
+				&:hover { font-weight: normal; }
+			}
 		}
 	}
 }

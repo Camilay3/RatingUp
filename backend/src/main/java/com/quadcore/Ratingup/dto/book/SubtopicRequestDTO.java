@@ -5,9 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record SubtopicRequestDTO(
-        @NotNull Long chapterId,
-        @NotBlank String title,
-        @NotNull Integer displayOrder
+        @NotNull(message = "id não pode ser vazaio")
+        Long chapterId,
+
+        @NotBlank(message = "titulo não pode ser vazio")
+        String title,
+
+        @NotNull (message = "ordem não pode ser vazia")
+        Integer displayOrder
 ) {
     public SubtopicRequestDTO(Subtopics subtopic) {
         this(

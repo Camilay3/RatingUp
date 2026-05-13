@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
 import { PageComponent } from '../page/page.component';
-import { IPage, PageData } from '../../interfaces/IBook';
+import { IPage, PageData } from '../../interfaces/book/IBook';
 import { AudioService } from '../../services/book/audio.service';
 
 @Component({

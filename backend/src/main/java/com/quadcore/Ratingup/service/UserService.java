@@ -4,7 +4,7 @@ import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 
 import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
-import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
+import com.quadcore.Ratingup.dto.profile.ProfileUpdateRequestDTO;
 import com.quadcore.Ratingup.model.profile.Progress;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressRepository;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -41,18 +40,11 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User registerUser(User user) {
-        String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
-
-        if(user.getPassword() == null || user.getPassword().isEmpty()){
-            throw new RuntimeException("A senha não pode ser nula");
-        }
-        if(!user.getPassword().matches(senhaPadrao)){
-            throw new RuntimeException("Senha inválida! A senha precisa ter entre 8 a 12 caracteres, que tenham letras maiúsculas, minúsculas, números e símbolos");
-        }
 
         String senhaCriptografada = passwordEncoder.encode(user.getPassword());
         user.setPassword(senhaCriptografada);
 
+        //talvez fazer uma função so pra isso aq(mateus)
         User savedUser = userRepository.save(user);
         Progress progresso = new Progress();
         progresso.setUser(savedUser);
@@ -62,11 +54,10 @@ public class UserService implements UserDetailsService {
         return savedUser;
     }
 
-    public Optional<User> updateUser(String email, ProfileUpdateDTO data) {
-        Optional<User> optionalUser = Optional.of(userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
-
-        User user = optionalUser.get();
+    @Transactional
+    public Optional<User> updateUser(String email, ProfileUpdateRequestDTO data) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Nenhum usuário encontrado para esse email"));
 
         if (data.name() != null) {
             user.setName(data.name());
@@ -78,31 +69,28 @@ public class UserService implements UserDetailsService {
             user.setTelefone(data.telefone());
         }
 
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
 
         return Optional.of(user);
     }
 
-    public Optional<User> deleteUser(String email) {
-        Optional<User> user = Optional.of(userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
+    public void deleteUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
-        user.ifPresent(userRepository::delete);
-
-        return user;
+        userRepository.deleteById(user.getId());
     }
 
     public void changePassword(String email, PasswordChangeDTO dto) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Nenhum Usuário encontrado para esse email"));
 
         if(!passwordEncoder.matches(dto.oldPassword(), user.getPassword())){
-            throw new RuntimeException("As senhas não combinam");
+            throw new RuntimeException("Senha antiga não está correta");
         }
 
-        String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
-        if(!dto.newPassword().matches(senhaPadrao)){
-            throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
+        if(dto.oldPassword().equals(dto.newPassword())){
+            throw new RuntimeException("A nova senha não pode ser igual a antiga");
         }
 
         user.setPassword(passwordEncoder.encode(dto.newPassword()));
@@ -111,18 +99,18 @@ public class UserService implements UserDetailsService {
 
     public String loginUser(String email, String senha){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Nenhum usuário encontrado para esse email"));
 
         if(passwordEncoder.matches(senha, user.getPassword())){
             return tokenGenerator.gerarToken(user);
         }
 
-        throw new RuntimeException("Senha inválida");
+        throw new RuntimeException("Senha incorreta");
     }
 
     public void PasswordRecoverRequest(String email){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("E-mail não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Nenhum usuário encontrado para esse email"));
 
 //        String token = UUID.randomUUID().toString(); //codigo de verificação grande
         String token = String.format("%05d", new java.util.Random().nextInt(100000)); //codigo de verificação pequeno
