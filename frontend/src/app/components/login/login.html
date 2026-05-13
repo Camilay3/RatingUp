@@ -75,11 +75,15 @@
 
     <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>Senha</mat-label>
-      <input matInput type="password" placeholder="Mínimo 8 caracteres" formControlName="password">
+      <input matInput [type]="hidePassword ? 'password' : 'text'" placeholder="Mínimo 8 caracteres" formControlName="password">
 
       <mat-error *ngIf="RegisterForm.get('password')?.hasError('backendError')" >
         {{ RegisterForm.get('password')?.getError('backendError') }}
       </mat-error>
+
+      <button mat-icon-button matSuffix (click)="togglePassword()" type="button">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
 
     </mat-form-field>
 
