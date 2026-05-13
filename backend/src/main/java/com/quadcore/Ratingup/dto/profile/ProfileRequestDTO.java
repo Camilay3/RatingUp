@@ -1,6 +1,5 @@
 package com.quadcore.Ratingup.dto.profile;
 
-import com.quadcore.Ratingup.enums.Roles;
 import com.quadcore.Ratingup.model.profile.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
