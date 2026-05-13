@@ -116,7 +116,7 @@ export class Login implements OnInit {
       
       if (err.error.data?.email) {
     this.LoginForm.get('email')?.setErrors({ backendError: err.error.data.email });
-    }if (err.error.data?.password){
+    } else if (err.error.data?.password){
       this.LoginForm.get('password')?.setErrors({ backendError: err.error.data.password });
     } else {
 
