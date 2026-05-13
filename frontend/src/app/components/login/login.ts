@@ -8,6 +8,8 @@ import { LoginService } from '../../services/user/login.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -17,7 +19,8 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
@@ -69,10 +72,33 @@ export class Login implements OnInit {
    const payload: IUser = this.RegisterForm.value
    this.loginService.register(payload).subscribe({
     next: (response: any) => {
+      localStorage.setItem('token', response.token);
       this.router.navigate(['/book']);
     },
     error: (err) => {
-      console.error('Erro no cadastro', err);
+      if (err.error.data) {
+    if (err.error.data.name) {
+      this.RegisterForm.get('name')?.setErrors({ backendError: err.error.data.name });
+    }
+    if (err.error.data.nickname) {
+      this.RegisterForm.get('nickname')?.setErrors({ backendError: err.error.data.nickname });
+    }
+    if (err.error.data.telefone) {
+      this.RegisterForm.get('telefone')?.setErrors({ backendError: err.error.data.telefone });
+    }
+    if (err.error.data.email) {
+      this.RegisterForm.get('email')?.setErrors({ backendError: err.error.data.email });
+    }
+    if (err.error.data.password) {
+      this.RegisterForm.get('password')?.setErrors({ backendError: err.error.data.password });
+    }
+  } else{
+     Swal.fire({
+    icon: 'error',
+    title: 'Erro!',
+    text: err.error.message || 'Algo deu errado.',
+  });
+  }
     }
   });
 }
@@ -85,9 +111,27 @@ export class Login implements OnInit {
       this.router.navigate(['/book']);
     },
     error: (err) => {
-      console.error('Erro no login', err);
+      
+      if (err.error.data?.email) {
+    this.LoginForm.get('email')?.setErrors({ backendError: err.error.data.email });
+    }if (err.error.data?.password){
+      this.LoginForm.get('password')?.setErrors({ backendError: err.error.data.password });
+    } else {
+    Swal.fire({
+    icon: 'error',
+    title: 'Erro!',
+    text: err.error.message || 'Algo deu errado.',
+  });
+    }
+
     }
   });
+}
+
+hidePassword = true
+
+togglePassword(){
+  this.hidePassword = !this.hidePassword
 }
 
 // formatPhone(event: Event): void {

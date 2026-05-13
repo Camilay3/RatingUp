@@ -29,13 +29,13 @@
     object-fit: cover; // cobre o fundo todo
   }
 
-  .livro-capa {
+  /*.livro-capa {
     position: relative;
     height: 90vh;      // ajuste o tamanho conforme precisar
     width: auto;
     z-index: 1;
     object-fit: contain;
-  }
+  }*/
 }
 
 .overdelay {
@@ -165,6 +165,10 @@
         cursor: not-allowed;
         transform: none;
       }
+    }
+
+    mat-form-field{
+      width: 350px;
     }
   }
 

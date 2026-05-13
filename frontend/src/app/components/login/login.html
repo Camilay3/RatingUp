@@ -4,7 +4,6 @@
     <div class="background">
         <!--<app-book></app-book>-->
         <img src="livro/background.png" alt="" class="livro-fundo">
-        <img src="livro/capa.png" alt="" class="livro-capa">
     </div>
 
     <div class="overdelay" ></div>
@@ -33,31 +32,55 @@
 
         <div *ngIf="isFirstAcess === true"> <!--Parte de Cadastro-->
 
-            <form [formGroup]="RegisterForm" (ngSubmit)="onRegister()">
-
-            <mat-form-field appearance="outline" floatLabel="auto">
+    <form [formGroup]="RegisterForm" (ngSubmit)="onRegister()">
+    <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>Nome completo</mat-label>
       <input matInput type="text" placeholder="João Silva" formControlName="name">
+
+      <mat-error *ngIf="RegisterForm.get('name')?.hasError('backendError')" >
+        {{ RegisterForm.get('name')?.getError('backendError') }}
+      </mat-error>
+
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>Apelido</mat-label>
       <input matInput type="text" placeholder="joao123" formControlName="nickname">
+
+      <mat-error *ngIf="RegisterForm.get('nickname')?.hasError('backendError')" >
+        {{ RegisterForm.get('nickname')?.getError('backendError') }}
+      </mat-error>
+
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>Telefone</mat-label>
       <input matInput type="text" placeholder="(85) 99999-9999" formControlName="telefone">
+
+      <mat-error *ngIf="RegisterForm.get('telefone')?.hasError('backendError')" >
+        {{ RegisterForm.get('telefone')?.getError('backendError') }}
+      </mat-error>
+
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>E-mail</mat-label>
       <input matInput type="email" placeholder="seu@email.com" formControlName="email">
+
+      <mat-error *ngIf="RegisterForm.get('email')?.hasError('backendError')" >
+        {{ RegisterForm.get('email')?.getError('backendError') }}
+      </mat-error>
+
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>Senha</mat-label>
       <input matInput type="password" placeholder="Mínimo 8 caracteres" formControlName="password">
+
+      <mat-error *ngIf="RegisterForm.get('password')?.hasError('backendError')" >
+        {{ RegisterForm.get('password')?.getError('backendError') }}
+      </mat-error>
+
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit">Cadastrar</button>
@@ -74,11 +97,25 @@
         <mat-form-field appearance="outline" floatLabel="auto">
           <mat-label>E-mail</mat-label>
           <input matInput type="email" placeholder="seu@email.com" formControlName="email">
+
+          <mat-error *ngIf="LoginForm.get('email')?.hasError('backendError')" >
+            {{ LoginForm.get('email')?.getError('backendError') }}
+          </mat-error>
+
         </mat-form-field>
 
         <mat-form-field appearance="outline" floatLabel="auto" >
             <mat-label>Senha</mat-label>
-            <input matInput type="password" placeholder="Digite sua senha" formControlName="password">
+            <input matInput [type]="hidePassword ? 'password' : 'text'" placeholder="Digite sua senha" formControlName="password">
+
+            <mat-error *ngIf="LoginForm.get('password')?.hasError('backendError')" >
+            {{ LoginForm.get('password')?.getError('backendError') }}
+          </mat-error>
+
+          <button mat-icon-button matSuffix (click)="togglePassword()" type="button">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+
         </mat-form-field>
 
         <button mat-raised-button color="primary" type="submit">Entrar</button>
