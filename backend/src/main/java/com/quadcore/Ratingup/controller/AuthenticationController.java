@@ -4,6 +4,7 @@ package com.quadcore.Ratingup.controller;
 import com.quadcore.Ratingup.dto.profile.*;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,7 @@ public class AuthenticationController {
         this.userService = userService;
     }
 
+    @Operation(summary = "fazer o login",description = "faz o login no sitema com um usuário existente")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<?>> loginUser(
             @Valid @RequestBody LoginRequestDTO dto,
@@ -76,18 +78,18 @@ public class AuthenticationController {
     }
 
     @PostMapping("/recover-password")
-    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody PasswordResetRequestDTO dto){
+    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto){
         userService.PasswordRecoverRequest(dto.email());
         return ResponseEntity.ok(new ApiResponse<>(true,"Email de recuperação enviado", null));
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<ApiResponse<?>> resetPassword(@RequestBody PasswordResetDTO dto){
+    public ResponseEntity<ApiResponse<?>> resetPassword(@RequestBody @Valid PasswordResetDTO dto){
         userService.resetPassword(dto);
         return ResponseEntity.ok(new ApiResponse<>(true,"Senha redefinida com sucesso!",null));
     }
     @PutMapping("/change-password")
-    public ResponseEntity<ApiResponse<?>> changePassword(@RequestBody PasswordChangeDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<ApiResponse<?>> changePassword(@RequestBody @Valid  PasswordChangeDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
         userService.changePassword(userDetails.getUsername(), dto);
         return ResponseEntity.ok(new ApiResponse<>(true, "Senha alterada com sucesso!", null));
     }
