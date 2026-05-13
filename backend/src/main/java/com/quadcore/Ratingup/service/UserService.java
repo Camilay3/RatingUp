@@ -83,15 +83,14 @@ public class UserService implements UserDetailsService {
 
     public void changePassword(String email, PasswordChangeDTO dto) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Nenhum Usuário encontrado para esse email"));
 
         if(!passwordEncoder.matches(dto.oldPassword(), user.getPassword())){
-            throw new RuntimeException("As senhas não combinam");
+            throw new RuntimeException("Senha antiga não está correta");
         }
 
-        String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
-        if(!dto.newPassword().matches(senhaPadrao)){
-            throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
+        if(dto.oldPassword().equals(dto.newPassword())){
+            throw new RuntimeException("A nova senha não pode ser igual a antiga");
         }
 
         user.setPassword(passwordEncoder.encode(dto.newPassword()));
@@ -111,7 +110,7 @@ public class UserService implements UserDetailsService {
 
     public void PasswordRecoverRequest(String email){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("E-mail não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Nenhum usuário encontrado para esse email"));
 
 //        String token = UUID.randomUUID().toString(); //codigo de verificação grande
         String token = String.format("%05d", new java.util.Random().nextInt(100000)); //codigo de verificação pequeno

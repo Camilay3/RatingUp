@@ -6,10 +6,10 @@ import jakarta.validation.constraints.Pattern;
 
 public record PasswordResetDTO(
 
-        @NotBlank
+        @NotBlank(message = "código é obrigatório")
         String token,
 
-        @NotBlank(message = "Nova senha inválida")
+        @NotBlank(message = "Senha não pode ser vazia")
         @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$",
                 message = "A senha precisa ter entre 8 a 12 caracteres, com maiúsculas, minúsculas, números e símbolos")
         @Schema(example = "SenhaExemplo@123")
