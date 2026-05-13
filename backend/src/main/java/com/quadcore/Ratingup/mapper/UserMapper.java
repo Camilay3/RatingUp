@@ -2,7 +2,7 @@ package com.quadcore.Ratingup.mapper;
 
 import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileResponseDTO;
-import com.quadcore.Ratingup.dto.profile.ProfileUpdateDTO;
+import com.quadcore.Ratingup.dto.profile.ProfileUpdateRequestDTO;
 import com.quadcore.Ratingup.model.profile.User;
 
 public abstract class UserMapper {
@@ -27,7 +27,7 @@ public abstract class UserMapper {
         return new ProfileResponseDTO(user);
     }
 
-    public static ProfileUpdateDTO toUpdateDTO(User user) {
-        return new ProfileUpdateDTO(user);
+    public static ProfileUpdateRequestDTO toUpdateDTO(User user) {
+        return new ProfileUpdateRequestDTO(user);
     }
 }

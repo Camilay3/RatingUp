@@ -26,12 +26,12 @@ public class ProgressController {
 
     @Operation(summary = "Retorna a fase atual do usuário")
     @GetMapping("/disponiveis")
-    public ResponseEntity<ApiResponse<?>> allowedPhases(@AuthenticationPrincipal User logado) {
-        Progress progresso = progressoService.allowedPhases(logado.getEmail());
+    public ResponseEntity<ApiResponse<?>> allowedPhases(@AuthenticationPrincipal User loggedUser) {
+        Progress progress = progressoService.allowedPhases(loggedUser.getEmail());
         ProgressResponseDTO dto = new ProgressResponseDTO(
-                progresso.getUser().getId(),
-                progresso.getChapters(),
-                progresso.getSubtopics());
+                progress.getUser().getId(),
+                progress.getChapters(),
+                progress.getSubtopics());
         return ResponseEntity.ok(new ApiResponse<>(true, "Progresso encontrado", dto));
     }
 
