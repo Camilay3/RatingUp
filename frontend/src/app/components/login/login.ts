@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
 
 
@@ -20,7 +21,8 @@ import Swal from 'sweetalert2';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule
   ],
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
@@ -33,7 +35,8 @@ export class Login implements OnInit {
   constructor(
     private readonly fb :FormBuilder,
     private readonly loginService : LoginService,
-    private readonly router : Router
+    private readonly router : Router,
+    private snackBar : MatSnackBar
   ){}
 
   ngOnInit(): void {
@@ -93,11 +96,10 @@ export class Login implements OnInit {
       this.RegisterForm.get('password')?.setErrors({ backendError: err.error.data.password });
     }
   } else{
-     Swal.fire({
-    icon: 'error',
-    title: 'Erro!',
-    text: err.error.message || 'Algo deu errado.',
-  });
+
+    this.snackBar.open('Ops, ocorreu um erro inesperado', 'Fechar', {
+      duration: 3000
+    });
   }
     }
   });
@@ -117,11 +119,11 @@ export class Login implements OnInit {
     }if (err.error.data?.password){
       this.LoginForm.get('password')?.setErrors({ backendError: err.error.data.password });
     } else {
-    Swal.fire({
-    icon: 'error',
-    title: 'Erro!',
-    text: err.error.message || 'Algo deu errado.',
-  });
+
+     this.snackBar.open('Ops, ocorreu um erro inesperado', 'Fechar', {
+      duration: 99999,
+     });   
+    
     }
 
     }

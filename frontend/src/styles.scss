@@ -145,6 +145,21 @@ button:not(.mdc-button):not(.mat-mdc-button):not([mat-button]):not([mat-raised-b
   opacity: 1 !important;
 }
 
+.mat-mdc-snack-bar-container {
+  .mat-mdc-snack-bar-label {
+    background-color: #d32f2f !important;
+    color: white !important;
+  }
+
+  .mdc-snackbar__surface {
+    background-color: #d32f2f !important;
+  }
+
+  .mdc-button__label {
+    color: white !important;
+  }
+}
+
 // Evita que o label fique invisível no estado normal
 .mat-mdc-form-field:not(.mat-focused) .mdc-floating-label {
   color: var(--secondary) !important;
