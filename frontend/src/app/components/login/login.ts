@@ -75,7 +75,6 @@ export class Login implements OnInit {
    const payload: IUser = this.RegisterForm.value
    this.loginService.register(payload).subscribe({
     next: (response: any) => {
-      localStorage.setItem('token', response.token);
       this.router.navigate(['/book']);
     },
     error: (err) => {
@@ -136,25 +135,35 @@ togglePassword(){
   this.hidePassword = !this.hidePassword
 }
 
-// formatPhone(event: Event): void {
-//   const input = event.target as HTMLInputElement;
-//   let value = input.value.replace(/\D/g, '');
+maskPhone(event: Event){
+  const input = event.target as HTMLInputElement;
+  let digits = input.value.replace(/\D/g, '');
 
-//    if (value.length > 11) {
-//     value = value.slice(0, 11);
-//   }
+  if (digits.length === 0) {
+    input.value = '';
+    this.RegisterForm.get('telefone')?.setValue('', { emitEvent: false });
+    return;
+  }
 
-//   if (value.length <= 8) {
-//     value = value.replace(/(\d{4})(\d)/, '$1-$2');
-//   } else if (value.length <= 10) {
-//     value = value.replace(/(\d{2})(\d{4})(\d)/, '($1) $2-$3');
-//   } else {
-//     value = value.replace(/(\d{2})(\d{5})(\d)/, '($1) $2-$3');
-//   }
+  if(digits.length > 11){
+    digits = digits.slice(0, 11);
+  }
 
-//   input.value = value;
-//   this.RegisterForm.get('phone')?.setValue(value, { emitEvent: false });
-// }
+  let masked = digits;
+
+  if (digits.length <= 2) {
+    masked = `(${digits}`;
+  } else if (digits.length <= 6) {
+    masked = digits.replace(/(\d{2})(\d{0,4})/, '($1) $2');
+  } else if (digits.length <= 10) {
+    masked = digits.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+  } else {
+    masked = digits.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+  }
+
+  this.RegisterForm.get('telefone')?.setValue(digits, { emitEvent: false });
+  setTimeout(() => { input.value = masked; }, 0) 
+}
 
 
 }

@@ -55,7 +55,7 @@
 
     <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>Telefone</mat-label>
-      <input matInput type="text" placeholder="(85) 99999-9999" formControlName="telefone">
+      <input matInput type="text" placeholder="(85) 99999-9999" (input)="maskPhone($event)" formControlName="telefone">
 
       <mat-error *ngIf="RegisterForm.get('telefone')?.hasError('backendError')" >
         {{ RegisterForm.get('telefone')?.getError('backendError') }}
