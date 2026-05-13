@@ -4,6 +4,7 @@ package com.quadcore.Ratingup.controller;
 import com.quadcore.Ratingup.dto.profile.*;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,7 @@ public class AuthenticationController {
         this.userService = userService;
     }
 
+    @Operation(summary = "fazer o login",description = "faz o login no sitema com um usuário existente")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<?>> loginUser(
             @Valid @RequestBody LoginRequestDTO dto,
