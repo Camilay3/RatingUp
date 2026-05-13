@@ -6,6 +6,7 @@ import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
 import com.quadcore.Ratingup.dto.profile.PasswordResetRequestDTO;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,18 +25,18 @@ public class AuthenticationController {
     }
 
     @PostMapping("/recover-password")
-    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody PasswordResetRequestDTO dto){
+    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto){
         userService.PasswordRecoverRequest(dto.email());
         return ResponseEntity.ok(new ApiResponse<>(true,"Email de recuperação enviado", null));
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<ApiResponse<?>> resetPassword(@RequestBody PasswordResetDTO dto){
+    public ResponseEntity<ApiResponse<?>> resetPassword(@RequestBody @Valid PasswordResetDTO dto){
         userService.resetPassword(dto);
         return ResponseEntity.ok(new ApiResponse<>(true,"Senha redefinida com sucesso!",null));
     }
     @PutMapping("/change-password")
-    public ResponseEntity<ApiResponse<?>> changePassword(@RequestBody PasswordChangeDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<ApiResponse<?>> changePassword(@RequestBody @Valid  PasswordChangeDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
         userService.changePassword(userDetails.getUsername(), dto);
         return ResponseEntity.ok(new ApiResponse<>(true, "Senha alterada com sucesso!", null));
     }

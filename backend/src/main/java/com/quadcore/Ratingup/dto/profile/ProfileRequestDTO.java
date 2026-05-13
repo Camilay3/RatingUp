@@ -18,6 +18,7 @@ public record ProfileRequestDTO(
 
         @NotBlank(message = "Telefone é obrigatório")
         @Pattern(regexp = "\\d{8,11}", message = "Telefone deve conter apenas números, entre 8 e 11 dígitos")
+        @Schema(example = "telefone")
         String telefone,
 
         @NotBlank(message = "Senha é obrigatória")
