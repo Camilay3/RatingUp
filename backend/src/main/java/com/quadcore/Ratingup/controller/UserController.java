@@ -42,9 +42,8 @@ public class UserController {
     @Operation(summary = "Cadastra um novo usuário",description = "cadastra um novo usuário no sitema com a role user")
     @PostMapping("/cadastro")
     public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody ProfileRequestDTO dto) {
-        User user = UserMapper.toEntity(dto);
-        user.setRole(Roles.USER);
-        User newUser = userService.registerUser(user);
+
+        User newUser = userService.registerUser(dto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
