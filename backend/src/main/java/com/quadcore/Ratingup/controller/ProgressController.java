@@ -1,4 +1,5 @@
 package com.quadcore.Ratingup.controller;
+
 import com.quadcore.Ratingup.dto.progresso.ProgressUpdateDTO;
 import com.quadcore.Ratingup.dto.progresso.ProgressResponseDTO;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 @Tag(name = "Progresso", description = "Endpoints para gerenciamento do progresso do usuário")
 @RestController
@@ -38,7 +40,7 @@ public class ProgressController {
     @Operation(summary = "Atualiza a fase atual do usuário")
     @PostMapping("/atualiza-fase")
     public ResponseEntity<ApiResponse<?>> updateCurrentPhase(@AuthenticationPrincipal User logado, @Valid @RequestBody ProgressUpdateDTO dto) {
-        Progress atualizado = progressoService.updateCurrentPhase(logado.getEmail(), dto);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Progresso atualizado", ProgressoMapper.toResponse(atualizado)));
+        Optional<Progress> atualizado = progressoService.updateCurrentPhase(logado.getEmail(), dto);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Progresso atualizado", ProgressoMapper.toResponse(atualizado.get())));
     }
 }

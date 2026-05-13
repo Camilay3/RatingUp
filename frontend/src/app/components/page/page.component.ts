@@ -1,7 +1,7 @@
 import { AuthService } from '../../services/user/auth.service';
 import { Component, computed, input, output } from '@angular/core';
 import { Router } from '@angular/router';
-import { IPage, PageData } from '../../interfaces/IBook';
+import { IPage, ISheet, ISubtopico, PageData } from '../../interfaces/book/IBook';
 
 @Component({
   selector: 'app-page',
@@ -31,14 +31,25 @@ export class PageComponent {
 		return page?.type === type ? page as Extract<PageData, { type: T }> : undefined;
 	}
 
+	isSubtopico(page: PageData): page is ISubtopico {
+		return page.type === 'subtópico';
+	}
+
 	acessarSubtopico(capitulo: number, subtopico: number) {
 		this.router.navigate(['/subtopico'], {
             state: { capitulo, subtopico }
         });
 	}
 
-	multiplasPaginas(qnt: number = 1, next: boolean = true) {
-		this.navigate.emit({ qnt, next });
+	getPages(item: ISheet) {
+		return [
+			{ page: item.front, offset: 1 },
+			{ page: item.verse, offset: 2 },
+		];
+	}
+
+	multiplasPaginas(qnt: number = 1) {
+		this.navigate.emit({ qnt });
 	}
 
 	onImageError(event: Event) {
