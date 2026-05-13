@@ -1,10 +1,8 @@
 package com.quadcore.Ratingup.repository;
 
 import com.quadcore.Ratingup.model.book.Chapters;
-import com.quadcore.Ratingup.model.book.Subtopics;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
 
 public interface ChaptersRepository extends JpaRepository<Chapters, Long> {

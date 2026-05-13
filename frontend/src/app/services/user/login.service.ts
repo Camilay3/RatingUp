@@ -11,7 +11,7 @@ export class LoginService {
   private readonly apiUrl = environment.apiUrl;
 
   login(email: string, password: string) {
-    return this.http.post<{ data: string }>(`${this.apiUrl}/conta/login`, { email, password });
+    return this.http.post<{ data: string }>(`${this.apiUrl}/auth/login`, { email, password });
   }
 
   register(data: any) {

@@ -25,19 +25,20 @@
 			<!-- <p (click)="$event.stopPropagation(); multiplasPaginas(1 + home.summary.length)">Ir para o final</p> -->
 			<h1>Níveis</h1>
 			<span></span>
-			@for (item of home.summary; track $index) {
-				@if (item.front.type == 'capitulo') {
-					<h2>Capítulo {{item.front.displayOrder}}</h2>
+			@for (item of home.summary; track outerIndex; let outerIndex = $index) {
+				@for (entry of getPages(item); track entry.page.displayOrder) {
+					@if (entry.page.type == 'capitulo') {
+						<h2>Capítulo {{ entry.page.displayOrder }}</h2>
 
-				} @else {
-					<p (click)="$event.stopPropagation(); multiplasPaginas(1 + ($index))">{{item.front.displayOrder}}. {{item.front.title}}</p>
-				}
-
-				@if (item.verse.type == 'capitulo') {
-					<h2>Capítulo {{item.verse.displayOrder}}</h2>
-
-				} @else {
-					<p (click)="$event.stopPropagation(); multiplasPaginas(2 + ($index))">{{item.verse.displayOrder}}. {{item.verse.title}}</p>
+					} @else {
+						<p [class.blocked]="isSubtopico(entry.page) && entry.page.isBlocked"
+							(click)="$event.stopPropagation();
+								(isSubtopico(entry.page) && !entry.page.isBlocked)
+									? multiplasPaginas(entry.offset + outerIndex)
+									: null">
+							{{ entry.page.displayOrder }}. {{ entry.page.title }}
+						</p>
+					}
 				}
 			}
 		</div>
@@ -49,7 +50,7 @@
 		</svg>
 
 		@if (side() == 'verso') {
-			<svg (click)="$event.stopPropagation(); multiplasPaginas(-1, false)" width="48" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<svg (click)="$event.stopPropagation(); multiplasPaginas(-1)" width="48" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path fill="currentColor" d="M32 6.5C30.8 6.5 29.7 6.9 28.8 7.7L4.8 28.7C2.1 31.1 3.8 35.5 7.4 35.5H11V54C11 56.2 12.8 58 15 58H49C51.2 58 53 56.2 53 54V35.5H56.6C60.2 35.5 61.9 31.1 59.2 28.7L35.2 7.7C34.3 6.9 33.2 6.5 32 6.5Z"/>
 			</svg>
 		}
