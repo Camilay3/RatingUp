@@ -2,7 +2,6 @@
 <div class="login.container" >
 
     <div class="background">
-        <!--<app-book></app-book>-->
         <img src="livro/background.png" alt="" class="livro-fundo">
     </div>
 
@@ -24,28 +23,29 @@
             }
         </h3>
 
-       <!-- <div class="tab-buttons">
-        <button (click)="choseForm(false)" *ngIf="isFirstAcess === true" >Entrar</button>
-        <button (click)="choseForm(true)" *ngIf="isFirstAcess === false" >Cadastro</button>
-       </div>  
-      </div>   -->
-
         <div *ngIf="isFirstAcess === true"> <!--Parte de Cadastro-->
 
     <form [formGroup]="RegisterForm" (ngSubmit)="onRegister()">
     <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>Nome completo</mat-label>
       <input matInput type="text" placeholder="João Silva" formControlName="name">
+      <mat-error *ngIf="RegisterForm.get('name')?.hasError('required')">Nome é obrigatório</mat-error>
 
       <mat-error *ngIf="RegisterForm.get('name')?.hasError('backendError')" >
         {{ RegisterForm.get('name')?.getError('backendError') }}
       </mat-error>
+
+      <mat-error *ngIf="RegisterForm.get('name')?.hasError('pattern')">
+      Nome não pode conter emojis ou caracteres especiais
+     </mat-error>
 
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>Apelido</mat-label>
       <input matInput type="text" placeholder="joao123" formControlName="nickname">
+      <mat-error *ngIf="RegisterForm.get('nickname')?.hasError('required')">Nickname é obrigatório</mat-error>
+      <mat-error *ngIf="RegisterForm.get('nickname')?.hasError('pattern')">Use apenas letras, números</mat-error>
 
       <mat-error *ngIf="RegisterForm.get('nickname')?.hasError('backendError')" >
         {{ RegisterForm.get('nickname')?.getError('backendError') }}
@@ -56,6 +56,7 @@
     <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>Telefone</mat-label>
       <input matInput type="text" placeholder="(85) 99999-9999" (input)="maskPhone($event)" formControlName="telefone">
+      <mat-error *ngIf="RegisterForm.get('telefone')?.hasError('required')">Telefone é obrigatório</mat-error>
 
       <mat-error *ngIf="RegisterForm.get('telefone')?.hasError('backendError')" >
         {{ RegisterForm.get('telefone')?.getError('backendError') }}
@@ -66,6 +67,8 @@
     <mat-form-field appearance="outline" floatLabel="auto">
       <mat-label>E-mail</mat-label>
       <input matInput type="email" placeholder="seu@email.com" formControlName="email">
+      <mat-error *ngIf="RegisterForm.get('email')?.hasError('required')">E-mail é obrigatório</mat-error>
+      <mat-error *ngIf="RegisterForm.get('email')?.hasError('email')">E-mail inválido</mat-error>
 
       <mat-error *ngIf="RegisterForm.get('email')?.hasError('backendError')" >
         {{ RegisterForm.get('email')?.getError('backendError') }}

@@ -10,7 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
-import Swal from 'sweetalert2';
 
 
 @Component({
@@ -53,11 +52,11 @@ export class Login implements OnInit {
 
   initRegisterForm(){
     this.RegisterForm = this.fb.group({
-      email: ['',[Validators.required]],
+      email: ['',[Validators.required, Validators.email]],
       password: ['',[Validators.required]],
-      name: ['',[Validators.required]],
-      nickname: ['',[Validators.required]],
-      telefone: ['',[Validators.required, Validators.minLength(8), Validators.maxLength(11)]]
+      name: ['',[Validators.required, Validators.pattern('^[a-zA-ZÀ-ÿ ]+$')]],
+      nickname: ['',[Validators.required, Validators.pattern('^[a-zA-Z0-9_-]+$')]],
+      telefone: ['',[Validators.required, Validators.minLength(8), Validators.maxLength(11), Validators.pattern('^[0-9]{8,11}$')]]
     })
   }
 
@@ -98,11 +97,13 @@ export class Login implements OnInit {
      }
     } 
     if (err.error.code === 'CONFLICT') {
-      this.RegisterForm.get('email')?.setErrors({ backendError: err.error.messages[0] })
-    }if (err.error.code === 'CONFLICT') {
-      this.RegisterForm.get('nickname')?.setErrors({ backendError: err.error.messages[1] })
-    }if (err.error.code === 'CONFLICT') {
-      this.RegisterForm.get('telefone')?.setErrors({ backendError: err.error.messages[2] })
+      const msgs: string[] = err.error.messages ?? [];
+
+     msgs.forEach((msg: string) => {
+     if (msg.toLowerCase().includes('email'))     this.RegisterForm.get('email')?.setErrors({ backendError: msg });
+     if (msg.toLowerCase().includes('nickname'))  this.RegisterForm.get('nickname')?.setErrors({ backendError: msg });
+     if (msg.toLowerCase().includes('telefone'))  this.RegisterForm.get('telefone')?.setErrors({ backendError: msg });
+  });
     }
     else{
 
