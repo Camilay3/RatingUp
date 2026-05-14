@@ -38,9 +38,25 @@ services:
       - /app/node_modules
     networks:
       - front-network
-
+  minio:
+    image: minio/minio
+    container_name: ratingup_minio
+    environment:
+      - MINIO_ROOT_USER=ROOTUSER
+      - MINIO_ROOT_PASSWORD=CHANGEME123
+      - MINIO_BROWSER_SESSION_DURATION=1h
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - back-network
 networks:
   back-network:
     driver: bridge
   front-network:
     driver: bridge
+volumes:
+  minio_data:
