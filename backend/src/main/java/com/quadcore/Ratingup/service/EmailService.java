@@ -2,6 +2,7 @@ package com.quadcore.Ratingup.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -42,9 +43,11 @@ public class EmailService {
             helper.setTo(destino);
             helper.setSubject(assunto);
             helper.setText(conteudo, true); // true = HTML
+            mailSender.send(message);
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException("Erro ao enviar e-mail: " + e.getMessage());
+        } catch (MailException e) {
+            throw new RuntimeException("Erro ao enviar e-mail: " + e.getMessage());
         }
-        mailSender.send(message);
     }
 }
