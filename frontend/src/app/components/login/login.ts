@@ -75,27 +75,28 @@ export class Login implements OnInit {
    const payload: IUser = this.RegisterForm.value
    this.loginService.register(payload).subscribe({
     next: (response: any) => {
-      this.router.navigate(['/book']);
       this.LoginafterRegister(payload.email,payload.password)
+      this.router.navigate(['/book']);
     },
     error: (err) => {
-      if (err.error.data) {
-    if (err.error.data.name) {
+
+    if(err.error.data){  
+     if (err.error.data.name) {
       this.RegisterForm.get('name')?.setErrors({ backendError: err.error.data.name });
-    }
-    if (err.error.data.nickname) {
+     }
+     if (err.error.data.nickname) {
       this.RegisterForm.get('nickname')?.setErrors({ backendError: err.error.data.nickname });
-    }
-    if (err.error.data.telefone) {
+     }
+     if (err.error.data.telefone) {
       this.RegisterForm.get('telefone')?.setErrors({ backendError: err.error.data.telefone });
-    }
-    if (err.error.data.email) {
+     }
+     if (err.error.data.email) {
       this.RegisterForm.get('email')?.setErrors({ backendError: err.error.data.email });
-    }
-    if (err.error.data.password) {
+     }
+     if (err.error.data.password) {
       this.RegisterForm.get('password')?.setErrors({ backendError: err.error.data.password });
-    }
-  } else{
+    } }
+    else{
 
     this.snackBar.open('Ops, ocorreu um erro inesperado', 'Fechar', {
       duration: 3000
@@ -113,15 +114,16 @@ export class Login implements OnInit {
       this.router.navigate(['/book']);
     },
     error: (err) => {
+    const message = err.error?.message;
       
       if (err.error.data?.email) {
     this.LoginForm.get('email')?.setErrors({ backendError: err.error.data.email });
-    } else if (err.error.data?.password){
-      this.LoginForm.get('password')?.setErrors({ backendError: err.error.data.password });
+    }else if(message){
+      this.LoginForm.get('password')?.setErrors({ backendError: message });
     } else {
 
      this.snackBar.open('Ops, ocorreu um erro inesperado', 'Fechar', {
-      duration: 99999,
+      duration: 3000,
      });   
     
     }
