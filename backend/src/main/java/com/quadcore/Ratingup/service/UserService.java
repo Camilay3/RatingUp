@@ -4,7 +4,11 @@ import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 
 import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
+import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileUpdateRequestDTO;
+import com.quadcore.Ratingup.enums.Roles;
+import com.quadcore.Ratingup.handler.DuplicateFieldException;
+import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.Progress;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressRepository;
@@ -18,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,7 +45,24 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User registerUser(User user) {
+    public User registerUser(ProfileRequestDTO dto) {
+
+        List<String> errors = new ArrayList<>();
+        if(userRepository.existsByEmail(dto.email())){
+            errors.add("E-email já cadastrado");
+        }
+        if(userRepository.existsByNickname(dto.nickname())){
+            errors.add("Nickname já cadastrado");
+        }
+        if(userRepository.existsByTelefone(dto.telefone())){
+            errors.add("telefone já cadastrado");
+        }
+        if (!errors.isEmpty()) {
+            throw new DuplicateFieldException(errors);
+        }
+
+        User user = UserMapper.toEntity(dto);
+        user.setRole(Roles.USER);
 
         String senhaCriptografada = passwordEncoder.encode(user.getPassword());
         user.setPassword(senhaCriptografada);
