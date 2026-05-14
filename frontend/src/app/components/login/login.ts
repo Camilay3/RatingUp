@@ -95,7 +95,15 @@ export class Login implements OnInit {
      }
      if (err.error.data.password) {
       this.RegisterForm.get('password')?.setErrors({ backendError: err.error.data.password });
-    } }
+     }
+    } 
+    if (err.error.code === 'CONFLICT') {
+      this.RegisterForm.get('email')?.setErrors({ backendError: err.error.messages[0] })
+    }if (err.error.code === 'CONFLICT') {
+      this.RegisterForm.get('nickname')?.setErrors({ backendError: err.error.messages[1] })
+    }if (err.error.code === 'CONFLICT') {
+      this.RegisterForm.get('telefone')?.setErrors({ backendError: err.error.messages[2] })
+    }
     else{
 
     this.snackBar.open('Ops, ocorreu um erro inesperado', 'Fechar', {
