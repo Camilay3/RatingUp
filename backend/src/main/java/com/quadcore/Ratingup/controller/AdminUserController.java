@@ -50,12 +50,7 @@ public class AdminUserController {
     @Operation(summary = "Cadastra um usuário admin")
     @PostMapping("/cadastro")
     public ResponseEntity<ApiResponse<?>> registerAdminUser(@Valid @RequestBody ProfileRequestDTO dto) {
-        User user = new User();
-        user.setName(dto.name());
-        user.setNickname(dto.nickname());
-        user.setEmail(dto.email());
-        user.setTelefone(dto.telefone());
-        user.setPassword(dto.password());
+        User user = UserMapper.toEntity(dto);
         user.setRole(Roles.ADMIN);
 
         User newUser = adminUserService.registerAdminUser(user);

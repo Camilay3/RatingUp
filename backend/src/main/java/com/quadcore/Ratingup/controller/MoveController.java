@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Movimentos", description = "Endpoints para gerenciamento dos movimentos das peças")
 @RequestMapping("/move")
@@ -22,16 +19,16 @@ public class MoveController {
     MoveValidationService moveValidationService;
 
     @Operation(summary = "Valida o movimento da peça")
-    @PostMapping
-    public ResponseEntity<Boolean> validateMovement(@RequestBody @Valid MoveRequestDTO movimentoDto){
-        Boolean isPossible = moveValidationService.validateMovement(movimentoDto);
+    @GetMapping
+    public ResponseEntity<Boolean> validateMovement(@RequestBody @Valid MoveRequestDTO movementDto){
+        Boolean isPossible = moveValidationService.validateMovement(movementDto);
         return ResponseEntity.ok(isPossible);
     }
 
-    @Operation(summary = "Executa o movimento da peça")
+    @Operation(summary = "Executa o movimento da peça",description = "valida o movimento,faz o movimento e retorna o estado atual do tabuleiro juntamente do status da partida")
     @PostMapping("/execute")
-    public ResponseEntity<MoveResponseDTO> performMoviment(@RequestBody @Valid MoveRequestDTO movimentoDto) {
-        MoveResponseDTO response = moveValidationService.performMovement(movimentoDto);
+    public ResponseEntity<MoveResponseDTO> performMovement(@RequestBody @Valid MoveRequestDTO movementDto) {
+        MoveResponseDTO response = moveValidationService.performMovement(movementDto);
         return ResponseEntity.ok(response);
     }
 }

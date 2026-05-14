@@ -9,6 +9,7 @@ import com.quadcore.Ratingup.repository.SubtopicsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProgressService {
@@ -27,6 +28,7 @@ public class ProgressService {
         return progressRepository.findByUserEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
     }
 
+    @Transactional
     public Optional<Progress> updateCurrentPhase(String userEmail, ProgressUpdateDTO dto) {
         Progress progressoUser = progressRepository.findByUserEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
