@@ -76,6 +76,7 @@ export class Login implements OnInit {
    this.loginService.register(payload).subscribe({
     next: (response: any) => {
       this.router.navigate(['/book']);
+      this.LoginafterRegister(payload.email,payload.password)
     },
     error: (err) => {
       if (err.error.data) {
@@ -127,6 +128,20 @@ export class Login implements OnInit {
 
     }
   });
+}
+
+private LoginafterRegister(email: string, password: string ){
+  this.loginService.login(email, password).subscribe({
+    next: () => {
+      this.router.navigate(['/book']);
+    },
+    error: () => {
+      this.snackBar.open('Um erro inesperado aconteceu, tente fazer login com os dados que cadastrou.Se não der certo, verifique sua conexão', 'Fechar', {
+        duration: 3000
+      });
+      this.choseForm(false);
+    }
+  })
 }
 
 hidePassword = true
