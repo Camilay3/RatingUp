@@ -53,7 +53,7 @@ export class PageComponent {
 		];
 	}
 
-	multiplasPaginas(qnt: number = 1) {
+	multiplasPaginas(qnt: number) {
 		this.navigate.emit({ qnt });
 	}
 

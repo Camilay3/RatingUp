@@ -140,7 +140,32 @@ export class BookComponent implements OnInit {
 		if (qnt < 0) {
 			qnt = this.paginaAtual - 1
 			next = false;
-		};
+
+		} else if (qnt == 0) {
+			const canFlipForward = (index: number): boolean => {
+				const page = this.book[index];
+
+				return !!(page && (index + 1 !== this.book.length) &&
+					(
+						'capa' in page ||
+						page.front?.type !== 'subtópico' ||
+						!page.front.isBlocked
+					)
+				);
+			};
+
+			let count = 0;
+			for (let i = this.paginaAtual; i < this.tamanhoLivro; i++) {
+				if (!canFlipForward(i)) break;
+				count++;
+			}
+			qnt = count;
+
+			if (qnt <= 0) {
+				this.isWaiting = false;
+				return;
+			}
+		}
 		let viradas = 0;
 
 		this.audioService.playFlips();

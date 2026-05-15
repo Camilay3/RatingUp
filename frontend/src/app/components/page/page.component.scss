@@ -12,7 +12,7 @@
 	.controls {
 		right: 1rem;
 		left: auto;
-		svg { transform: scale(-1, 1); }
+		svg.invertSVG { transform: scale(-1, 1); }
 	}
 }
 
