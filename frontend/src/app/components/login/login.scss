@@ -41,7 +41,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 48px;  // espaço entre as duas colunas
+  gap: 48px;
 
   .left-col {
     display: flex;
@@ -60,7 +60,6 @@
   }
 
 
-  // Coluna da esquerda — botões de escolha
   .tab-buttons {
     display: flex;
     flex-direction: column;  // empilhados verticalmente
@@ -97,7 +96,6 @@
 
   }
 
-  // Coluna da direita — formulário
   form {
     display: flex;
     flex-direction: column;
