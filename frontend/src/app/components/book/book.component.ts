@@ -73,7 +73,10 @@ export class BookComponent implements OnInit {
 					this.cdr.detectChanges();
 				},
 				error: (e) => console.error(e),
-				complete: () => this.isLoading = false
+				complete: () => {
+					this.isLoading = false
+					if (history.state?.executarAnimacao) this.multiplasPaginas(0);
+				}
 			})
 	}
 
