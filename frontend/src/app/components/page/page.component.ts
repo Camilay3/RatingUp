@@ -2,12 +2,13 @@ import { AuthService } from '../../services/user/auth.service';
 import { Component, computed, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { IPage, ISheet, ISubtopico, PageData } from '../../interfaces/book/IBook';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
   styleUrls: ['./page.component.scss'],
-  imports: [],
+  imports: [MatTooltipModule],
 })
 export class PageComponent {
 	page = input<PageData | IPage>();

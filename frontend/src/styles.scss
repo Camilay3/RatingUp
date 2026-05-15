@@ -158,3 +158,8 @@ button:not(.mdc-button):not(.mat-mdc-button):not([mat-button]):not([mat-raised-b
 .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
   color: var(--accent) !important;
 }
+
+.tooltip .mdc-tooltip__surface {
+	background-color: var(--primary) !important;
+	color: var(--white) !important;
+}
