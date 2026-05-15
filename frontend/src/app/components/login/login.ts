@@ -46,14 +46,19 @@ export class Login implements OnInit {
   initLoginForm(){
     this.LoginForm = this.fb.group({
       email : ['',[Validators.required]],
-      password: ['',[Validators.required]]
+      password: ['',[
+        Validators.required, 
+        Validators.pattern(/^[^\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2300}-\u{23FF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA9F}]*$/u)]]
     })
   }
 
   initRegisterForm(){
     this.RegisterForm = this.fb.group({
       email: ['',[Validators.required, Validators.email]],
-      password: ['',[Validators.required]],
+      password: ['',[
+        Validators.required, 
+        Validators.pattern(/^[^\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2300}-\u{23FF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA9F}]*$/u)]
+      ],
       name: ['',[Validators.required, Validators.pattern('^[a-zA-ZÀ-ÿ ]+$')]],
       nickname: ['',[Validators.required, Validators.pattern('^[a-zA-Z0-9_-]+$')]],
       telefone: ['',[Validators.required, Validators.minLength(8), Validators.maxLength(11), Validators.pattern('^[0-9]{8,11}$')]]
