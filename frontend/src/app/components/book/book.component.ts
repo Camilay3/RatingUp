@@ -5,17 +5,19 @@ import { ISheet } from '../../interfaces/book/IBook';
 import { BookService } from '../../services/book/book.service';
 import { AudioService } from '../../services/book/audio.service';
 import { AuthService } from '../../services/user/auth.service';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
 	selector: 'app-book',
 	templateUrl: './book.component.html',
 	styleUrls: ['./book.component.scss'],
-	imports: [SheetComponent]
+	imports: [SheetComponent, LoaderComponent]
 })
 export class BookComponent implements OnInit {
 	onFirstPage: boolean = true;
 	onLastPage: boolean = false;
 	isWaiting: boolean = false;
+	isLoading: boolean = true;
 	pageFlipStates: boolean[] = [];
 
 	capituloAtual: number = 1;
@@ -69,7 +71,8 @@ export class BookComponent implements OnInit {
 				this.buildBookFromPages();
 				this.cdr.detectChanges();
 			},
-			error: (e) => console.error(e)
+			error: (e) => console.error(e),
+			complete: () => this.isLoading = false
 		});
 	}
 
