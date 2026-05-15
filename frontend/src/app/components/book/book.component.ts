@@ -39,8 +39,8 @@ export class BookComponent implements OnInit {
 	ngOnInit() {
 		this.authService.getProgresso().subscribe({
 			next: (response) => {
-				this.capituloAtual = response.data.chapter;
-				this.subtopicoAtual = response.data.subtopic;
+				this.capituloAtual = response.data.chapter ?? 1;
+				this.subtopicoAtual = response.data.subtopic ?? 1;
 			},
 			error: (e) => console.error(e)
 		});

@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { IMyUser, IProgresso } from "../../interfaces/user/IMyUser";
 import { tap } from "rxjs";
 import { Router } from "@angular/router";
+import { IResponse } from "../../interfaces/IResponse";
 
 @Injectable({
 	providedIn: 'root'
@@ -29,7 +30,7 @@ export class AuthService {
 	}
 
 	logout() {
-		this.router.navigateByUrl('/');
+		return this.http.delete<IResponse>(`${this.apiUrl}/auth/logout`);
 	}
 
 	get getMyUser() { return this.currentUser.asReadonly(); }
