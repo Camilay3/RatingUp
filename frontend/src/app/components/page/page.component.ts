@@ -57,6 +57,9 @@ export class PageComponent {
 	}
 
 	logout() {
-		this.authService.logout();
+		this.authService.logout().subscribe({
+			next: () => this.router.navigateByUrl('/'),
+			error: (e) => console.error(e)
+		});
 	}
 }

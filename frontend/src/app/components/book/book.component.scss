@@ -29,18 +29,10 @@
 
 /* ANIMAÇÕES */
 .pageAnimation {
-	visibility: hidden;
 	animation: page 1s ease forwards 0.1s;
 }
 
 @keyframes page {
-	from {
-		visibility: visible;
-		transform: translateY(20%);
-	}
-
-	to {
-		visibility: visible;
-		transform: translateY(0);
-	}
+	from { transform: translateX(100%); }
+	to { transform: translateY(0); }
 }

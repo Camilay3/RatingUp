@@ -1,40 +1,4 @@
-
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
-
-html {
-  height: 100%;
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
-}
-
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
-  margin: 0;
-  height: 100%;
-}
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 :root {
@@ -66,8 +30,20 @@ body {
 * {
 	margin: 0;
 	padding: 0;
-	//border: 0;
+	border: 0;
 	box-sizing: border-box;
+}
+
+html {
+	height: 100%;
+	@include mat.theme((
+		color: (
+			primary: mat.$azure-palette,
+			tertiary: mat.$blue-palette,
+		),
+		typography: Lato,
+		density: 0,
+	));
 }
 
 body {
@@ -75,12 +51,19 @@ body {
 	width: 100dvw;
 	height: 100dvh;
 	overflow: hidden;
+
+	background-color: var(--mat-sys-surface);
+	color: var(--mat-sys-on-surface);
+	font: var(--mat-sys-body-medium);
 }
 
 h1, h2 {
 	font-family: var(--title-font-family);
 	color: var(--primary);
 }
+
+h1 { margin-bottom: 0.8rem; }
+h2 { margin-bottom: 0.5rem; }
 
 p, span, a, button {
 	font-family: var(--font-family);
@@ -92,19 +75,19 @@ img::selection {
 }
 
 button:not(.mdc-button):not(.mat-mdc-button):not([mat-button]):not([mat-raised-button]):not([mat-icon-button]) {
-  background-color: var(--primary);
-  box-shadow: 0px 0px 4px 0px var(--neutral);
-  border-radius: 1rem;
-  padding: 1.2rem;
-  font-size: 1rem;
-  font-weight: 900;
-  color: var(--white);
-  cursor: pointer;
-  width: 15.2rem;
-  margin: 0 auto;
+	background-color: var(--primary);
+	box-shadow: 0px 0px 4px 0px var(--neutral) !important;
+	border-radius: 1rem;
+	padding: 1.2rem;
+	font-size: 1rem;
+	font-weight: 900;
+	color: var(--white);
+	cursor: pointer;
+	width: 15.2rem;
+	margin: 0 auto;
 
-  &:hover { background-color: var(--primaryHover); }
-  &:active { background-color: var(--primaryActive); }
+	&:hover { background-color: var(--primaryHover); }
+	&:active { background-color: var(--primaryActive); }
 }
 
 //Angular Material
