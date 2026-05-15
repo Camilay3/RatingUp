@@ -22,7 +22,7 @@
 
 	} @else {
 		<div (click)="virarPagina()" class="versoPage">
-			<app-page [page]="verso()" side="verso" (isWaiting)="isPageWaiting = $event" (navigate)="navigate.emit($event)"></app-page>
+			<app-page [page]="verso()" side="verso" (navigate)="navigate.emit($event)"></app-page>
 		</div>
 
 		<div (click)="virarPagina()" class="frentePage">
