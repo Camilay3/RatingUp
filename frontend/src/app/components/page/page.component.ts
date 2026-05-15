@@ -35,6 +35,11 @@ export class PageComponent {
 		return page.type === 'subtópico';
 	}
 
+	setIconList(page: any) {
+		if (page.isBlocked) return "fa-solid fa-lock";
+		return "fa-solid fa-star";
+	}
+
 	acessarSubtopico(capitulo: number, subtopico: number) {
 		this.router.navigate(['/subtopico'], {
             state: { capitulo, subtopico }

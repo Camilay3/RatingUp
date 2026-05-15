@@ -25,22 +25,25 @@
 			<!-- <p (click)="$event.stopPropagation(); multiplasPaginas(1 + home.summary.length)">Ir para o final</p> -->
 			<h1>Níveis</h1>
 			<span></span>
-			@for (item of home.summary; track outerIndex; let outerIndex = $index) {
-				@for (entry of getPages(item); track entry.page.displayOrder) {
-					@if (entry.page.type == 'capitulo') {
-						<h2>Capítulo {{ entry.page.displayOrder }}</h2>
+			<ul>
+				@for (item of home.summary; track outerIndex; let outerIndex = $index) {
+					@for (entry of getPages(item); track entry.page.displayOrder) {
+						@if (entry.page.type == 'capitulo') {
+							<h2>Capítulo {{ entry.page.displayOrder }}</h2>
 
-					} @else {
-						<p [class.blocked]="isSubtopico(entry.page) && entry.page.isBlocked"
-							(click)="$event.stopPropagation();
+						} @else {
+							<li [class.blocked]="isSubtopico(entry.page) && entry.page.isBlocked"
+								(click)="$event.stopPropagation();
 								(isSubtopico(entry.page) && !entry.page.isBlocked)
-									? multiplasPaginas(entry.offset + outerIndex)
-									: null">
-							{{ entry.page.displayOrder }}. {{ entry.page.title }}
-						</p>
+								? multiplasPaginas(entry.offset + outerIndex)
+								: null">
+								<i [class]="setIconList(entry.page)"></i>
+								{{ entry.page.title }}
+							</li>
+						}
 					}
 				}
-			}
+			</ul>
 		</div>
 	}
 
