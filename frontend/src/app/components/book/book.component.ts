@@ -6,6 +6,7 @@ import { BookService } from '../../services/book/book.service';
 import { AudioService } from '../../services/book/audio.service';
 import { AuthService } from '../../services/user/auth.service';
 import { LoaderComponent } from '../loader/loader.component';
+import { switchMap } from 'rxjs';
 
 @Component({
 	selector: 'app-book',
@@ -39,41 +40,41 @@ export class BookComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		this.authService.getProgresso().subscribe({
-			next: (response) => {
-				this.capituloAtual = response.data.chapter ?? 1;
-				this.subtopicoAtual = response.data.subtopic ?? 1;
-			},
-			error: (e) => console.error(e)
-		});
+		this.authService.getProgresso()
+			.pipe(
+				switchMap((response) => {
+					this.capituloAtual = response.data.chapter;
+					this.subtopicoAtual = response.data.subtopic;
+					return this.bookService.getSheets();
+				})
 
-		this.bookService.getSheets().subscribe({
-			next: (response) => {
-				this.pages = response.data.pages.map(page => {
-					let currentItem = false;
+			).subscribe({
+				next: (response) => {
+					this.pages = response.data.pages.map(page => {
+						let currentItem = false;
 
-					(['front', 'verse'] as const).forEach(side => {
-						const current = page[side];
+						(['front', 'verse'] as const).forEach(side => {
+							const current = page[side];
 
-						if (current.type == 'subtópico') {
-							const isAfterCurrentChapter = current.chapterId > this.capituloAtual;
-							const isAfterCurrentSubtopic =
-								current.chapterId === this.capituloAtual &&
-								current.displayOrder > this.subtopicoAtual;
+							if (current.type == 'subtópico') {
+								const isAfterCurrentChapter = current.chapterId > this.capituloAtual;
+								const isAfterCurrentSubtopic =
+									current.chapterId === this.capituloAtual &&
+									current.displayOrder > this.subtopicoAtual;
 
-							currentItem = isAfterCurrentChapter || isAfterCurrentSubtopic;
-							page[side] = { ...current, isBlocked: currentItem };
-						}
-					});
-					return page;
-				}) || [];
+								currentItem = isAfterCurrentChapter || isAfterCurrentSubtopic;
+								page[side] = { ...current, isBlocked: currentItem };
+							}
+						});
+						return page;
+					}) || [];
 
-				this.buildBookFromPages();
-				this.cdr.detectChanges();
-			},
-			error: (e) => console.error(e),
-			complete: () => this.isLoading = false
-		});
+					this.buildBookFromPages();
+					this.cdr.detectChanges();
+				},
+				error: (e) => console.error(e),
+				complete: () => this.isLoading = false
+			})
 	}
 
 	private buildBookFromPages(): void {
