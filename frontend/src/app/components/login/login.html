@@ -84,7 +84,11 @@
         {{ RegisterForm.get('password')?.getError('backendError') }}
       </mat-error>
 
-      <button mat-icon-button matSuffix (click)="togglePassword()" type="button">
+      <mat-error *ngIf="RegisterForm.get('password')?.hasError('pattern')" >
+        A senha só pode ter letras, numeros e caracteres especiais, mas não emoji
+      </mat-error>
+
+      <button mat-icon-button matSuffix class="visibility" (click)="togglePassword()" type="button">
             <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
 
@@ -119,7 +123,11 @@
             {{ LoginForm.get('password')?.getError('backendError') }}
           </mat-error>
 
-          <button mat-icon-button matSuffix (click)="togglePassword()" type="button">
+          <mat-error *ngIf="LoginForm.get('password')?.hasError('pattern')" >
+            A senha só pode ter letras, numeros e caracteres especiais, mas não emoji
+          </mat-error>
+
+          <button mat-icon-button matSuffix class="visibility" (click)="togglePassword()" type="button">
             <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
 

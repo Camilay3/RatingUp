@@ -14,12 +14,6 @@
   z-index: 0;
   overflow: hidden;
 
-  /*app-book {
-    position: absolute;
-    inset: 0;          // adiciona isso
-    overflow: hidden;
-    pointer-events: none;
-  }*/
 
   .livro-fundo {
     position: absolute;
@@ -29,13 +23,6 @@
     object-fit: cover; // cobre o fundo todo
   }
 
-  /*.livro-capa {
-    position: relative;
-    height: 90vh;      // ajuste o tamanho conforme precisar
-    width: auto;
-    z-index: 1;
-    object-fit: contain;
-  }*/
 }
 
 .overdelay {
@@ -54,13 +41,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 48px;  // espaço entre as duas colunas
+  gap: 48px;
 
   .left-col {
     display: flex;
     flex-direction: column;  // título em cima, botão embaixo
     align-items: center;
-    gap: 24px;
+    gap: 35px;
 
     h1{
       color: var(--secondary);
@@ -73,11 +60,10 @@
   }
 
 
-  // Coluna da esquerda — botões de escolha
   .tab-buttons {
     display: flex;
     flex-direction: column;  // empilhados verticalmente
-    gap: 12px;
+    gap: 15px;
 
     button {
       width: 140px;
@@ -110,36 +96,15 @@
 
   }
 
-  // Coluna da direita — formulário
   form {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    
-    /*input {
-      width: 300px;
-      padding: 10px 16px;
-      border: none;
-      border-bottom: 1px solid rgba(197, 155, 80, 0.3);
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-      backdrop-filter: blur(4px);
-      transition: background 0.3s;
 
-      &::placeholder {
-        color: rgba(255, 255, 255, 0.9);
-        font-family: var(--font-family);
-      }
-
-      &:focus {
-        background: rgba(197, 155, 80, 0.25);
-        border-bottom-color: rgba(197, 155, 80, 0.7);
-      }
-    }*/
+    .visibility{
+    margin-right: 9px;
+    }
 
     button[type="submit"] {
       margin-top: 8px;
@@ -175,5 +140,9 @@
   p.registre{
     cursor: pointer;
     color: var(--secondary);
+
+    &:hover{
+      color: var(--accent);
+    }
   }
 }
