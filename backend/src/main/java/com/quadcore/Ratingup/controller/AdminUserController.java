@@ -31,13 +31,21 @@ public class AdminUserController {
     @Operation(summary = "Lista todas as contas registradas no banco")
     @GetMapping("/contas/listar")
     public ResponseEntity<ApiResponse<?>> listUsers() {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuários listados", adminUserService.listUsers()));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Usuários listados",
+                        adminUserService.listUsers()));
     }
 
     @Operation(summary = "Busca um usuário pelo id")
     @GetMapping("/contas/buscar/{id}")
     public ResponseEntity<ApiResponse<?>> serarchUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Perfil encontrado", UserMapper.toResponseDTO(adminUserService.searchUserById(id))));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                    true,
+                    "Perfil encontrado",
+                    UserMapper.toResponseDTO(adminUserService.searchUserById(id))));
     }
 
     @Operation(summary = "Cadastra um usuário admin")
@@ -45,12 +53,20 @@ public class AdminUserController {
     public ResponseEntity<ApiResponse<?>> registerAdminUser(@Valid @RequestBody ProfileRequestDTO dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(adminUserService.registerAdminUser(UserMapper.toEntity(dto)))));
+                .body(
+                        new ApiResponse<>(
+                            true,
+                            "Usuário cadastrado com sucesso",
+                            UserMapper.toResponseDTO(adminUserService.registerAdminUser(UserMapper.toEntity(dto)))));
     }
 
     @Operation(summary = "Retorna os dados do usuáiro admin")
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<?>> showUserAdmin(@AuthenticationPrincipal User adminLogado) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Administrador encontrado", UserMapper.toResponseDTO(adminLogado)));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Administrador encontrado",
+                        UserMapper.toResponseDTO(adminLogado)));
     }
 }

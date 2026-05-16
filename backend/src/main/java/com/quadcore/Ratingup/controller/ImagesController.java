@@ -36,7 +36,11 @@ public class ImagesController {
             MultipartFile file,
             @PathVariable String bucketName) throws Exception {
             imagesService.upload(file, bucketName);
-            return ResponseEntity.ok(new ApiResponse<>(true, "Imagem subiu com sucesso", null));
+            return ResponseEntity.ok(
+                    new ApiResponse<>(
+                            true,
+                            "Imagem subiu com sucesso",
+                            null));
         }
 
     @GetMapping(value = "/{bucketName}/{imageName}", produces = MediaType.IMAGE_PNG_VALUE)
