@@ -1,5 +1,8 @@
 package com.quadcore.Ratingup.service;
 
+import com.quadcore.Ratingup.dto.profile.ProfileResponseDTO;
+import com.quadcore.Ratingup.enums.Roles;
+import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.Progress;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressRepository;
@@ -23,7 +26,14 @@ public class AdminUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> listUsers() { return userRepository.findAll();}
+    public List<ProfileResponseDTO> listUsers() {
+        List<ProfileResponseDTO> dtos = userRepository.findAll()
+                .stream()
+                .map(UserMapper::toResponseDTO)
+                .toList();
+
+        return dtos;
+    }
 
     public User searchUserById(Long id) {
         return userRepository.findById(id)
@@ -42,6 +52,7 @@ public class AdminUserService {
 
         String senhaCriptografada = passwordEncoder.encode(user.getPassword());
         user.setPassword(senhaCriptografada);
+        user.setRole(Roles.ADMIN);
 
         User savedUser = userRepository.save(user);
         Progress progresso = new Progress();

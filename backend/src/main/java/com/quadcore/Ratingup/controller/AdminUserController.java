@@ -31,33 +31,21 @@ public class AdminUserController {
     @Operation(summary = "Lista todas as contas registradas no banco")
     @GetMapping("/contas/listar")
     public ResponseEntity<ApiResponse<?>> listUsers() {
-        List<ProfileResponseDTO> dtos = adminUserService.listUsers()
-                .stream()
-                .map(UserMapper::toResponseDTO)
-                .toList();
-
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuários listados", dtos));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuários listados", adminUserService.listUsers()));
     }
 
     @Operation(summary = "Busca um usuário pelo id")
     @GetMapping("/contas/buscar/{id}")
     public ResponseEntity<ApiResponse<?>> serarchUserById(@PathVariable Long id) {
-        User user = adminUserService.searchUserById(id);
-
-        return ResponseEntity.ok(new ApiResponse<>(true, "Perfil encontrado", UserMapper.toResponseDTO(user)));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Perfil encontrado", UserMapper.toResponseDTO(adminUserService.searchUserById(id))));
     }
 
     @Operation(summary = "Cadastra um usuário admin")
     @PostMapping("/cadastro")
     public ResponseEntity<ApiResponse<?>> registerAdminUser(@Valid @RequestBody ProfileRequestDTO dto) {
-        User user = UserMapper.toEntity(dto);
-        user.setRole(Roles.ADMIN);
-
-        User newUser = adminUserService.registerAdminUser(user);
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(newUser)));
+                .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(adminUserService.registerAdminUser(UserMapper.toEntity(dto)))));
     }
 
     @Operation(summary = "Retorna os dados do usuáiro admin")
