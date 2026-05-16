@@ -30,7 +30,6 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
-
     private final UserRepository userRepository;
     private final TokenGenerator tokenGenerator;
     private final ProgressRepository progressRepository;
