@@ -42,19 +42,15 @@ public class UserController {
     @Operation(summary = "Cadastra um novo usuário",description = "cadastra um novo usuário no sitema com a role user")
     @PostMapping("/cadastro")
     public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody ProfileRequestDTO dto) {
-
-        User newUser = userService.registerUser(dto);
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(newUser)));
+                .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(userService.registerUser(dto))));
     }
 
     @Operation(summary = "Atualiza parcialmente os dados do usuário",description = "atualiza dados de usuário e devolve um dto com as novas informações atualizadas do usuário")
     @PatchMapping("me/atualizar")
     public ResponseEntity<ApiResponse<?>> updateUser(@AuthenticationPrincipal User loggedUser, @Valid @RequestBody ProfileUpdateRequestDTO dto) {
-        Optional<User> userAtualizado = userService.updateUser(loggedUser.getEmail(), dto);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", userAtualizado.map(UserMapper::toResponseDTO)));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", UserMapper.toResponseDTO(userService.updateUser(loggedUser.getEmail(), dto))));
     }
 
 
