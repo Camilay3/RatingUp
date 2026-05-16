@@ -25,6 +25,7 @@ export class SheetComponent {
 	navigate = output<{ qnt?: number; next?: boolean }>();
 
 	virarPagina(multiplas: boolean = false): void {
+
 		if (this.isPageWaiting) return;
 		this.isPageWaiting = true;
 		this.isWaiting.emit(this.isPageWaiting);

@@ -1,4 +1,4 @@
-<div class="page" [class.home]="asType(page(), 'home')" [class.capitulo]="asType(page(), 'capitulo')" [class.subtopico]="asType(page(), 'subtópico')">
+<div class="page" [class.home]="asType(page(), 'home')" [class.sumario]="asType(page(), 'sumario')" [class.capitulo]="asType(page(), 'capitulo')" [class.subtopico]="asType(page(), 'subtópico')">
 	@if (pageIsBlocked()) {
 		<div class="lock">
 			<img loading="lazy" src="/lock.png" alt="Cadeado" draggable="false">
@@ -14,22 +14,38 @@
 				<span>∾</span><p>{{ sub.title }}</p><span>∾</span>
 			</div>
 		</div>
-			<img draggable="false" loading="lazy" [src]="'/subtopicos/' + sub.chapterId + '.' + sub.displayOrder + '.png'" [alt]="'Img do subtópico' + sub.displayOrder" (error)="onImageError($event)">
-			<button (click)="$event.stopPropagation(); acessarSubtopico(sub.chapterId, sub.displayOrder)">Acessar</button>
+		<img draggable="false" loading="lazy" [src]="'/subtopicos/' + sub.chapterId + '.' + sub.displayOrder + '.png'" [alt]="'Img do subtópico' + sub.displayOrder" (error)="onImageError($event)">
+		<button (click)="$event.stopPropagation(); acessarSubtopico(sub.chapterId, sub.displayOrder)">Acessar</button>
 	} @else if (asType(page(), 'home'); as home) {
 		<div class="header">
 			<h2>{{ home.nickname }}</h2>
 			<span (click)="$event.stopPropagation(); logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</span>
 		</div>
-		<div class="niveis">
-			<!-- <p (click)="$event.stopPropagation(); multiplasPaginas(1 + home.summary.length)">Ir para o final</p> -->
+		<div class="niveis" (click)="$event.stopPropagation()" >
 			<h1>Níveis</h1>
 			<span></span>
 			@for (item of home.summary; track outerIndex; let outerIndex = $index) {
 				@for (entry of getPages(item); track entry.page.displayOrder) {
 					@if (entry.page.type == 'capitulo') {
 						<h2>Capítulo {{ entry.page.displayOrder }}</h2>
-
+					} @else {
+						<p [class.blocked]="isSubtopico(entry.page) && entry.page.isBlocked"
+							(click)="$event.stopPropagation();
+								(isSubtopico(entry.page) && !entry.page.isBlocked)
+									? multiplasPaginas(entry.offset + outerIndex)
+									: null">
+							{{ entry.page.displayOrder }}. {{ entry.page.title }}
+						</p>
+					}
+				}
+			}
+		</div>
+	} @else if (asType(page(), 'sumario'); as sumario) {
+		<div class="niveis" (click)="$event.stopPropagation()" >
+			@for (item of sumario.summary; track outerIndex; let outerIndex = $index) {
+				@for (entry of getPages(item); track entry.page.displayOrder) {
+					@if (entry.page.type === 'capitulo') {
+						<h2>Capítulo {{ entry.page.displayOrder }}</h2>
 					} @else {
 						<p [class.blocked]="isSubtopico(entry.page) && entry.page.isBlocked"
 							(click)="$event.stopPropagation();

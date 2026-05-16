@@ -141,5 +141,25 @@
 	img {
 		border: 8px ridge var(--primary);
 		border-radius: 8px;
-	}
+	} 
+
+
+	.page.home, .page.sumario {
+    .niveis {
+    width: 100% !important;  // 👈 ocupa largura total
+            cursor: default;
+            
+            &:not(.blocked) {
+                cursor: pointer;
+            }
+            
+            &:hover:not(.blocked) { font-weight: bold; }
+            &.blocked {
+                color: var(--neutralOpacity);
+                &:hover { font-weight: normal; }
+            }
+    h2, h1, span { pointer-events: none; }
+   }
+  }
+
 }

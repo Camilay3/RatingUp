@@ -1,7 +1,14 @@
 import { IResponse } from "../IResponse";
 
 export type IPage = ICapitulo | ISubtopico;
-export type PageData = IPage | IHome;
+export type PageData = IPage | IHome | ISumario;
+
+export interface ISumario {
+  type: 'sumario';
+  displayOrder: number;
+  title: string;
+  summary: ISheet[];
+}
 
 export interface IBook extends IResponse {
 	data: {
@@ -15,20 +22,22 @@ export interface ISheet {
 	verse: IPage
 }
 
-interface IBasePage {
+export interface IBasePage {
 	type: 'capitulo' | 'subtópico' | 'home'
 	displayOrder: number
 	chapterId: number | null
 	title: string
 }
 
-interface IHome extends IBasePage {
+export interface IHome extends IBasePage {
 	type: 'home'
 	nickname: string
 	summary: ISheet[]
+	paginaSumario?: number        // 👈
+    totalPaginasSumario?: number 
 }
 
-interface ICapitulo extends IBasePage {
+export interface ICapitulo extends IBasePage {
 	type: 'capitulo'
 	chapterId: null
 }
