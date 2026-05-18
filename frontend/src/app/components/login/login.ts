@@ -47,7 +47,7 @@ export class Login implements OnInit {
     this.LoginForm = this.fb.group({
       email : ['',[Validators.required]],
       password: ['',[
-        Validators.required, 
+        Validators.required,
         Validators.pattern(/^[^\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2300}-\u{23FF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA9F}]*$/u)]]
     })
   }
@@ -56,7 +56,7 @@ export class Login implements OnInit {
     this.RegisterForm = this.fb.group({
       email: ['',[Validators.required, Validators.email]],
       password: ['',[
-        Validators.required, 
+        Validators.required,
         Validators.pattern(/^[^\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2300}-\u{23FF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA9F}]*$/u)]
       ],
       name: ['',[Validators.required, Validators.pattern('^[a-zA-ZÀ-ÿ ]+$')]],
@@ -80,11 +80,11 @@ export class Login implements OnInit {
    this.loginService.register(payload).subscribe({
     next: (response: any) => {
       this.LoginafterRegister(payload.email,payload.password)
-      this.router.navigate(['/book']);
+      this.router.navigate(['/']);
     },
     error: (err) => {
 
-    if(err.error.data){  
+    if(err.error.data){
      if (err.error.data.name) {
       this.RegisterForm.get('name')?.setErrors({ backendError: err.error.data.name });
      }
@@ -100,7 +100,7 @@ export class Login implements OnInit {
      if (err.error.data.password) {
       this.RegisterForm.get('password')?.setErrors({ backendError: err.error.data.password });
      }
-    } 
+    }
     if (err.error.code === 'CONFLICT') {
       const msgs: string[] = err.error.messages ?? [];
 
@@ -125,11 +125,11 @@ export class Login implements OnInit {
 
   this.loginService.login(payload.email, payload.password).subscribe({
     next: (response) => {
-      this.router.navigate(['/book']);
+      this.router.navigate(['/']);
     },
     error: (err) => {
     const message = err.error?.message;
-      
+
       if (err.error.data?.email) {
     this.LoginForm.get('email')?.setErrors({ backendError: err.error.data.email });
     }else if(message){
@@ -138,8 +138,8 @@ export class Login implements OnInit {
 
      this.snackBar.open('Ops, ocorreu um erro inesperado', 'Fechar', {
       duration: 3000,
-     });   
-    
+     });
+
     }
 
     }
@@ -149,7 +149,7 @@ export class Login implements OnInit {
 private LoginafterRegister(email: string, password: string ){
   this.loginService.login(email, password).subscribe({
     next: () => {
-      this.router.navigate(['/book']);
+      this.router.navigate(['/']);
     },
     error: () => {
       this.snackBar.open('Um erro inesperado aconteceu, tente fazer login com os dados que cadastrou.Se não der certo, verifique sua conexão', 'Fechar', {
@@ -193,7 +193,7 @@ maskPhone(event: Event){
   }
 
   this.RegisterForm.get('telefone')?.setValue(digits, { emitEvent: false });
-  setTimeout(() => { input.value = masked; }, 0) 
+  setTimeout(() => { input.value = masked; }, 0)
 }
 
 

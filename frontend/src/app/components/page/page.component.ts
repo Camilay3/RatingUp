@@ -148,7 +148,7 @@ export class PageComponent {
 
 	logout() {
 		this.authService.logout().subscribe({
-			next: () => this.router.navigateByUrl('/'),
+			next: () => this.router.navigateByUrl('/acesso'),
 			error: (e) => console.error(e)
 		});
 	}
