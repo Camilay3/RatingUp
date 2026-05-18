@@ -22,7 +22,7 @@
 	text-align: center;
 	position: relative;
 	p, span, svg { color: var(--primary); }
-	p, span, h1, h2 { &::selection { background-color: transparent; } } // Ainda seria captado no Ctrl A
+	p, span, h1, h2, li { &::selection { background-color: transparent; } }
 
 	overflow: hidden;
 	height: 96%;

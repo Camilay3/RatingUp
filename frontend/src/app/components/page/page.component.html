@@ -1,9 +1,17 @@
-<div class="page" [class.home]="asType(page(), 'home')" [class.capitulo]="asType(page(), 'capitulo')" [class.subtopico]="asType(page(), 'subtópico')">
+<div #pageRoot class="page" tabindex="0"
+	(copy)="onCopy($event)"
+	(mouseenter)="onHover(true)"
+	(mouseleave)="onHover(false)"
+	[class.home]="asType(page(), 'home')"
+	[class.capitulo]="asType(page(), 'capitulo')"
+	[class.subtopico]="asType(page(), 'subtópico')">
+
 	@if (pageIsBlocked()) {
 		<div class="lock">
 			<img loading="lazy" src="/lock.png" alt="Cadeado" draggable="false">
 		</div>
 	}
+
 	@if (asType(page(), 'capitulo'); as cap) {
 		<h1>Capítulo {{ cap.displayOrder }}</h1>
 		<h2>{{ cap.title }}</h2>
