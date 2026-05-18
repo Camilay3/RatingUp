@@ -6,7 +6,7 @@ import { RouterLink } from "@angular/router";
 	imports: [RouterLink],
 	template: `
 		<img draggable="false" src="/notfound.png" alt="Página não encontrada">
-		<a routerLink="/book">Voltar para o início</a>
+		<a routerLink="/">Voltar para o início</a>
 	`,
 	styles: [`
 		:host {
