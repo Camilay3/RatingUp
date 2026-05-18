@@ -152,7 +152,7 @@ private LoginafterRegister(email: string, password: string ){
       this.router.navigate(['/']);
     },
     error: () => {
-      this.snackBar.open('Um erro inesperado aconteceu, tente fazer login com os dados que cadastrou.Se não der certo, verifique sua conexão', 'Fechar', {
+      this.snackBar.open('Um erro inesperado aconteceu, tente fazer login com os dados que cadastrou. Se não der certo, verifique sua conexão', 'Fechar', {
         duration: 3000
       });
       this.choseForm(false);

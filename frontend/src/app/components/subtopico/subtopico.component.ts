@@ -1,5 +1,6 @@
 import { AuthService } from './../../services/user/auth.service';
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
@@ -15,6 +16,7 @@ export class SubtopicoComponent implements OnInit {
 	constructor(
 		private readonly router: Router,
 		private readonly authService: AuthService,
+		private readonly snackBar : MatSnackBar,
 	) {
 		this.capitulo = history.state?.capitulo;
 		this.subtopico = history.state?.subtopico;
@@ -25,13 +27,13 @@ export class SubtopicoComponent implements OnInit {
 	}
 
 	concluirSubtopico() {
-		this.authService.atualizarProgresso(this.capitulo, this.subtopico).subscribe({
+		this.authService.atualizarProgresso(0, 0).subscribe({
 			next: () => {
 				this.router.navigate(['/'], {
 					state: { executarAnimacao: true }
 				});
 			},
-			error: (e) => console.error(e)
+			error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 }),
 		});
 	}
 

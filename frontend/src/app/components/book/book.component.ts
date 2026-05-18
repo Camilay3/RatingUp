@@ -7,6 +7,7 @@ import { AudioService } from '../../services/book/audio.service';
 import { AuthService } from '../../services/user/auth.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { switchMap } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
 	selector: 'app-book',
@@ -37,6 +38,7 @@ export class BookComponent implements OnInit {
 		private readonly bookService: BookService,
 		private readonly authService: AuthService,
 		private readonly audioService: AudioService,
+		private readonly snackBar : MatSnackBar,
 	) {}
 
 	ngOnInit() {
@@ -72,7 +74,7 @@ export class BookComponent implements OnInit {
 					this.buildBookFromPages();
 					this.cdr.detectChanges();
 				},
-				error: (e) => console.error(e),
+				error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 }),
 				complete: () => {
 					this.isLoading = false
 					if (history.state?.executarAnimacao) this.multiplasPaginas(0);

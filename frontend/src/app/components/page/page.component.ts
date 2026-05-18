@@ -3,6 +3,7 @@ import { Component, computed, input, output, ViewChild, ElementRef, HostListener
 import { Router } from '@angular/router';
 import { IPage, ISheet, ISubtopico, PageData } from '../../interfaces/book/IBook';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-page',
@@ -25,6 +26,7 @@ export class PageComponent {
 	constructor(
 		private readonly router: Router,
 		private readonly authService: AuthService,
+		private readonly snackBar : MatSnackBar,
 	) {}
 
 	private isSubtopicoBlocked(item: PageData | undefined): boolean {
@@ -75,25 +77,21 @@ export class PageComponent {
 
 		const pageRange = document.createRange();
 		pageRange.selectNodeContents(this.pageRoot.nativeElement);
-
-		// compute intersection between selRange and pageRange
 		const intersection = document.createRange();
 
-		// start = later of selRange.start and pageRange.start
 		if (selRange.compareBoundaryPoints(Range.START_TO_START, pageRange) < 0) {
 			intersection.setStart(pageRange.startContainer, pageRange.startOffset);
 		} else {
 			intersection.setStart(selRange.startContainer, selRange.startOffset);
 		}
-		// end = earlier of selRange.end and pageRange.end
+
 		if (selRange.compareBoundaryPoints(Range.END_TO_END, pageRange) > 0) {
 			intersection.setEnd(pageRange.endContainer, pageRange.endOffset);
 		} else {
 			intersection.setEnd(selRange.endContainer, selRange.endOffset);
 		}
 
-		if (intersection.collapsed) return; // nothing inside page
-
+		if (intersection.collapsed) return;
 		const container = document.createElement('div');
 		container.appendChild(intersection.cloneContents());
 		container.querySelectorAll('img, picture, svg').forEach(n => n.remove());
@@ -118,13 +116,9 @@ export class PageComponent {
 		const active = document.activeElement;
 		let shouldSelect = false;
 
-		// If focus is inside this page, allow
 		if (active && this.pageRoot.nativeElement.contains(active)) shouldSelect = true;
-
-		// If mouse is over this page, allow
 		if (this.isHovered) shouldSelect = true;
 
-		// If current selection intersects this page, allow
 		try {
 			const sel = window.getSelection();
 			if (sel && sel.rangeCount > 0) {
@@ -149,7 +143,7 @@ export class PageComponent {
 	logout() {
 		this.authService.logout().subscribe({
 			next: () => this.router.navigateByUrl('/acesso'),
-			error: (e) => console.error(e)
+			error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 }),
 		});
 	}
 }
