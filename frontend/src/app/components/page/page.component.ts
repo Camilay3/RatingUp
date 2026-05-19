@@ -41,12 +41,9 @@ export class PageComponent {
         });
 	}
 
-	getPages(item: ISheet) {
-		return [
-			{ page: item.front, offset: 1 },
-			{ page: item.verse, offset: 2 },
-		];
-	}
+	getPages(item: any) {
+    return [{ page: item, offset: 1 }];
+    }
 
 	multiplasPaginas(qnt: number = 1) {
 		this.navigate.emit({ qnt });
@@ -62,5 +59,4 @@ export class PageComponent {
 			error: (e) => console.error(e)
 		});
 	}
-
 }

@@ -24,7 +24,7 @@
 		<div class="niveis" (click)="$event.stopPropagation()" >
 			<h1>Níveis</h1>
 			<span></span>
-			@for (item of home.summary; track outerIndex; let outerIndex = $index) {
+			@for (item of home.summary; track $index; let outerIndex = $index) {
 				@for (entry of getPages(item); track entry.page.displayOrder) {
 					@if (entry.page.type == 'capitulo') {
 						<h2>Capítulo {{ entry.page.displayOrder }}</h2>
@@ -42,7 +42,7 @@
 		</div>
 	} @else if (asType(page(), 'sumario'); as sumario) {
 		<div class="niveis" (click)="$event.stopPropagation()" >
-			@for (item of sumario.summary; track outerIndex; let outerIndex = $index) {
+			@for (item of sumario.summary; track $index; let outerIndex = $index) {
 				@for (entry of getPages(item); track entry.page.displayOrder) {
 					@if (entry.page.type === 'capitulo') {
 						<h2>Capítulo {{ entry.page.displayOrder }}</h2>

@@ -33,8 +33,8 @@ export class BookComponent implements OnInit {
 	nickname: string = '';
 
 	private readonly ALTURA_UTIL = 569;
-    private readonly ALTURA_HEADER_NIVEIS = 140; // h1 + span + margin-top 4rem
-    private readonly ALTURA_CAPITULO = 52;
+    private readonly ALTURA_HEADER_NIVEIS = 28; // h1 + span + margin-top 4rem
+    private readonly ALTURA_CAPITULO = 40;
     private readonly ALTURA_SUBTOPICO = 20;
 
 	constructor(
@@ -73,7 +73,6 @@ export class BookComponent implements OnInit {
 						});
 						return page;
 					}) || [];
-
 					this.buildBookFromPages();
 					this.cdr.detectChanges();
 				},
@@ -83,40 +82,29 @@ export class BookComponent implements OnInit {
 	}
 
 private buildHomePages(): any[] {
-  type Grupo = { capSheet: ISheet; subSheets: ISheet[] };
-  const grupos: Grupo[] = [];
+  const grupos: { title: any; subtopicos: any[] }[] = [];
 
   for (const sheet of this.pages) {
-    if (sheet.front.type === 'capitulo') {
-      grupos.push({ capSheet: sheet, subSheets: [] });
-    } else if (sheet.front.type === 'subtópico' && grupos.length > 0) {
-      grupos[grupos.length - 1].subSheets.push(sheet);
+    for (const side of [sheet.front, sheet.verse].filter(Boolean)) {
+      if (side.type === 'capitulo') {
+        grupos.push({ title: side, subtopicos: [] });
+      } else if (side.type === 'subtópico' && grupos.length > 0) {
+        grupos[grupos.length - 1].subtopicos.push(side);
+      }
     }
   }
 
-  // Altura útil da frente home (tem header com nickname+sair + h1 Níveis + span)
   const ALTURA_FRENTE_HOME = this.ALTURA_UTIL - this.ALTURA_HEADER_NIVEIS;
-  // Altura útil do verso e páginas seguintes (sem header, só padding)
   const ALTURA_CONTINUACAO = this.ALTURA_UTIL;
-
-  // Divide grupos em fatias (frente, verso, frente, verso...)
-  const fatias: Grupo[][] = [];
-  let fatiaAtual: Grupo[] = [];
+  const fatias: typeof grupos[] = [];
+  let fatiaAtual: typeof grupos = [];
   let alturaUsada = 0;
   let primeiraFatia = true;
 
   const alturaDisponivel = () => primeiraFatia ? ALTURA_FRENTE_HOME : ALTURA_CONTINUACAO;
 
   for (const grupo of grupos) {
-    const totalSubs =
-      (grupo.capSheet.verse?.type === 'subtópico' ? 1 : 0) +
-      grupo.subSheets.reduce((acc, s) => {
-        return acc
-          + (s.front.type === 'subtópico' ? 1 : 0)
-          + (s.verse?.type === 'subtópico' ? 1 : 0);
-      }, 0);
-
-    const alturaGrupo = this.ALTURA_CAPITULO + totalSubs * this.ALTURA_SUBTOPICO;
+    const alturaGrupo = this.ALTURA_CAPITULO + grupo.subtopicos.length * this.ALTURA_SUBTOPICO;
 
     if (alturaUsada + alturaGrupo <= alturaDisponivel()) {
       fatiaAtual.push(grupo);
@@ -132,21 +120,18 @@ private buildHomePages(): any[] {
   }
   if (fatiaAtual.length > 0) fatias.push(fatiaAtual);
 
-  // Monta os sheets: fatia[0]=frente home, fatia[1]=verso home, fatia[2]=frente próxima folha...
   const nickname = this.authService.getMyUser()?.data.nickname;
-  const toSummary = (fatia: Grupo[]) =>
-    fatia.flatMap(g => [g.capSheet, ...g.subSheets]);
+  const toSummary = (fatia: typeof grupos) => fatia.flatMap(g => [g.title, ...g.subtopicos]);
 
   const sheets: any[] = [];
-
   for (let i = 0; i < fatias.length; i += 2) {
     const frente = i === 0
-  ? { type: 'home', nickname, summary: toSummary(fatias[0]) }
-  : { type: 'sumario', displayOrder: i, summary: toSummary(fatias[i]) };
+      ? { type: 'home', nickname, summary: toSummary(fatias[0]) }
+      : { type: 'sumario', displayOrder: i, summary: toSummary(fatias[i]) };
 
     const verso = fatias[i + 1]
-  ? { type: 'sumario', displayOrder: i + 1, summary: toSummary(fatias[i + 1]) }
-  : null;
+      ? { type: 'sumario', displayOrder: i + 1, summary: toSummary(fatias[i + 1]) }
+      : null;
 
     sheets.push({ front: frente, verse: verso });
   }
@@ -155,6 +140,7 @@ private buildHomePages(): any[] {
 }
 
 	private buildBookFromPages(): void {
+		console.log('PAGES:', JSON.stringify(this.pages, null, 2));
   const homePages = this.buildHomePages();
 
   this.book = [
