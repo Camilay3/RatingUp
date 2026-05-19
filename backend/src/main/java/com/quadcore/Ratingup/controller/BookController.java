@@ -23,12 +23,20 @@ public class BookController {
     @Operation(summary = "Lista as páginas do livro")
     @GetMapping("/paginas")
     public ResponseEntity<ApiResponse<?>> listPages() {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Páginas encontradas", bookService.buildBook()));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Páginas encontradas",
+                        bookService.buildBook()));
     }
 
     @Operation(summary = "Adiciona mais subtópicos ao livro")
     @PostMapping("/adicionar")
     public ResponseEntity<ApiResponse<?>> addSubtopics(@Valid @RequestBody SubtopicRequestDTO dto) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Subtópico salvo com sucesso", bookService.addSubtopic(dto)));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Subtópico salvo com sucesso",
+                        bookService.addSubtopic(dto)));
     }
 }

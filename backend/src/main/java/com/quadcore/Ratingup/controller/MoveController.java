@@ -21,14 +21,12 @@ public class MoveController {
     @Operation(summary = "Valida o movimento da peça")
     @GetMapping
     public ResponseEntity<Boolean> validateMovement(@RequestBody @Valid MoveRequestDTO movementDto){
-        Boolean isPossible = moveValidationService.validateMovement(movementDto);
-        return ResponseEntity.ok(isPossible);
+        return ResponseEntity.ok(moveValidationService.validateMovement(movementDto));
     }
 
     @Operation(summary = "Executa o movimento da peça",description = "valida o movimento,faz o movimento e retorna o estado atual do tabuleiro juntamente do status da partida")
     @PostMapping("/execute")
     public ResponseEntity<MoveResponseDTO> performMovement(@RequestBody @Valid MoveRequestDTO movementDto) {
-        MoveResponseDTO response = moveValidationService.performMovement(movementDto);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(moveValidationService.performMovement(movementDto));
     }
 }

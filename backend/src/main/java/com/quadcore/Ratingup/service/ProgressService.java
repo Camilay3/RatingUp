@@ -1,6 +1,8 @@
 package com.quadcore.Ratingup.service;
 
+import com.quadcore.Ratingup.dto.progresso.ProgressResponseDTO;
 import com.quadcore.Ratingup.dto.progresso.ProgressUpdateDTO;
+import com.quadcore.Ratingup.mapper.ProgressoMapper;
 import com.quadcore.Ratingup.model.book.Subtopics;
 import com.quadcore.Ratingup.model.profile.Progress;
 import com.quadcore.Ratingup.repository.ChaptersRepository;
@@ -24,12 +26,18 @@ public class ProgressService {
         this.chaptersRepository = chaptersRepository;
     }
 
-    public Progress allowedPhases(String userEmail) {
-        return progressRepository.findByUserEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
+    public ProgressResponseDTO allowedPhases(String userEmail) {
+        Progress progress = progressRepository.findByUserEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
+        ProgressResponseDTO dto = new ProgressResponseDTO(
+                progress.getUser().getId(),
+                progress.getChapters(),
+                progress.getSubtopics());
+
+        return dto;
     }
 
     @Transactional
-    public Optional<Progress> updateCurrentPhase(String userEmail, ProgressUpdateDTO dto) {
+    public ProgressResponseDTO updateCurrentPhase(String userEmail, ProgressUpdateDTO dto) {
         Progress progressoUser = progressRepository.findByUserEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
 
@@ -50,6 +58,8 @@ public class ProgressService {
             progressoUser.setSubtopics(1);
         }
 
-        return Optional.of(progressRepository.save(progressoUser));
+        Progress progress = progressRepository.save(progressoUser);
+
+        return ProgressoMapper.toResponse(progress);
     }
 }
