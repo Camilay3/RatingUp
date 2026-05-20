@@ -7,7 +7,6 @@ import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -40,78 +39,34 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Operation(summary = "Cadastra um usuário")
+    @Operation(summary = "Cadastra um novo usuário",description = "cadastra um novo usuário no sitema com a role user")
     @PostMapping("/cadastro")
     public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody ProfileRequestDTO dto) {
-        User user = new User();
-        user.setName(dto.name());
-        user.setNickname(dto.nickname());
-        user.setEmail(dto.email());
-        user.setTelefone(dto.telefone());
-        user.setPassword(dto.password());
-        user.setRole(Roles.USER);
-
-        User newUser = userService.registerUser(user);
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(newUser)));
+                .body(new ApiResponse<>(true, "Usuário cadastrado com sucesso", UserMapper.toResponseDTO(userService.registerUser(dto))));
     }
 
-    @PostMapping("/login")
-	public ResponseEntity<ApiResponse<?>> loginUser(
-		@Valid @RequestBody LoginRequestDTO dto,
-		HttpServletResponse response
-	) {
-
-		String token = userService.loginUser(
-				dto.email(),
-				dto.password()
-		);
-
-		ResponseCookie cookie = ResponseCookie
-				.from("token", token)
-				.httpOnly(true)
-				.secure(false)
-				.path("/")
-				.sameSite("Lax")
-				.maxAge(Duration.ofDays(7))
-				.build();
-
-		response.addHeader(
-				HttpHeaders.SET_COOKIE,
-				cookie.toString()
-		);
-
-		return ResponseEntity.ok(
-				new ApiResponse<>(
-						true,
-						"Usuário realizou login com sucesso",
-						null
-				)
-		);
-	}
-
-
-    @Operation(summary = "Atualiza parcialmente os dados do usuário")
+    @Operation(summary = "Atualiza parcialmente os dados do usuário",description = "atualiza dados de usuário e devolve um dto com as novas informações atualizadas do usuário")
     @PatchMapping("me/atualizar")
-    public ResponseEntity<ApiResponse<?>> updateUser(@AuthenticationPrincipal User logado, @Valid @RequestBody ProfileUpdateDTO dto) {
-        Optional<User> userAtualizado = userService.updateUser(logado.getEmail(), dto);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", userAtualizado.map(UserMapper::toResponseDTO)));
+    public ResponseEntity<ApiResponse<?>> updateUser(@AuthenticationPrincipal User loggedUser, @Valid @RequestBody ProfileUpdateRequestDTO dto) {
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário atualizado", UserMapper.toResponseDTO(userService.updateUser(loggedUser.getEmail(), dto))));
     }
 
 
-    @Operation(summary = "Deleta o usuário")
+    @Operation(summary = "Deleta o usuário",description = "faz um hard delete no sistema de um usuário")
     @DeleteMapping("me/deletar")
-    public ResponseEntity<ApiResponse<?>> deleteUser(@AuthenticationPrincipal User logado) {
-        userService.deleteUser(logado.getEmail());
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário deletado com sucesso", null));
+    public ResponseEntity<ApiResponse<?>> deleteUser(@AuthenticationPrincipal User loggedUser) {
+        userService.deleteUser(loggedUser.getEmail());
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(new ApiResponse<>(true, "Usuário deletado com sucesso", null));
     }
 
-    @Operation(summary = "Retorna os dados do usuário")
+    @Operation(summary = "Retorna os dados do usuário",description = "devolve um dto completo com dados do usuário")
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<?>> showUser(@AuthenticationPrincipal User logado) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário encontrado", UserMapper.toResponseDTO(logado)));
+    public ResponseEntity<ApiResponse<?>> showUser(@AuthenticationPrincipal User loggedUser) {
+        return ResponseEntity.ok(new ApiResponse<>(true, "Usuário encontrado", UserMapper.toResponseDTO(loggedUser)));
     }
 
 }

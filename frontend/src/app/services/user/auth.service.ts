@@ -1,9 +1,10 @@
 import { Injectable, signal } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
-import { IMyUser } from "../../interfaces/IMyUser";
+import { IMyUser, IProgresso } from "../../interfaces/user/IMyUser";
 import { tap } from "rxjs";
 import { Router } from "@angular/router";
+import { IResponse } from "../../interfaces/IResponse";
 
 @Injectable({
 	providedIn: 'root'
@@ -20,8 +21,16 @@ export class AuthService {
 		);
 	}
 
+	atualizarProgresso(chapter: number, subtopic: number) {
+		return this.http.post<IProgresso>(`${this.apiUrl}/progresso/atualiza-fase`, { chapter, subtopic });
+	}
+
+	getProgresso() {
+		return this.http.get<IProgresso>(`${this.apiUrl}/progresso/disponiveis`);
+	}
+
 	logout() {
-		this.router.navigateByUrl('/');
+		return this.http.delete<IResponse>(`${this.apiUrl}/auth/logout`);
 	}
 
 	get getMyUser() { return this.currentUser.asReadonly(); }

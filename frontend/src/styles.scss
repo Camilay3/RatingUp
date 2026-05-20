@@ -1,3 +1,4 @@
+@use '@angular/material' as mat;
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 :root {
@@ -33,10 +34,27 @@
 	box-sizing: border-box;
 }
 
+html {
+	height: 100%;
+	@include mat.theme((
+		color: (
+			primary: mat.$azure-palette,
+			tertiary: mat.$blue-palette,
+		),
+		typography: Lato,
+		density: 0,
+	));
+}
+
 body {
+	color-scheme: dark;
 	width: 100dvw;
 	height: 100dvh;
 	overflow: hidden;
+
+	background-color: var(--mat-sys-surface);
+	color: var(--mat-sys-on-surface);
+	font: var(--mat-sys-body-medium);
 }
 
 h1, h2 {
@@ -44,28 +62,104 @@ h1, h2 {
 	color: var(--primary);
 }
 
+h1 { margin-bottom: 0.8rem; }
+h2 { margin-bottom: 0.5rem; }
+
 p, span, a, button {
 	font-family: var(--font-family);
 	color: var(--textColor);
 }
 
 img::selection {
-	background-color: transparent;
+  background-color: transparent;
 }
 
-button {
+button:not(.mdc-button):not(.mat-mdc-button):not([mat-button]):not([mat-raised-button]):not([mat-icon-button]) {
 	background-color: var(--primary);
-	box-shadow: 0px 0px 4px 0px var(--neutral);
+	box-shadow: 0px 0px 4px 0px var(--neutral) !important;
 	border-radius: 1rem;
 	padding: 1.2rem;
 	font-size: 1rem;
 	font-weight: 900;
 	color: var(--white);
 	cursor: pointer;
-
 	width: 15.2rem;
 	margin: 0 auto;
 
 	&:hover { background-color: var(--primaryHover); }
 	&:active { background-color: var(--primaryActive); }
+}
+
+//Angular Material
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-form-field-infix {
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+.mdc-text-field--outlined,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+  background-color: transparent !important;
+  --mdc-filled-text-field-container-color: transparent;
+  --mdc-filled-text-field-hover-container-color: transparent;
+  --mdc-filled-text-field-focus-container-color: transparent;
+  --mdc-filled-text-field-label-text-color: var(--secondary);
+  --mdc-filled-text-field-focus-label-text-color: var(--accent);
+  --mdc-filled-text-field-input-text-color: var(--secondary);
+  --mdc-filled-text-field-active-indicator-color: var(--accent);
+  --mdc-filled-text-field-focus-active-indicator-color: var(--accent);
+  --mdc-filled-text-field-hover-active-indicator-color: var(--accent);
+}
+
+.mdc-floating-label {
+  color: var(--secondary) !important;
+}
+
+.mdc-floating-label--float-above {
+  color: var(--accent) !important;
+}
+
+// Label visível mesmo sem foco
+.mdc-text-field--filled .mdc-floating-label {
+  color: var(--secondary) !important;
+  opacity: 1 !important;
+}
+
+.mat-mdc-snack-bar-container {
+  .mat-mdc-snack-bar-label {
+    background-color: #d32f2f !important;
+    color: white !important;
+  }
+
+  .mdc-snackbar__surface {
+    background-color: #d32f2f !important;
+  }
+
+  .mdc-button__label {
+    color: white !important;
+  }
+}
+
+// Evita que o label fique invisível no estado normal
+.mat-mdc-form-field:not(.mat-focused) .mdc-floating-label {
+  color: var(--secondary) !important;
+  opacity: 1 !important;
+}
+
+// Label dentro do campo (sem foco)
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: var(--secondary) !important;
+}
+
+// Label flutuado (com foco ou preenchido)
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
+  color: var(--accent) !important;
+}
+
+.tooltip .mdc-tooltip__surface {
+	background-color: var(--primary) !important;
+	color: var(--white) !important;
 }

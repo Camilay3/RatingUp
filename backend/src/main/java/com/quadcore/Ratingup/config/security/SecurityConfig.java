@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/conta/cadastro").permitAll()
                         .requestMatchers(HttpMethod.POST, "/admin/cadastro").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/conta/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/recover-password").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/reset-password").permitAll()
                         .requestMatchers(HttpMethod.GET, "/auth/reset-password").permitAll()
@@ -48,7 +48,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
+        config.setAllowedOrigins(List.of("http://localhost:80"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(true);

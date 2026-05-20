@@ -4,6 +4,8 @@ import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.move.Move;
 import com.quadcore.Ratingup.dto.board.MoveRequestDTO;
 import com.quadcore.Ratingup.dto.board.MoveResponseDTO;
+import com.quadcore.Ratingup.enums.BoardStatus;
+import com.quadcore.Ratingup.enums.Roles;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,18 +13,19 @@ import java.util.List;
 @Service
 public class MoveValidationService {
 
-    public Boolean validateMovement(MoveRequestDTO movimento){
+    public Boolean validateMovement(MoveRequestDTO moveDto){
         Board board = new Board();
-        board.loadFromFen(movimento.fen());
-        Move move = new Move(movimento.posInitial(),movimento.posFinal(),movimento.piece());
+        board.loadFromFen(moveDto.fen());
+        Move move = new Move(moveDto.posInitial(),moveDto.posFinal(),moveDto.piece());
         List<Move> moveList = board.legalMoves();
-        return moveList.contains(move);
+        Boolean isPossible = moveList.contains(move);
+        return isPossible;
     }
 
-    public MoveResponseDTO performMovement(MoveRequestDTO movimento) {
+    public MoveResponseDTO performMovement(MoveRequestDTO moveDto) {
         Board board = new Board();
-        board.loadFromFen(movimento.fen());
-        Move move = new Move(movimento.posInitial(), movimento.posFinal(), movimento.piece());
+        board.loadFromFen(moveDto.fen());
+        Move move = new Move(moveDto.posInitial(), moveDto.posFinal(), moveDto.piece());
 
         List<Move> moveList = board.legalMoves();
         if (!moveList.contains(move)) {
@@ -36,36 +39,14 @@ public class MoveValidationService {
 
     private String checkStatus(Board board) {
         if (board.isMated()) {
-            return "CHECKMATE";
+            return BoardStatus.CHECKMATE.name();
         } else if (board.isDraw()) {
-            return "DRAW";
+            return BoardStatus.DRAW.name();
         } else if (board.isKingAttacked()) {
-            return "CHECK";
+            return BoardStatus.CHECK.name();
         } else {
-            return "NORMAL";
+            return BoardStatus.NORMAL.name();
         }
     }
-
-
-//    public boolean validateMove(MoveRequestDTO move) {
-//
-//        // esse switch case diferenciado é o switch expression, ele usa lambda msm
-//        return switch (move.piece().toUpperCase()) {
-//            case "QUEEN" -> isValidQueenMove(start, end);
-//            case "PAWN" -> isValidPawnMove(start, end);
-//            default -> false;
-//        };
-//    }
-//
-//
-//    public boolean isValidPawnMove(BoardPosition start, BoardPosition end) {
-//        int colDiff = Math.abs(end.col() - start.col());
-//        int rowDiff = end.row() - start.row();
-//    }
-//
-//    public boolean isValidQueenMove(int newX, int newY) {
-//
-//        return false;
-//    }
 
 }

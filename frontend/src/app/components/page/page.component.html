@@ -1,9 +1,17 @@
-<div class="page" [class.home]="asType(page(), 'home')" [class.capitulo]="asType(page(), 'capitulo')" [class.subtopico]="asType(page(), 'subtópico')">
+<div #pageRoot class="page" tabindex="0"
+	(copy)="onCopy($event)"
+	(mouseenter)="onHover(true)"
+	(mouseleave)="onHover(false)"
+	[class.home]="asType(page(), 'home')"
+	[class.capitulo]="asType(page(), 'capitulo')"
+	[class.subtopico]="asType(page(), 'subtópico')">
+
 	@if (pageIsBlocked()) {
 		<div class="lock">
-			<img src="/lock.png" alt="Cadeado" draggable="false">
+			<img loading="lazy" src="/lock.png" alt="Cadeado" draggable="false">
 		</div>
 	}
+
 	@if (asType(page(), 'capitulo'); as cap) {
 		<h1>Capítulo {{ cap.displayOrder }}</h1>
 		<h2>{{ cap.title }}</h2>
@@ -14,13 +22,14 @@
 				<span>∾</span><p>{{ sub.title }}</p><span>∾</span>
 			</div>
 		</div>
-			<img draggable="false" [src]="'/subtopicos/' + sub.chapterId + '.' + sub.displayOrder + '.png'" [alt]="'Img do subtópico' + sub.displayOrder" (error)="onImageError($event)">
-			<button (click)="$event.stopPropagation(); acessarSubtopico(sub.chapterId, sub.displayOrder)">Acessar</button>
+		<img draggable="false" loading="lazy" [src]="'/subtopicos/' + sub.chapterId + '.' + sub.displayOrder + '.png'" [alt]="'Img do subtópico' + sub.displayOrder" (error)="onImageError($event)">
+		<button (click)="$event.stopPropagation(); acessarSubtopico(sub.chapterId, sub.displayOrder)">Acessar</button>
 	} @else if (asType(page(), 'home'); as home) {
+
 		@if (home.isFirstHome) {
 			<div class="header">
 				<h2>{{ home.nickname }}</h2>
-				<span (click)="logout()">
+				<span (click)="$event.stopPropagation(); logout()">
 					<i class="fa-solid fa-arrow-right-from-bracket"></i> Sair
 				</span>
 			</div>
@@ -31,36 +40,39 @@
 				<h1>Níveis</h1>
 				<span></span>
 			}
-
-			@for (item of home.summary; track $index) {
-				@if (item.front.type === 'capitulo') {
-					<h2>Capítulo {{ item.front.displayOrder }}</h2>
-				} @else {
-					<p (click)="$event.stopPropagation();
-								multiplasPaginas(1 + home.chunkOffset + $index)">
-					{{ item.front.displayOrder }}. {{ item.front.title }}
-					</p>
+			<ul>
+				@for (item of home.summary; track outerIndex; let outerIndex = $index) {
+					@for (entry of getPages(item); track entry.page.displayOrder) {
+						@if (entry.page.type == 'capitulo') {
+							<h2>Capítulo {{ entry.page.displayOrder }}</h2>
+						} @else {
+							<li [class.blocked]="isSubtopico(entry.page) && entry.page.isBlocked"
+								(click)="$event.stopPropagation();
+								(isSubtopico(entry.page) && !entry.page.isBlocked)
+								? multiplasPaginas(entry.offset + outerIndex)
+								: null">
+								<i [class]="setIconList(entry.page)"></i>
+								{{ entry.page.title }}
+							</li>
+						}
+					}
 				}
-
-				@if (item.verse.type === 'capitulo') {
-					<h2>Capítulo {{ item.verse.displayOrder }}</h2>
-				} @else {
-					<p (click)="$event.stopPropagation();
-								multiplasPaginas(2 + home.chunkOffset + $index)">
-					{{ item.verse.displayOrder }}. {{ item.verse.title }}
-					</p>
-				}
-			}
+			</ul>
 		</div>
 	}
 
 	<div class="controls">
-		<svg width="48" height="41" viewBox="0 0 68 61" fill="none" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg">
+		@if (side() == 'frente') {
+			<svg matTooltip="Avançar para fase atual" [matTooltipShowDelay]="500" matTooltipClass="tooltip" (click)="$event.stopPropagation(); multiplasPaginas(0)" width="48" height="48" viewBox="0 0 61 61" fill="none" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg">
+				<path fill="currentColor" style="pointer-events: all;" d="M39.6502 15.25C39.6502 11.8855 42.3857 9.15005 45.7502 9.15005C49.1147 9.15005 51.8502 11.8855 51.8502 15.25V18.3C51.8502 19.9871 53.2132 21.35 54.9002 21.35C56.5872 21.35 57.9502 19.9871 57.9502 18.3V15.25C57.9502 8.51146 52.4888 3.05005 45.7502 3.05005C39.0116 3.05005 33.5502 8.51146 33.5502 15.25V21.35H18.3002C14.9357 21.35 12.2002 24.0855 12.2002 27.45V48.8C12.2002 52.1646 14.9357 54.9 18.3002 54.9H42.7002C46.0647 54.9 48.8002 52.1646 48.8002 48.8V27.45C48.8002 24.0855 46.0647 21.35 42.7002 21.35H39.6502V15.25Z"/>
+			</svg>
+		}
+		<svg class="invertSVG" width="48" height="41" viewBox="0 0 68 61" fill="none" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg">
 			<path fill="currentColor" style="pointer-events: all;" d="M67.9211 42.1558V18.6558C67.9211 16.4466 66.1303 14.6558 63.9211 14.6558H33.4211V4.00828C33.4211 0.417438 29.0563 -1.35465 26.5532 1.21996L1.132 27.3674C-0.377357 28.9199 -0.377358 31.3916 1.132 32.9441L26.5532 59.0916C29.0563 61.6662 33.4211 59.8941 33.4211 56.3032V46.1558H63.9211C66.1303 46.1558 67.9211 44.3649 67.9211 42.1558Z"/>
 		</svg>
 
 		@if (side() == 'verso') {
-			<svg (click)="$event.stopPropagation(); multiplasPaginas(-1, false)" width="48" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<svg matTooltip="Voltar para o início" [matTooltipShowDelay]="500" matTooltipClass="tooltip" (click)="$event.stopPropagation(); multiplasPaginas(-1)" width="48" height="50" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path fill="currentColor" d="M32 6.5C30.8 6.5 29.7 6.9 28.8 7.7L4.8 28.7C2.1 31.1 3.8 35.5 7.4 35.5H11V54C11 56.2 12.8 58 15 58H49C51.2 58 53 56.2 53 54V35.5H56.6C60.2 35.5 61.9 31.1 59.2 28.7L35.2 7.7C34.3 6.9 33.2 6.5 32 6.5Z"/>
 			</svg>
 		}

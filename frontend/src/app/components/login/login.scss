@@ -14,12 +14,15 @@
   z-index: 0;
   overflow: hidden;
 
-  app-book {
+
+  .livro-fundo {
     position: absolute;
-    inset: 0;          // adiciona isso
-    overflow: hidden;
-    pointer-events: none;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // cobre o fundo todo
   }
+
 }
 
 .overdelay {
@@ -38,13 +41,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 48px;  // espaço entre as duas colunas
+  gap: 48px;
 
   .left-col {
     display: flex;
     flex-direction: column;  // título em cima, botão embaixo
     align-items: center;
-    gap: 24px;
+    gap: 35px;
 
     h1{
       color: var(--secondary);
@@ -57,12 +60,10 @@
   }
 
 
-  // Coluna da esquerda — botões de escolha
   .tab-buttons {
     display: flex;
     flex-direction: column;  // empilhados verticalmente
-    gap: 12px;
-
+    gap: 15px;
 
     button {
       width: 140px;
@@ -88,37 +89,21 @@
         border-color: rgba(197, 155, 80, 0.9);
       }
     }
+
+    mat-form-field {
+    width: 300px; // largura definida no field, não no input
   }
 
-  // Coluna da direita — formulário
+  }
+
   form {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 12px;
 
-    input {
-      width: 300px;
-      padding: 10px 16px;
-      border: none;
-      border-bottom: 1px solid rgba(197, 155, 80, 0.3);
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-      backdrop-filter: blur(4px);
-      transition: background 0.3s;
-
-      &::placeholder {
-        color: rgba(255, 255, 255, 0.9);
-        font-family: var(--font-family);
-      }
-
-      &:focus {
-        background: rgba(197, 155, 80, 0.25);
-        border-bottom-color: rgba(197, 155, 80, 0.7);
-      }
+    .visibility{
+    margin-right: 9px;
     }
 
     button[type="submit"] {
@@ -146,10 +131,18 @@
         transform: none;
       }
     }
+
+    mat-form-field{
+      width: 350px;
+    }
   }
 
   p.registre{
     cursor: pointer;
     color: var(--secondary);
+
+    &:hover{
+      color: var(--accent);
+    }
   }
 }

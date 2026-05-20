@@ -1,4 +1,4 @@
-import { IResponse } from "./IResponse";
+import { IResponse } from "../IResponse";
 
 export type IPage = ICapitulo | ISubtopico;
 export type PageData = IPage | IHome;
@@ -35,7 +35,7 @@ interface ICapitulo extends IBasePage {
 	chapterId: null
 }
 
-interface ISubtopico extends IBasePage {
+export interface ISubtopico extends IBasePage {
 	type: 'subtópico'
 	chapterId: number
 	isBlocked: boolean

@@ -1,3 +1,6 @@
+@if (isLoading) {
+	<app-loader [visible]="isLoading"></app-loader>
+}
 <div class="book-container" style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/livro/background.png');">
 	<div class="page-container pageAnimation">
 		@if (isWaiting) { <div class="blockClick"></div> }
@@ -11,7 +14,7 @@
 				[style.zIndex]="zIndexValues[$index]"
 				(flippedChange)="onFlip($index, $event)"
 				(isWaiting)="isWaiting = $event"
-				(navigate)="multiplasPaginas($event.qnt ?? 1, $event.next ?? true)"
+				(navigate)="multiplasPaginas($event.qnt ?? 1)"
 				[onFirstPage]="onFirstPage"
 				[onLastPage]="onLastPage"
 			></app-sheet>

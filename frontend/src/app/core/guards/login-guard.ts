@@ -10,7 +10,7 @@ export const loginGuard: CanActivateFn = () => {
 
 	return authService.me().pipe(
 		map(() => {
-			router.navigate(['/book']);
+			router.navigate(['/']);
 			return false;
 		}),
 		catchError(() => of(true))

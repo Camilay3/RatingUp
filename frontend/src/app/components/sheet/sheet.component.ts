@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
 import { PageComponent } from '../page/page.component';
-import { IPage, PageData } from '../../interfaces/IBook';
+import { IPage, PageData } from '../../interfaces/book/IBook';
 import { AudioService } from '../../services/book/audio.service';
 
 @Component({
@@ -23,7 +23,6 @@ export class SheetComponent {
 
 	constructor( private readonly cdr: ChangeDetectorRef, private readonly audioService: AudioService ) {}
 	navigate = output<{ qnt?: number; next?: boolean }>();
-	backgroundImage = computed(() => this.capa() ? `url(/livro/${this.capa()})` : null);
 
 	virarPagina(multiplas: boolean = false): void {
 		if (this.isPageWaiting) return;
@@ -47,4 +46,16 @@ export class SheetComponent {
 			this.isWaiting.emit(this.isPageWaiting);
 		 }, duracao);
 	}
+
+	frontImage = computed(() => {
+		if (!this.capa()) return null;
+		if (this.frenteCapa()) return `/livro/${this.capa()}`;
+		return '/livro/contracapaFront.png';
+	});
+
+	backImage = computed(() => {
+		if (!this.capa()) return null;
+		if (this.frenteCapa()) return '/livro/contracapa.png';
+		return `/livro/${this.capa()}`;
+	});
 }

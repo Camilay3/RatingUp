@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+    <p>Olá,</p>
+    <p>Recebemos uma solicitação para redefinir sua senha.</p>
+    <p>Use o código abaixo para redefinir sua senha (expira em 30 minutos):</p>
+    <h3 th:text="${token}"></h3>
+    <p>Se não foi você, ignore este e-mail.</p>
+    <br>
+    <p>Equipe RatingUp</p>
+</body>
+</html>

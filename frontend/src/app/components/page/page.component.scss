@@ -3,6 +3,7 @@
 	margin-left: auto !important;
 
 	.controls { left: 1rem; }
+	.lock { cursor: pointer; }
 }
 
 :host-context(.frentePage) .page {
@@ -11,7 +12,7 @@
 	.controls {
 		right: 1rem;
 		left: auto;
-		svg { transform: scale(-1, 1); }
+		svg.invertSVG { transform: scale(-1, 1); }
 	}
 }
 
@@ -21,14 +22,13 @@
 	text-align: center;
 	position: relative;
 	p, span, svg { color: var(--primary); }
-	p, span, h1, h2 { &::selection { background-color: transparent; } } // Ainda seria captado no Ctrl A
+	p, span, h1, h2, li { &::selection { background-color: transparent; } }
 
 	overflow: hidden;
 	height: 96%;
 	width: 97%;
 	margin-top: 2%;
 	background-color: var(--secondary);
-	border: solid 1px #c4c4c4;
 
 	.controls {
 		position: absolute;
@@ -92,9 +92,27 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		p {
+
+		ul { list-style: none; }
+		li {
+			margin-left: 0.5rem;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			color: var(--primary);
 			width: fit-content;
 			&:hover { font-weight: bold; }
+			&.blocked {
+				color: var(--neutralOpacity);
+				cursor: default;
+				&:hover { font-weight: normal; }
+			}
+
+			&:not(.blocked):not(:has(~ li:not(.blocked))) {
+				font-weight: bold;
+				&:hover { color: var(--primaryHover); }
+				i.fa-star::before { content: "\f09c"; } // Cadeado desbloqueado
+			}
 		}
 	}
 }

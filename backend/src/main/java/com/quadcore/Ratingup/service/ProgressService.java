@@ -1,32 +1,65 @@
 package com.quadcore.Ratingup.service;
 
+import com.quadcore.Ratingup.dto.progresso.ProgressResponseDTO;
 import com.quadcore.Ratingup.dto.progresso.ProgressUpdateDTO;
+import com.quadcore.Ratingup.mapper.ProgressoMapper;
+import com.quadcore.Ratingup.model.book.Subtopics;
 import com.quadcore.Ratingup.model.profile.Progress;
+import com.quadcore.Ratingup.repository.ChaptersRepository;
 import com.quadcore.Ratingup.repository.ProgressRepository;
-import com.quadcore.Ratingup.repository.UserRepository;
+import com.quadcore.Ratingup.repository.SubtopicsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProgressService {
 
     private final ProgressRepository progressRepository;
+    private final SubtopicsRepository subtopicsRepository;
+    private final ChaptersRepository chaptersRepository;
 
-    public ProgressService(UserRepository userRepository, ProgressRepository progressRepository) {
+    public ProgressService(ProgressRepository progressRepository, SubtopicsRepository subtopicsRepository, ChaptersRepository chaptersRepository) {
         this.progressRepository = progressRepository;
+        this.subtopicsRepository = subtopicsRepository;
+        this.chaptersRepository = chaptersRepository;
     }
 
-    public Progress allowedPhases(String userEmail) {
-        return progressRepository.findByUserEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
+    public ProgressResponseDTO allowedPhases(String userEmail) {
+        Progress progress = progressRepository.findByUserEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
+        ProgressResponseDTO dto = new ProgressResponseDTO(
+                progress.getUser().getId(),
+                progress.getChapters(),
+                progress.getSubtopics());
+
+        return dto;
     }
 
-    public Progress updateCurrentPhase(String userEmail, ProgressUpdateDTO dto) {
+    @Transactional
+    public ProgressResponseDTO updateCurrentPhase(String userEmail, ProgressUpdateDTO dto) {
         Progress progressoUser = progressRepository.findByUserEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
 
-        progressoUser.setChapters(dto.chapter());
-        progressoUser.setSubtopics(dto.subtopic());
+        if (dto.chapter() != progressoUser.getChapters() ||
+                dto.subtopic() != progressoUser.getSubtopics()) {
+            throw new IllegalArgumentException("Progresso inválido");
+        }
 
-        return progressRepository.save(progressoUser);
+        Subtopics lastSubtopic = subtopicsRepository
+                .findTopByChapterIdOrderByDisplayOrderDesc(dto.chapter())
+                .orElseThrow(() -> new EntityNotFoundException("Capítulo não encontrado"));
+        int maxSubtopic = lastSubtopic.getDisplayOrder();
+
+        if (dto.subtopic() < maxSubtopic) {
+            progressoUser.setSubtopics(progressoUser.getSubtopics() + 1);
+        } else {
+            progressoUser.setChapters(progressoUser.getChapters() + 1);
+            progressoUser.setSubtopics(1);
+        }
+
+        Progress progress = progressRepository.save(progressoUser);
+
+        return ProgressoMapper.toResponse(progress);
     }
 }

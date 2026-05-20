@@ -4,8 +4,11 @@ import com.quadcore.Ratingup.model.profile.Progress;
 import jakarta.validation.constraints.NotNull;
 
 public record ProgressUpdateDTO(
-        @NotNull Integer chapter,
-        @NotNull Integer subtopic
+        @NotNull(message = "capítulo é obrigatório")
+        Integer chapter,
+
+        @NotNull(message = "subtópico é obrigatório")
+        Integer subtopic
 ) {
     public ProgressUpdateDTO(Progress progresso) {
         this(

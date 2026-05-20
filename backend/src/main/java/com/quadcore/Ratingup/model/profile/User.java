@@ -33,21 +33,14 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Nome completo obrigatório!")
     private String name;
 
-    @NotBlank(message = "Nickname obrigatório!")
     private String nickname;
 
-    @NotBlank(message = "Email obrigatório!")
-    @Email(message = "Email em formato inválido!")
     private String email;
 
-    @NotBlank(message = "Telefone obrigatório!")
-    @Size(min = 8, max = 11)
     private String telefone;
 
-    @NotBlank(message = "Senha obrigatória!")
     private String password;
 
     @Enumerated(EnumType.STRING)

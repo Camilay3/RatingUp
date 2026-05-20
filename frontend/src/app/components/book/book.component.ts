@@ -1,22 +1,29 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
-import { ISheet } from '../../interfaces/IBook';
+import { ISheet } from '../../interfaces/book/IBook';
 
 import { BookService } from '../../services/book/book.service';
 import { AudioService } from '../../services/book/audio.service';
 import { AuthService } from '../../services/user/auth.service';
+import { LoaderComponent } from '../loader/loader.component';
+import { switchMap } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
 	selector: 'app-book',
 	templateUrl: './book.component.html',
 	styleUrls: ['./book.component.scss'],
-	imports: [SheetComponent]
+	imports: [SheetComponent, LoaderComponent]
 })
 export class BookComponent implements OnInit {
 	onFirstPage: boolean = true;
 	onLastPage: boolean = false;
 	isWaiting: boolean = false;
+	isLoading: boolean = true;
 	pageFlipStates: boolean[] = [];
+
+	capituloAtual: number = 1;
+	subtopicoAtual: number = 1;
 
 	pages: ISheet[] = [];
 	home: any[] = [];
@@ -31,23 +38,51 @@ export class BookComponent implements OnInit {
 		private readonly bookService: BookService,
 		private readonly authService: AuthService,
 		private readonly audioService: AudioService,
+		private readonly snackBar : MatSnackBar,
 	) {}
 
 	private pageHeight = 0;
 	private pagesLoaded = false;
 
 	ngOnInit() {
-		this.bookService.getSheets().subscribe({
-			next: (response) => {
-				this.pages = response.data.pages || [];
-				this.pagesLoaded = true;
-				if (this.pageHeight) {
+		this.authService.getProgresso()
+			.pipe(
+				switchMap((response) => {
+					this.capituloAtual = response.data.chapter;
+					this.subtopicoAtual = response.data.subtopic;
+					return this.bookService.getSheets();
+				})
+
+			).subscribe({
+				next: (response) => {
+					this.pages = response.data.pages.map(page => {
+						let currentItem = false;
+
+						(['front', 'verse'] as const).forEach(side => {
+							const current = page[side];
+
+							if (current.type == 'subtópico') {
+								const isAfterCurrentChapter = current.chapterId > this.capituloAtual;
+								const isAfterCurrentSubtopic =
+									current.chapterId === this.capituloAtual &&
+									current.displayOrder > this.subtopicoAtual;
+
+								currentItem = isAfterCurrentChapter || isAfterCurrentSubtopic;
+								page[side] = { ...current, isBlocked: currentItem };
+							}
+						});
+						return page;
+					}) || [];
+
 					this.buildBookFromPages();
 					this.cdr.detectChanges();
+				},
+				error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 }),
+				complete: () => {
+					this.isLoading = false
+					if (history.state?.executarAnimacao) this.multiplasPaginas(0);
 				}
-			},
-			error: (e) => console.error(e)
-		});
+			})
 	}
 
 	ngAfterViewInit(): void {
@@ -184,11 +219,40 @@ export class BookComponent implements OnInit {
 		});
 	}
 
-	multiplasPaginas(qnt: number, next: boolean = true) {
+	multiplasPaginas(qnt: number) {
+		let next = true;
 		this.isWaiting = true;
 		this.duracaoAnimacao = 160;
 		this.setVelocidade(this.duracaoAnimacao);
-		if (qnt < 0) qnt = this.paginaAtual - 1;
+		if (qnt < 0) {
+			qnt = this.paginaAtual - 1
+			next = false;
+
+		} else if (qnt == 0) {
+			const canFlipForward = (index: number): boolean => {
+				const page = this.book[index];
+
+				return !!(page && (index + 1 !== this.book.length) &&
+					(
+						'capa' in page ||
+						page.front?.type !== 'subtópico' ||
+						!page.front.isBlocked
+					)
+				);
+			};
+
+			let count = 0;
+			for (let i = this.paginaAtual; i < this.tamanhoLivro; i++) {
+				if (!canFlipForward(i)) break;
+				count++;
+			}
+			qnt = count;
+
+			if (qnt <= 0) {
+				this.isWaiting = false;
+				return;
+			}
+		}
 		let viradas = 0;
 
 		this.audioService.playFlips();

@@ -8,3 +8,11 @@ VALUES (
         'ADMIN'
        )
 ON CONFLICT (email) DO NOTHING;
+
+INSERT INTO progress (chapters, subtopics, user_id)
+VALUES (
+        9,
+        6,
+        (SELECT u.id FROM users u WHERE u.email = 'ratingupadmin@gmail.com')
+       )
+ON CONFLICT (user_id) DO NOTHING;
