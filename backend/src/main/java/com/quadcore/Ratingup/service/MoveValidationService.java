@@ -18,7 +18,8 @@ public class MoveValidationService {
         board.loadFromFen(moveDto.fen());
         Move move = new Move(moveDto.posInitial(),moveDto.posFinal(),moveDto.piece());
         List<Move> moveList = board.legalMoves();
-        return moveList.contains(move);
+        Boolean isPossible = moveList.contains(move);
+        return isPossible;
     }
 
     public MoveResponseDTO performMovement(MoveRequestDTO moveDto) {

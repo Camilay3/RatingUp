@@ -14,6 +14,9 @@ import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +24,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +34,6 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
-
     private final UserRepository userRepository;
     private final TokenGenerator tokenGenerator;
     private final ProgressRepository progressRepository;
@@ -78,7 +81,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public Optional<User> updateUser(String email, ProfileUpdateRequestDTO data) {
+    public User updateUser(String email, ProfileUpdateRequestDTO data) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Nenhum usuário encontrado para esse email"));
 
@@ -94,7 +97,7 @@ public class UserService implements UserDetailsService {
 
         userRepository.saveAndFlush(user);
 
-        return Optional.of(user);
+        return user;
     }
 
     public void deleteUser(String email) {
@@ -120,15 +123,35 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public String loginUser(String email, String senha){
+    public ResponseCookie loginUser(String email, String senha){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Nenhum usuário encontrado para esse email"));
 
-        if(passwordEncoder.matches(senha, user.getPassword())){
-            return tokenGenerator.gerarToken(user);
+        if(!(passwordEncoder.matches(senha, user.getPassword()))) {
+            throw new RuntimeException("Senha incorreta");
         }
 
-        throw new RuntimeException("Senha incorreta");
+        String token = tokenGenerator.gerarToken(user);
+
+        return ResponseCookie
+                .from("token", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(Duration.ofDays(7))
+                .build();
+    }
+
+    public ResponseCookie logoutUser() {
+        return ResponseCookie
+                .from("token", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(0)
+                .build();
     }
 
     public void PasswordRecoverRequest(String email){

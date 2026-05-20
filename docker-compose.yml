@@ -2,12 +2,14 @@ services:
   postgres_db:
     image: postgres:18-alpine
     container_name: ratingup_db
+    env_file:
+      - .env
     environment:
-      - POSTGRES_DB=ratingup
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=admin123
-    ports:
-      - "5432:5432"
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    expose:
+      - "5432"
     networks:
       - back-network
   backend:
@@ -15,14 +17,12 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: ratingup_back
+    env_file:
+      - .env
     depends_on:
       - postgres_db
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/ratingup
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=admin123
+    expose:
+      - "8080"
     networks:
       - back-network
       - front-network
@@ -31,8 +31,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: ratingup_front
-    ports:
-      - "4200:4200"
+    expose:
+      - "4200"
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -41,10 +41,12 @@ services:
   minio:
     image: minio/minio
     container_name: ratingup_minio
+    env_file:
+      - .env
     environment:
-      - MINIO_ROOT_USER=ROOTUSER
-      - MINIO_ROOT_PASSWORD=CHANGEME123
-      - MINIO_BROWSER_SESSION_DURATION=1h
+      - MINIO_ROOT_USER=${MINIO_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}
+      - MINIO_BROWSER_SESSION_DURATION=${MINIO_SESSION}
     command: server /data --console-address ":9001"
     ports:
       - "9000:9000"
@@ -53,6 +55,19 @@ services:
       - minio_data:/data
     networks:
       - back-network
+  nginx:
+    image: nginx:alpine
+    container_name: ratingup_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - back-network
+      - front-network
 networks:
   back-network:
     driver: bridge

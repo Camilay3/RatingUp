@@ -10,7 +10,7 @@ export const authGuard: CanActivateFn = () => {
 	return authService.me().pipe(
 		map(() => true),
 		catchError(() => {
-			router.navigate(['/']);
+			router.navigate(['/acesso']);
 			return of(false);
 		})
 	);

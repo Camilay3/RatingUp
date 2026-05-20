@@ -10,19 +10,20 @@
 			class="versoPage"
 			(click)="virarPagina()"
 			[src]="backImage()"
-			loading="eager"
+			loading="lazy"
 		/>
 
 		<img
 			class="frentePage"
 			(click)="virarPagina()"
 			[src]="frontImage()"
-			loading="eager"
+			loading="lazy"
 		/>
 
 	} @else {
 		<div (click)="virarPagina()" class="versoPage">
 			<app-page [page]="verso()" side="verso" (isWaiting)="isPageWaiting = $event" (navigate)="navigate.emit($event)"></app-page>
+			<!-- Remover isWaiting daqui quando quiser permitir que o usuário veja que tem coisas bloqueadas atrás -->
 		</div>
 
 		<div (click)="virarPagina()" class="frentePage">

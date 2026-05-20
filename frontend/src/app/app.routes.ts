@@ -8,10 +8,14 @@ import { NotFoundComponent } from './components/not-found.component';
 
 export const routes: Routes = [
 
-	{ path: '', component: Login, canActivate: [loginGuard] },
+	{ path: 'acesso', component: Login, canActivate: [loginGuard] },
 
-	{ path: 'book', component: BookComponent, canActivate: [authGuard] },
+	{ path: '', component: BookComponent, canActivate: [authGuard] },
 	{ path: 'subtopico', component: SubtopicoComponent, canActivate: [authGuard] },
-    { path: '**', component: NotFoundComponent }
+    { path: '**', component: NotFoundComponent },
+
+
+	/* { path: '', component: Login, canActivate: [loginGuard] },
+	{ path: 'book', component: BookComponent, canActivate: [authGuard] }, */
 
 ];

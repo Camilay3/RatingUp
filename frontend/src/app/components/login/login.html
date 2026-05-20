@@ -9,7 +9,7 @@
 
     <div class="content" >
 
-      <div class="left-col" > 
+      <div class="left-col" >
 
        <h1 class="title">
          RatingUp
@@ -95,7 +95,7 @@
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit" [disabled]="RegisterForm.invalid" >Cadastrar</button>
-            <p class="registre" (click)="choseForm(false)" >Tem conta ? Entrar</p>
+            <p class="registre" (click)="choseForm(false)" >Já tem uma conta? Entrar</p>
 
             </form>
         </div>
@@ -103,7 +103,7 @@
         <div *ngIf="isFirstAcess === false" > <!--Parte do Login -->
 
         <form [formGroup]="LoginForm" (ngSubmit)="onLogin()">
-  
+
             <!-- login.component.html -->
         <mat-form-field appearance="outline" floatLabel="auto">
           <mat-label>E-mail</mat-label>
@@ -138,8 +138,6 @@
             <!-- <button (click)="choseForm(true)" >Cadastro</button> -->
         </form>
         </div>
-        
-
     </div>
 
 </div>

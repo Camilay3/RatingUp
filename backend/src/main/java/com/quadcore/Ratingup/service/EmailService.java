@@ -2,10 +2,13 @@ package com.quadcore.Ratingup.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.io.UnsupportedEncodingException;
 
@@ -14,23 +17,24 @@ public class EmailService {
 
 
     private final JavaMailSender mailSender;
-    private static final String EMAIL_ORIGEM = "enviadorratingup@gmail.com";
-    private static final String NOME_ENVIADOR = "RatingUp";
+    private final TemplateEngine templateEngine;
 
-    public EmailService(JavaMailSender mailSender) {
+    @Value("${spring.mail.username}")
+    private String emailOrigem;
+
+    @Value("${spring.mail.name}")
+    private String nomeEnviador;
+
+    public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine) {
         this.mailSender = mailSender;
+        this.templateEngine = templateEngine;
     }
 
     public void sendRecoverMail(String destiny, String token) {
-        String conteudo = """
-        <p>Olá,</p>
-        <p>Recebemos uma solicitação para redefinir sua senha.</p>
-        <p>Use o código abaixo para redefinir sua senha (expira em 30 minutos):</p>
-        <h3>%s</h3>
-        <p>Se não foi você, ignore este e-mail.</p>
-        <br>
-        <p>Equipe RatingUp</p>
-    """.formatted(token);
+        Context context = new Context();
+        context.setVariable("token", token);
+
+        String conteudo = templateEngine.process("email/redefinir-senha", context);
 
         enviarEmail(destiny, "Recuperação de Senha - RatingUp", conteudo);
     }
@@ -39,7 +43,7 @@ public class EmailService {
         MimeMessage message = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom(EMAIL_ORIGEM, NOME_ENVIADOR);
+            helper.setFrom(emailOrigem, nomeEnviador);
             helper.setTo(destino);
             helper.setSubject(assunto);
             helper.setText(conteudo, true); // true = HTML

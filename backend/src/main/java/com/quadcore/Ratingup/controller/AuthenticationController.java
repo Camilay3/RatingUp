@@ -33,26 +33,13 @@ public class AuthenticationController {
             @Valid @RequestBody LoginRequestDTO dto,
             HttpServletResponse response
     ) {
-
-        String token = userService.loginUser(
-                dto.email(),
-                dto.password()
-        );
-
-        ResponseCookie cookie = ResponseCookie
-                .from("token", token)
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(Duration.ofDays(7))
-                .build();
-
         response.addHeader(
                 HttpHeaders.SET_COOKIE,
-                cookie.toString()
+                userService.loginUser(
+                        dto.email(),
+                        dto.password())
+                        .toString()
         );
-
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
@@ -64,33 +51,39 @@ public class AuthenticationController {
 
     @DeleteMapping("/logout")
     public ResponseEntity<ApiResponse<?>> logoutUser(HttpServletResponse response){
-        ResponseCookie cookie = ResponseCookie
-                .from("token", "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(0)
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return ResponseEntity.ok(new ApiResponse<>(true,"Usuário deslogado com sucesso",null));
+        response.addHeader(HttpHeaders.SET_COOKIE, userService.logoutUser().toString());
+        return ResponseEntity.ok(new ApiResponse<>(
+                true,
+                "Usuário deslogado com sucesso",
+                null));
     }
 
     @PostMapping("/recover-password")
     public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto){
         userService.PasswordRecoverRequest(dto.email());
-        return ResponseEntity.ok(new ApiResponse<>(true,"Email de recuperação enviado", null));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Email de recuperação enviado",
+                        null));
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<ApiResponse<?>> resetPassword(@RequestBody @Valid PasswordResetDTO dto){
         userService.resetPassword(dto);
-        return ResponseEntity.ok(new ApiResponse<>(true,"Senha redefinida com sucesso!",null));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Senha redefinida com sucesso!",
+                        null));
     }
     @PutMapping("/change-password")
     public ResponseEntity<ApiResponse<?>> changePassword(@RequestBody @Valid  PasswordChangeDTO dto, @AuthenticationPrincipal UserDetails userDetails) {
         userService.changePassword(userDetails.getUsername(), dto);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Senha alterada com sucesso!", null));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Senha alterada com sucesso!",
+                        null));
     }
 }

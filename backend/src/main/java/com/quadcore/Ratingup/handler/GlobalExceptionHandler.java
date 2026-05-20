@@ -3,6 +3,7 @@ package com.quadcore.Ratingup.handler;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import io.jsonwebtoken.JwtException;
+import io.minio.errors.ErrorResponseException;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -95,5 +96,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ApiResponse<>(false, "Erro interno no servidor", null));
+    }
+
+    @ExceptionHandler(ErrorResponseException.class)
+    public ResponseEntity<ApiResponse<?>> handleMinioError (ErrorResponseException ex) {
+        String errorCode = ex.errorResponse().code();
+
+        if (errorCode.equals("NoSuchKey")) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Imagem não encontrada", null));
+        } else if (errorCode.equals("NoSuchBucket")) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Bucket não encontrado", null));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_GATEWAY)
+                .body(new ApiResponse<>(false, "Erro no armazenamento: " + ex.getMessage(), null));
     }
 }
