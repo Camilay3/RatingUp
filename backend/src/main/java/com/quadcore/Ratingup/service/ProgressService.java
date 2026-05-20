@@ -38,7 +38,7 @@ public class ProgressService {
     }
 
     @Transactional
-    public Optional<Progress> updateCurrentPhase(String userEmail, ProgressUpdateDTO dto) {
+    public ProgressResponseDTO updateCurrentPhase(String userEmail, ProgressUpdateDTO dto) {
         Progress progressoUser = progressRepository.findByUserEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
 
