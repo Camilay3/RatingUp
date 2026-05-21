@@ -53,6 +53,8 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user")
     private Progress progress;
 
+    private String avatarURL;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + getRole().name()));
