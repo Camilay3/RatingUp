@@ -59,13 +59,21 @@
 	.header {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 		width: 100%;
+
+		.actions {
+			display: flex;
+			gap: 1rem;
+			align-items: center;
+		}
 
 		span {
 			font-weight: bold;
 			color: var(--alert);
 			&:hover { color: var(--alertHover); }
 		}
+		h2 { margin-bottom: 0; }
 	}
 
 	.niveis {

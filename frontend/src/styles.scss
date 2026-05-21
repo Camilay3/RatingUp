@@ -17,6 +17,8 @@
 	// Cores (estados)
 	--primaryHover: #855c41;
 	--primaryActive: #6d4b35;
+	--secondaryHover: #fff5e2;
+	--secondaryActive: #F8EFDc;
 	--alertHover: #e73a3a;
 
 	// Tipografia
@@ -88,6 +90,21 @@ button:not(.mdc-button):not(.mat-mdc-button):not([mat-button]):not([mat-raised-b
 
 	&:hover { background-color: var(--primaryHover); }
 	&:active { background-color: var(--primaryActive); }
+
+	&.outline {
+		background-color: transparent;
+		border: 1px solid var(--primary);
+		box-shadow: 0px 0px 2px 0px var(--neutralOpacity) !important;
+		border-radius: 0.5rem;
+		padding: 0.3rem 0.6rem;
+		font-size: 0.8rem;
+		font-weight: 700;
+		color: var(--primary);
+		width: fit-content;
+
+		&:hover { background-color: var(--secondaryHover); }
+		&:active { background-color: var(--secondaryActive); }
+	}
 }
 
 //Angular Material

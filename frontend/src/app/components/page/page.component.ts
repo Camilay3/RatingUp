@@ -146,4 +146,8 @@ export class PageComponent {
 			error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 }),
 		});
 	}
+
+	verPerfil() {
+		this.router.navigateByUrl('/perfil');
+	}
 }

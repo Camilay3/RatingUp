@@ -1,0 +1,85 @@
+:host {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 4rem;
+	height: 100%;
+	background-color: var(--secondary);
+}
+
+
+section {
+	position: relative;
+	display: flex;
+	width: 50%;
+	height: 50%;
+	background-color: var(--white);
+	padding: 3rem;
+	gap: 2rem;
+	box-shadow: 4px 4px 20px 0 var(--neutralOpacity);
+	border: 2px solid var(--neutral);
+
+	.foto {
+		border: 8px ridge var(--primary);
+		border-radius: 8px;
+		width: 40%;
+		height: 100%;
+
+		background-color: rgb(190, 190, 190);
+	}
+
+	.infos {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+
+		.header {
+			padding-top: 2rem;
+			p { font-weight: bold; }
+		}
+	}
+
+	// Cordões
+	&::before, &::after {
+		content: '';
+		position: absolute;
+		top: -53%;
+		height: calc(53% + 19px);
+		background: var(--neutral);
+	}
+
+	&::before {
+		left: calc(5% + 9px);
+		right: 50%;
+		clip-path: polygon(0 100%, 0 calc(100% - 2px), 100% 0, 100% 2px);
+	}
+
+	&::after {
+		left: 50%;
+		right: calc(5% + 9px);
+		clip-path: polygon(0 0, 100% calc(100% - 2px), 100% 100%, 0 2px);
+	}
+
+	.hole-left, .hole-right {
+		position: absolute;
+		top: 10px;
+
+		width: 18px;
+		height: 18px;
+		z-index: 2;
+
+		border-radius: 50%;
+		border: 2px solid var(--neutral);
+		background: var(--secondary);
+	}
+
+	.hole-left { left: 5%; }
+	.hole-right { right: 5%; }
+	animation: card 0.8s ease forwards 0.1s;
+}
+
+@keyframes card {
+	from { transform: translateY(-200%); }
+	to { transform: translateY(0); }
+}
