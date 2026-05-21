@@ -24,4 +24,26 @@ export class ProfileComponent implements OnInit {
 			error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 }),
 		})
 	}
+
+	formatPhone(phone?: string | null): string {
+		if (!phone) return '';
+		let digits = phone.replace(/\D/g, '');
+
+		if (digits.startsWith('55')) digits = digits.slice(2);
+
+		if (digits.length === 10) return `(${digits.slice(0,2)}) ${digits.slice(2,6)}-${digits.slice(6)}`;
+
+		if (digits.length === 11) return `(${digits.slice(0,2)}) ${digits.slice(2,7)}-${digits.slice(7)}`;
+
+		if (digits.length > 2) {
+			const ddd = digits.slice(0,2);
+			const rest = digits.slice(2);
+
+			return (rest.length > 4)
+				? `(${ddd}) ${rest.slice(0, rest.length-4)}-${rest.slice(-4)}`
+				: `(${ddd}) ${rest}`
+		}
+
+		return phone;
+	}
 }

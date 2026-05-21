@@ -5,9 +5,8 @@
 	flex-direction: column;
 	gap: 4rem;
 	height: 100%;
-	background-color: var(--secondary);
+	background-color: color-mix(in srgb, var(--secondary) 95%, var(--neutral));
 }
-
 
 section {
 	position: relative;
@@ -19,6 +18,7 @@ section {
 	gap: 2rem;
 	box-shadow: 4px 4px 20px 0 var(--neutralOpacity);
 	border: 2px solid var(--neutral);
+	transform: translateY(-200%);
 
 	.foto {
 		border: 8px ridge var(--primary);
@@ -33,10 +33,36 @@ section {
 		display: flex;
 		flex-direction: column;
 		gap: 2rem;
+		p {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			font-size: 1rem;
+			color: var(--primary);
+
+			span {
+				font-weight: bold;
+				color: var(--primary);
+			}
+		}
+
+		i:hover {
+			cursor: pointer;
+			color: var(--primaryHover);
+		}
 
 		.header {
 			padding-top: 2rem;
-			p { font-weight: bold; }
+			p {
+				font-weight: bold;
+				font-size: 1.2rem;
+			}
+		}
+
+		.section {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
 		}
 	}
 
@@ -76,10 +102,15 @@ section {
 
 	.hole-left { left: 5%; }
 	.hole-right { right: 5%; }
-	animation: card 0.8s ease forwards 0.1s;
+
+	transform: translateY(-120vh) rotate(-82deg);
+	transform-origin: top center;
+	animation: dropCard 2s cubic-bezier(0.15, 0.85, 0.25, 1) forwards;
 }
 
-@keyframes card {
-	from { transform: translateY(-200%); }
-	to { transform: translateY(0); }
+@keyframes dropCard {
+	0% { transform: translateY(-120vh) rotate(-82deg); }
+	60% { transform: translateY(0px) rotate(8deg); }
+	80% { transform: translateY(-8px) rotate(-3deg); }
+	100% { transform: translateY(0) rotate(0deg); }
 }
