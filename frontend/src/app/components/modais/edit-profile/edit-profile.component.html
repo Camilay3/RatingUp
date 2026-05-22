@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>{{ data.header }}</h2>
+
+<mat-dialog-content>
+	<form [formGroup]="EditForm" (ngSubmit)="onEdit()">
+		<mat-form-field appearance="outline" floatLabel="auto">
+			<mat-label>{{ data.header.replace('Editar ', '') }}</mat-label>
+			<input matInput type="text" [placeholder]="data.value || ''" formControlName="value">
+			<mat-error *ngIf="EditForm.get('value')?.hasError('required')">Campo obrigatório</mat-error>
+			<mat-error *ngIf="data?.fieldKey === 'email' && EditForm.get('value')?.hasError('email')">Email inválido</mat-error>
+			<mat-error *ngIf="data?.fieldKey !== 'email' && EditForm.get('value')?.hasError('pattern')">Formato inválido</mat-error>
+
+			<mat-error *ngIf="EditForm.get('value')?.hasError('backendError')" >
+			{{ EditForm.get('value')?.getError('backendError') }}
+			</mat-error>
+		</mat-form-field>
+	</form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close>Cancelar</button>
+	<button mat-button type="submit" [disabled]="EditForm.invalid" (click)="onEdit()" cdkFocusInitial>Salvar</button>
+</mat-dialog-actions>
+

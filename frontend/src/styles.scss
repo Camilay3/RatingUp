@@ -148,19 +148,31 @@ button:not(.mdc-button):not(.mat-mdc-button):not([mat-button]):not([mat-raised-b
   opacity: 1 !important;
 }
 
+.snack-success {
+	background-color: var(--success) !important;
+	color: var(--white) !important;
+}
+
 .mat-mdc-snack-bar-container {
-  .mat-mdc-snack-bar-label {
-    background-color: #d32f2f !important;
-    color: white !important;
-  }
+	.mat-mdc-snack-bar-label {
+		background-color: #d32f2f !important;
+		color: var(--white) !important;
+	}
 
-  .mdc-snackbar__surface {
-    background-color: #d32f2f !important;
-  }
+	.mdc-snackbar__surface {
+		background-color: #d32f2f !important;
+	}
 
-  .mdc-button__label {
-    color: white !important;
-  }
+	.mdc-button__label {
+		color: var(--white) !important;
+	}
+}
+
+/* Allow overriding snackbar color via panelClass 'snack-success' */
+.mat-mdc-snack-bar-container.snack-success .mat-mdc-snack-bar-label,
+.mat-mdc-snack-bar-container.snack-success .mdc-snackbar__surface {
+	background-color: #43a047 !important;
+	color: var(--white) !important;
 }
 
 // Evita que o label fique invisível no estado normal
@@ -182,4 +194,55 @@ button:not(.mdc-button):not(.mat-mdc-button):not([mat-button]):not([mat-raised-b
 .tooltip .mdc-tooltip__surface {
 	background-color: var(--primary) !important;
 	color: var(--white) !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+	background-color: var(--white);
+	border-radius: 1rem;
+
+	h1, h2 {
+		font-weight: bold;
+		color: var(--primary);
+	}
+
+	mat-dialog-content {
+		padding: 1rem !important;
+	}
+
+	button.mat-mdc-button {
+		border-radius: 1rem;
+
+		&:focus, &:focus-visible, &:hover {
+			background-color: var(--secondary);
+		}
+
+		.mat-mdc-button-persistent-ripple::before {
+			background-color: transparent !important;
+		}
+	}
+
+	.mdc-text-field--outlined .mdc-floating-label {
+		color: rgba(0,0,0,0.65) !important;
+	}
+
+	.mdc-text-field--outlined input.mdc-text-field__input,
+	.mdc-text-field--outlined textarea.mdc-text-field__input {
+		color: rgba(0,0,0,0.87) !important;
+	}
+
+	.mdc-text-field--outlined .mdc-text-field__input::placeholder {
+		color: rgba(0,0,0,0.54) !important;
+	}
+
+	/* Required asterisk color */
+	.mdc-floating-label .mdc-floating-label__required {
+		color: rgba(0,0,0,0.87) !important;
+	}
+
+	/* Disabled dialog buttons should look visually disabled */
+	.mat-mdc-button[disabled] {
+		opacity: 0.5 !important;
+		cursor: not-allowed !important;
+		color: rgba(0,0,0,0.38) !important;
+	}
 }

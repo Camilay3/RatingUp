@@ -32,6 +32,7 @@ section {
 	.infos {
 		display: flex;
 		flex-direction: column;
+		justify-content: space-between;
 		gap: 2rem;
 		p {
 			display: flex;
@@ -62,6 +63,11 @@ section {
 		.section {
 			display: flex;
 			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.controls {
+			display: flex;
 			gap: 0.5rem;
 		}
 	}

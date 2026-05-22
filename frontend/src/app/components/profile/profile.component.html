@@ -5,21 +5,32 @@
 	<div class="foto"></div>
 
 	<div class="infos">
-
 		<div class="header">
-			<h1>{{ user?.nickname }} <i class="fa-solid fa-pencil"></i></h1>
+			<h1>{{ user?.nickname }} <i (click)="abrirModal('Apelido', user?.nickname)" class="fa-solid fa-pencil"></i></h1>
 			<p>Nível {{ capAtual }}</p>
 		</div>
 
 		<div class="section">
-			<p><span>Enxadrista:</span>{{ user?.name }} <i class="fa-solid fa-pencil"></i></p>
-			<p><span>Email:</span>{{ user?.email }} <i class="fa-solid fa-pencil"></i></p>
-			<p><span>Telefone:</span>{{ formatPhone(user?.telefone) }} <i class="fa-solid fa-pencil"></i></p>
-			<p><span>Início do aprendizado:</span>xx/xx/xxxx</p>
+			<p>
+				<span>Enxadrista:</span>{{ user?.name }}
+				<i (click)="abrirModal('Nome', user?.name)" class="fa-solid fa-pencil"></i>
+			</p>
+			<p>
+				<span>Email:</span>{{ user?.email }}
+				<i (click)="abrirModal('Email', user?.email)" class="fa-solid fa-pencil"></i>
+			</p>
+			<p>
+				<span>Telefone:</span>{{ formatPhone(user?.telefone) }}
+				<i (click)="abrirModal('Telefone', user?.telefone)" class="fa-solid fa-pencil"></i>
+			</p>
+			<p>
+				<span>Início do aprendizado:</span>xx/xx/xxxx</p>
 		</div>
 
-		<button class="outline small">Alterar senha</button>
-		<button class="small">Voltar para o início</button>
+		<div class="controls">
+			<button class="outline small">Alterar senha</button>
+			<button class="small">Voltar para o início</button>
+		</div>
 	</div>
 </section>
 
