@@ -33,7 +33,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
 
 		switch (field) {
 			case 'nickname':
-				validators = [Validators.required, Validators.pattern('^[a-zA-Z0-9_-]+$'), Validators.minLength(3)];
+				validators = [Validators.required, Validators.pattern('^[a-zA-Z0-9_-]+$'), Validators.minLength(8), Validators.maxLength(16)];
 				break;
 			case 'email':
 				validators = [Validators.required, Validators.email];
@@ -42,7 +42,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
 				validators = [Validators.required, Validators.pattern('^[0-9]{10,11}$')];
 				break;
 			case 'name':
-				validators = [Validators.required, Validators.pattern('^[a-zA-ZÀ-ÿ ]+$')];
+				validators = [Validators.required, Validators.pattern('^[a-zA-ZÀ-ÿ ]+$'), Validators.minLength(10), Validators.maxLength(100)];
 				break;
 			default:
 				validators = [Validators.required];

@@ -10,9 +10,12 @@
 			<mat-error *ngIf="data?.fieldKey === 'email' && EditForm.get('value')?.hasError('email')">E-mail inválido</mat-error>
 
 			<mat-error *ngIf="data?.fieldKey === 'nickname' && EditForm.get('value')?.hasError('pattern')">Use apenas letras e números</mat-error>
-			<mat-error *ngIf="data?.fieldKey === 'nickname' && EditForm.get('value')?.hasError('minlength')">Apelido muito curto</mat-error>
+			<mat-error *ngIf="data?.fieldKey === 'nickname' && EditForm.get('value')?.hasError('minlength')">Deve conter no mínimo {{ EditForm.get('value')?.getError('minlength')?.requiredLength }} caracteres</mat-error>
+			<mat-error *ngIf="data?.fieldKey === 'nickname' && EditForm.get('value')?.hasError('maxlength')">Deve conter no máximo {{ EditForm.get('value')?.getError('maxlength')?.requiredLength }} caracteres</mat-error>
 
 			<mat-error *ngIf="data?.fieldKey === 'name' && EditForm.get('value')?.hasError('pattern')">Nome não pode conter emojis ou caracteres especiais</mat-error>
+			<mat-error *ngIf="data?.fieldKey === 'name' && EditForm.get('value')?.hasError('minlength')">Deve conter no mínimo {{ EditForm.get('value')?.getError('minlength')?.requiredLength }} caracteres</mat-error>
+			<mat-error *ngIf="data?.fieldKey === 'name' && EditForm.get('value')?.hasError('maxlength')">Deve conter no máximo {{ EditForm.get('value')?.getError('maxlength')?.requiredLength }} caracteres</mat-error>
 
 			<mat-error *ngIf="data?.fieldKey === 'telefone' && EditForm.get('value')?.hasError('pattern')">Telefone deve conter apenas números, entre 8 e 11 dígitos</mat-error>
 
