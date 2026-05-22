@@ -6,10 +6,11 @@ import jakarta.validation.constraints.*;
 
 public record ProfileRequestDTO(
         @NotBlank(message = "Nome é obrigatório")
+        @Size(min = 10, max = 100, message = "O Nome deve ter entre 10 e 100 caracteres")
         String name,
 
         @NotBlank(message = "Nickname é obrigatório")
-        @Size(min= 8, max =12, message = "o nickname deve ter entre 8 a 16 caracteres")
+        @Size(min = 8, max = 16, message = "o nickname deve ter entre 8 a 16 caracteres")
         String nickname,
 
         @NotBlank(message = "Email é obrigatório")
@@ -26,7 +27,7 @@ public record ProfileRequestDTO(
                 message = "A senha precisa ter entre 8 a 12 caracteres, com maiúsculas, minúsculas, números e símbolos")
         @Schema(example = "SenhaExemplo@123")
         String password
-){
+) {
     public ProfileRequestDTO(User user) {
         this(
                 user.getName(),
