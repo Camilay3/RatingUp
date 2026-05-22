@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -15,7 +15,9 @@ import { AuthService } from '../../../services/user/auth.service';
 	templateUrl: './edit-profile.component.html',
 	styleUrls: ['./edit-profile.component.scss']
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent implements OnInit, AfterViewInit {
+
+	@ViewChild('valueInput') valueInput?: ElementRef<HTMLInputElement>;
 
 	public readonly data = inject(MAT_DIALOG_DATA);
 	public readonly fb = inject(FormBuilder);
@@ -37,7 +39,7 @@ export class EditProfileComponent implements OnInit {
 				validators = [Validators.required, Validators.email];
 				break;
 			case 'telefone':
-				validators = [Validators.required, Validators.minLength(8), Validators.maxLength(11), Validators.pattern('^[0-9]{8,11}$')];
+				validators = [Validators.required, Validators.pattern('^[0-9]{10,11}$')];
 				break;
 			case 'name':
 				validators = [Validators.required, Validators.pattern('^[a-zA-ZÀ-ÿ ]+$')];
@@ -48,7 +50,76 @@ export class EditProfileComponent implements OnInit {
 
 		this.EditForm = this.fb.group({
 			value: [this.data?.value ?? '', validators]
-		});
+		}, { updateOn: 'change' });
+	}
+
+	ngAfterViewInit(): void {
+		const field = this.data?.fieldKey;
+		if (field === 'telefone' && this.data?.value) {
+			const digits = String(this.data.value).replace(/\D/g, '').slice(0, 11);
+			let masked = digits;
+
+			if (digits.length <= 2) {
+				masked = `(${digits}`;
+			} else if (digits.length <= 6) {
+				masked = digits.replace(/(\d{2})(\d{0,4})/, '($1) $2');
+			} else if (digits.length <= 10) {
+				masked = digits.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+			} else {
+				masked = digits.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+			}
+
+			if (this.valueInput?.nativeElement) {
+				this.valueInput.nativeElement.value = masked;
+			}
+		}
+	}
+
+	handleInput(event: Event) {
+		const field = this.data?.fieldKey;
+		if (field === 'telefone') {
+			this.maskPhone(event);
+		}
+		if (field === 'nickname') {
+			const control = this.EditForm.get('value');
+			control?.updateValueAndValidity();
+			if (control?.invalid) {
+				control.markAsTouched();
+			} else {
+				control?.markAsUntouched();
+			}
+		}
+	}
+
+	maskPhone(event: Event){
+		const input = event.target as HTMLInputElement;
+		let digits = input.value.replace(/\D/g, '');
+
+		if (digits.length === 0) {
+			input.value = '';
+			this.EditForm.get('value')?.setValue('', { emitEvent: false });
+			return;
+		}
+
+		if(digits.length > 11){
+			digits = digits.slice(0, 11);
+		}
+
+		let masked = digits;
+
+		if (digits.length <= 2) {
+			masked = `(${digits}`;
+		} else if (digits.length <= 6) {
+			masked = digits.replace(/(\d{2})(\d{0,4})/, '($1) $2');
+		} else if (digits.length <= 10) {
+			masked = digits.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+		} else {
+			masked = digits.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+		}
+
+		// store raw digits in the form control (no emit to avoid recursion)
+		this.EditForm.get('value')?.setValue(digits, { emitEvent: false });
+		setTimeout(() => { input.value = masked; }, 0);
 	}
 
 	onEdit() {

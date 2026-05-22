@@ -4,7 +4,7 @@
 	<form [formGroup]="EditForm" (ngSubmit)="onEdit()">
 		<mat-form-field appearance="outline" floatLabel="auto">
 			<mat-label>{{ data.header.replace('Editar ', '') }}</mat-label>
-			<input matInput type="text" [placeholder]="data.value || ''" formControlName="value">
+			<input #valueInput matInput type="text" [placeholder]="data.value || ''" formControlName="value" (input)="handleInput($event)">
 			<mat-error *ngIf="EditForm.get('value')?.hasError('required')">Campo obrigatório</mat-error>
 
 			<mat-error *ngIf="data?.fieldKey === 'email' && EditForm.get('value')?.hasError('email')">E-mail inválido</mat-error>
