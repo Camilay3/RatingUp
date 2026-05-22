@@ -37,10 +37,10 @@ export class EditProfileComponent implements OnInit {
 				validators = [Validators.required, Validators.email];
 				break;
 			case 'telefone':
-				validators = [Validators.required, Validators.pattern('^[0-9]{8,11}$')];
+				validators = [Validators.required, Validators.minLength(8), Validators.maxLength(11), Validators.pattern('^[0-9]{8,11}$')];
 				break;
 			case 'name':
-				validators = [Validators.required];
+				validators = [Validators.required, Validators.pattern('^[a-zA-ZÀ-ÿ ]+$')];
 				break;
 			default:
 				validators = [Validators.required];
