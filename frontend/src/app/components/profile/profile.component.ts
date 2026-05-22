@@ -3,11 +3,12 @@ import { AuthService } from '../../services/user/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditProfileComponent } from '../modais/edit-profile/edit-profile.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
 	selector: 'app-profile',
 	templateUrl: './profile.component.html',
-	imports: [ MatDialogModule ],
+	imports: [ MatDialogModule, RouterLink ],
 	styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {

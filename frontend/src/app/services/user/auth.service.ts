@@ -33,7 +33,9 @@ export class AuthService {
 	}
 
 	logout() {
-		return this.http.delete<IResponse>(`${this.apiUrl}/auth/logout`);
+		return this.http.delete<IResponse>(`${this.apiUrl}/auth/logout`).pipe(
+			tap(() => this.currentUser.set(null))
+		);
 	}
 
 	get getMyUser() { return this.currentUser.asReadonly(); }
