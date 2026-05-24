@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN avatarurl VARCHAR(255);
