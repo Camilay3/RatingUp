@@ -36,7 +36,7 @@ public class AvatarService {
         Images image = imagesRepository.findByImageName(imageName)
                 .orElseThrow(() -> new RuntimeException("Imagem não encontrada"));
 
-        user.setAvatarURL(imageName);
+        user.setAvatarurl(imageName);
         userRepository.save(user);
     }
 

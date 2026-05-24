@@ -4,7 +4,7 @@ import com.quadcore.Ratingup.model.images.Images;
 
 public record AvatarResponseDTO(
         String imageName,
-        String avatarURL
+        String avatarurl
 ) {
     public AvatarResponseDTO(Images images){
         this(
