@@ -5,11 +5,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 @Schema(example = """
-            {
-                "email": "ratingupadmin@gmail.com",
-                "password": "Ab@12345"
-            }
-            """)
+        {
+            "email": "ratingupadmin@gmail.com",
+            "password": "Ab@12345"
+        }
+        """)
 public record LoginRequestDTO(
 
         @NotBlank(message = "Email é obrigatório")
@@ -18,4 +18,5 @@ public record LoginRequestDTO(
 
         @NotBlank(message = "Senha é obrigatória")
         String password
-) {}
+) {
+}

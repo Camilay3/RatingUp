@@ -3,6 +3,7 @@ package com.quadcore.Ratingup.service;
 import com.quadcore.Ratingup.dto.progresso.ProgressResponseDTO;
 import com.quadcore.Ratingup.dto.progresso.ProgressUpdateDTO;
 import com.quadcore.Ratingup.mapper.ProgressoMapper;
+import com.quadcore.Ratingup.model.book.Chapters;
 import com.quadcore.Ratingup.model.book.Subtopics;
 import com.quadcore.Ratingup.model.profile.Progress;
 import com.quadcore.Ratingup.repository.ChaptersRepository;
@@ -41,15 +42,24 @@ public class ProgressService {
         Progress progressoUser = progressRepository.findByUserEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Progresso não encontrado"));
 
-        if (dto.chapter() != progressoUser.getChapters() ||
-                dto.subtopic() != progressoUser.getSubtopics()) {
-            throw new IllegalArgumentException("Progresso inválido");
-        }
+        Chapters lastChapter = chaptersRepository
+                .findTopByOrderByDisplayOrderDesc()
+                .orElseThrow(() -> new EntityNotFoundException("Capítulo não encontrado"));
+        int maxChapter = lastChapter.getDisplayOrder();
 
         Subtopics lastSubtopic = subtopicsRepository
                 .findTopByChapterIdOrderByDisplayOrderDesc(dto.chapter())
                 .orElseThrow(() -> new EntityNotFoundException("Capítulo não encontrado"));
         int maxSubtopic = lastSubtopic.getDisplayOrder();
+
+        if (dto.chapter() == maxChapter &&
+            dto.subtopic() == maxSubtopic) {
+            throw new IllegalArgumentException("Progresso máximo alcançado!");
+        }
+        else if (dto.chapter() != progressoUser.getChapters() ||
+                dto.subtopic() != progressoUser.getSubtopics()) {
+            throw new IllegalArgumentException("Progresso inválido");
+        }
 
         if (dto.subtopic() < maxSubtopic) {
             progressoUser.setSubtopics(progressoUser.getSubtopics() + 1);

@@ -5,8 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 public record PasswordResetDTO(
-
-        @NotBlank(message = "código é obrigatório")
+        @NotBlank(message = "Código é obrigatório")
         String token,
 
         @NotBlank(message = "Senha não pode ser vazia")
