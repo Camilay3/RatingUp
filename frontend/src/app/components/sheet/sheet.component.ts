@@ -20,6 +20,7 @@ export class SheetComponent {
 	protected flipped: boolean = false;
 	isPageWaiting: boolean = false;
 	isWaiting = output<boolean>();
+	paginaAtual = input<number>(0);
 
 	constructor( private readonly cdr: ChangeDetectorRef, private readonly audioService: AudioService ) {}
 	navigate = output<{ qnt?: number; next?: boolean }>();

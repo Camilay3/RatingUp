@@ -41,6 +41,9 @@ export class BookComponent implements OnInit {
 		private readonly snackBar : MatSnackBar,
 	) {}
 
+	private pageHeight = 0;
+	private pagesLoaded = false;
+
 	ngOnInit() {
 		this.authService.getProgresso()
 			.pipe(
@@ -82,21 +85,30 @@ export class BookComponent implements OnInit {
 			})
 	}
 
-	private buildBookFromPages(): void {
-		const home = [
-			{
-				front: {
-					type: 'home',
-					nickname: this.authService.getMyUser()?.data.nickname,
-					summary: this.pages
-				},
-				verse: null
+	ngAfterViewInit(): void {
+		const containerEl = document.querySelector('.book-container');
+		if (!containerEl) return;
+
+		const ro = new ResizeObserver(entries => {
+			const newHeight = entries[0].contentRect.height;
+			if (newHeight !== this.pageHeight) {
+				this.pageHeight = newHeight * 0.95;
+				if (this.pagesLoaded) {
+					this.buildBookFromPages();
+					this.cdr.detectChanges();
+				}
 			}
-		];
+		});
+
+		ro.observe(containerEl);
+	}
+
+	private buildBookFromPages(): void {
+		const homePages = this.splitSummaryIntoHomePages(this.pages);
 
 		this.book = [
 			{ capa: 'capa.png', frenteCapa: true },
-			...home,
+			...homePages,
 			...this.pages,
 			{ capa: 'quartaCapa.png' }
 		];
@@ -104,7 +116,77 @@ export class BookComponent implements OnInit {
 		this.tamanhoLivro = this.book.length;
 		this.pageFlipStates = new Array(this.tamanhoLivro).fill(false);
 		this.zIndexValues = [];
-		for (let i = 0; i < this.tamanhoLivro; i++) this.zIndexValues.push(this.tamanhoLivro - i + 1);
+		for (let i = 0; i < this.tamanhoLivro; i++)
+			this.zIndexValues.push(this.tamanhoLivro - i + 1);
+		}
+
+		private splitSummaryIntoHomePages(pages: any[]): any[] {
+			const MAX_FIRST = this.calcMaxHeight(true);
+			const MAX_REST  = this.calcMaxHeight(false);
+
+			const chunks: any[][] = [];
+			let current: any[] = [];
+			let currentHeight = 0;
+			let isFirstChunk = true;
+
+			const itemHeight = (item: any) => item?.type === 'capitulo' ? 8 : 4;
+			const pairHeight = (page: any) => itemHeight(page.front) + itemHeight(page.verse);
+			const startsNewSection = (page: any) =>
+				page.front.type === 'capitulo' || page.verse?.type === 'capitulo';
+
+			const maxForCurrent = () => isFirstChunk ? MAX_FIRST : MAX_REST;
+
+			for (const page of pages) {
+				const h = pairHeight(page);
+
+				if (currentHeight + h > maxForCurrent() && startsNewSection(page)) {
+					chunks.push(current);
+					current = [];
+					currentHeight = 0;
+					isFirstChunk = false;
+				}
+
+				current.push(page);
+				currentHeight += h;
+			}
+			if (current.length) chunks.push(current);
+
+			const homePages: any[] = [];
+
+			for (let i = 0; i < chunks.length; i += 2) {
+				homePages.push({
+					front: {
+						type: 'home',
+						nickname: i === 0 ? this.authService.getMyUser()?.data.nickname : null,
+						isFirstHome: i === 0,
+						summary: chunks[i],
+						chunkOffset: this.countPagesInChunks(chunks, i)
+					},
+					verse: chunks[i + 1] ? {
+						type: 'home',
+						nickname: null,
+						isFirstHome: false,
+						summary: chunks[i + 1],
+						chunkOffset: this.countPagesInChunks(chunks, i + 1)
+					} : null
+				});
+			}
+		return homePages;
+	}
+
+	private calcMaxHeight(isFirst: boolean): number {
+		if (!this.pageHeight) return isFirst ? 55 : 75;
+
+		const PX_PER_UNIT = 9;
+		const HEADER_PX = isFirst ? 180 : 0;
+
+		return Math.floor((this.pageHeight - HEADER_PX) / PX_PER_UNIT);
+	}
+
+	private countPagesInChunks(chunks: any[][], targetIndex: number): number {
+		let count = 0;
+		for (let i = 0; i < targetIndex; i++) count += chunks[i].length;
+		return count;
 	}
 
 	@ViewChildren(SheetComponent) sheets!: QueryList<SheetComponent>;

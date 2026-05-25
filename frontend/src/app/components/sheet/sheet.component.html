@@ -22,12 +22,12 @@
 
 	} @else {
 		<div (click)="virarPagina()" class="versoPage">
-			<app-page [page]="verso()" side="verso" (isWaiting)="isPageWaiting = $event" (navigate)="navigate.emit($event)"></app-page>
+			<app-page [page]="verso()" side="verso" [paginaAtual]="paginaAtual()" (isWaiting)="isPageWaiting = $event" (navigate)="navigate.emit($event)"></app-page>
 			<!-- Remover isWaiting daqui quando quiser permitir que o usuário veja que tem coisas bloqueadas atrás -->
 		</div>
 
 		<div (click)="virarPagina()" class="frentePage">
-			<app-page [page]="frente()" side="frente" (isWaiting)="isPageWaiting = $event" (navigate)="navigate.emit($event)"></app-page>
+			<app-page [page]="frente()" side="frente" [paginaAtual]="paginaAtual()" (isWaiting)="isPageWaiting = $event" (navigate)="navigate.emit($event)"></app-page>
 		</div>
 	}
 </div>

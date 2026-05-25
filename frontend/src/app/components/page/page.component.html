@@ -22,28 +22,34 @@
 				<span>∾</span><p>{{ sub.title }}</p><span>∾</span>
 			</div>
 		</div>
-			<img draggable="false" loading="lazy" [src]="'/subtopicos/' + sub.chapterId + '.' + sub.displayOrder + '.png'" [alt]="'Img do subtópico' + sub.displayOrder" (error)="onImageError($event)">
-			<button (click)="$event.stopPropagation(); acessarSubtopico(sub.chapterId, sub.displayOrder)">Acessar</button>
+		<img draggable="false" loading="lazy" [src]="'/subtopicos/' + sub.chapterId + '.' + sub.displayOrder + '.png'" [alt]="'Img do subtópico' + sub.displayOrder" (error)="onImageError($event)">
+		<button (click)="$event.stopPropagation(); acessarSubtopico(sub.chapterId, sub.displayOrder)">Acessar</button>
 	} @else if (asType(page(), 'home'); as home) {
-		<div class="header">
-			<h2>{{ home.nickname }}</h2>
-			<span (click)="$event.stopPropagation(); logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</span>
-		</div>
-		<div class="niveis">
-			<!-- <p (click)="$event.stopPropagation(); multiplasPaginas(1 + home.summary.length)">Ir para o final</p> -->
-			<h1>Níveis</h1>
-			<span></span>
+
+		@if (home.isFirstHome) {
+			<div class="header">
+				<h2>{{ home.nickname }}</h2>
+				<span (click)="$event.stopPropagation(); logout()">
+					<i class="fa-solid fa-arrow-right-from-bracket"></i> Sair
+				</span>
+			</div>
+		}
+
+		<div class="niveis" [class.continuation]="!home.isFirstHome">
+			@if (home.isFirstHome) {
+				<h1>Níveis</h1>
+				<span></span>
+			}
 			<ul>
 				@for (item of home.summary; track outerIndex; let outerIndex = $index) {
-					@for (entry of getPages(item); track entry.page.displayOrder) {
+					@for (entry of getPages(item, outerIndex); track entry.uid) {
 						@if (entry.page.type == 'capitulo') {
 							<h2>Capítulo {{ entry.page.displayOrder }}</h2>
-
 						} @else {
 							<li [class.blocked]="isSubtopico(entry.page) && entry.page.isBlocked"
 								(click)="$event.stopPropagation();
 								(isSubtopico(entry.page) && !entry.page.isBlocked)
-								? multiplasPaginas(entry.offset + outerIndex)
+								? multiplasPaginas(home.chunkOffset + outerIndex + entry.offset - paginaAtual() + 2)
 								: null">
 								<i [class]="setIconList(entry.page)"></i>
 								{{ entry.page.title }}
