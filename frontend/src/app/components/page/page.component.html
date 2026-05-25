@@ -42,14 +42,14 @@
 			}
 			<ul>
 				@for (item of home.summary; track outerIndex; let outerIndex = $index) {
-					@for (entry of getPages(item); track entry.page.displayOrder) {
+					@for (entry of getPages(item, outerIndex); track entry.uid) {
 						@if (entry.page.type == 'capitulo') {
 							<h2>Capítulo {{ entry.page.displayOrder }}</h2>
 						} @else {
 							<li [class.blocked]="isSubtopico(entry.page) && entry.page.isBlocked"
 								(click)="$event.stopPropagation();
 								(isSubtopico(entry.page) && !entry.page.isBlocked)
-								? multiplasPaginas(entry.offset + outerIndex)
+								? multiplasPaginas(home.chunkOffset + outerIndex + entry.offset - paginaAtual() + 2)
 								: null">
 								<i [class]="setIconList(entry.page)"></i>
 								{{ entry.page.title }}

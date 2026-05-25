@@ -16,6 +16,7 @@ export class PageComponent {
 	side = input<'frente' | 'verso'>();
 	isWaiting = output<boolean>();
 	navigate = output<{ qnt?: number; next?: boolean }>();
+	paginaAtual = input<number>(0);
 
 	@ViewChild('pageRoot', { static: true }) pageRoot!: ElementRef<HTMLElement>;
 	private isHovered = false;
@@ -55,10 +56,10 @@ export class PageComponent {
         });
 	}
 
-	getPages(item: ISheet) {
+	getPages(item: ISheet, outerIndex: number) {
 		return [
-			{ page: item.front, offset: 1 },
-			{ page: item.verse, offset: 2 },
+			{ page: item.front, offset: 1, uid: `${outerIndex}-1` },
+			{ page: item.verse, offset: 2, uid: `${outerIndex}-2` },
 		];
 	}
 
