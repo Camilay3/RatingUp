@@ -72,6 +72,7 @@ public class UserService implements UserDetailsService {
 
         //talvez fazer uma função so pra isso aq(mateus)
         User savedUser = userRepository.save(user);
+        LocalDateTime creationDate = savedUser.getCreationDate();
         Progress progresso = new Progress();
         progresso.setUser(savedUser);
         savedUser.setProgress(progresso);
