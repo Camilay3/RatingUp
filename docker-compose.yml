@@ -4,10 +4,6 @@ services:
     container_name: ratingup_db
     env_file:
       - .env
-    environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
     expose:
       - "5432"
     networks:
@@ -21,6 +17,12 @@ services:
       - .env
     depends_on:
       - postgres_db
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     expose:
       - "8080"
     networks:
@@ -43,18 +45,44 @@ services:
     container_name: ratingup_minio
     env_file:
       - .env
-    environment:
-      - MINIO_ROOT_USER=${MINIO_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}
-      - MINIO_BROWSER_SESSION_DURATION=${MINIO_SESSION}
     command: server /data --console-address ":9001"
     ports:
       - "9000:9000"
       - "9001:9001"
     volumes:
       - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - back-network
+  minio-init:
+    image: alpine:latest
+    container_name: ratingup_images
+    env_file:
+      - .env
+    depends_on:
+      minio:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./scripts/minio-init.sh:/scripts/minio-init.sh
+      - ./assets/images:/images
+    command: >
+      sh -c "
+        apk add --no-cache curl grep wget &&
+        wget https://dl.min.io/client/mc/release/linux-amd64/mc &&
+        chmod +x mc &&
+        mv mc /usr/local/bin/mc &&
+        sh /scripts/minio-init.sh
+      "
+    networks:
+      - back-network
+    restart: "no"
   nginx:
     image: nginx:alpine
     container_name: ratingup_proxy
