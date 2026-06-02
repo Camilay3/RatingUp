@@ -1,6 +1,6 @@
 package com.quadcore.Ratingup.dto.board;
 
-public record MoveResponseDTO(
+public record SubtopicPracticeSessionResponseDTO(
         String fen,
         String status
 ) {}

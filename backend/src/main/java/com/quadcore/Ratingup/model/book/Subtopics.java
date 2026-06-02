@@ -22,4 +22,7 @@ public class Subtopics {
     @ManyToOne
     @JoinColumn(name = "chapter_id")
     private Chapters chapter;
+
+    @Column(length = 100)
+    private String initialFen;//LEMBRAR DE GERAR ESSE FEN NA MIGRATION(mateus)
 }
