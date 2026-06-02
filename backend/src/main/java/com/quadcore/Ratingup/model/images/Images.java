@@ -16,9 +16,10 @@ import lombok.Setter;
 @EqualsAndHashCode(of = "id")
 public class Images {
 
-    public Images(String objectId, String imageName) {
+    public Images(String objectId, String imageName, String bucketName) {
         this.objectId = objectId;
         this.imageName = imageName;
+        this.bucketName = bucketName;
     }
 
     @Id
@@ -26,4 +27,5 @@ public class Images {
     private Long id;
     private String objectId;
     private String imageName;
+    private String bucketName;
 }

@@ -19,13 +19,9 @@ import java.util.UUID;
 @RequestMapping("/images")
 public class ImagesController {
 
-    private final MinioClient minioClient;
-    private final JdbcClient jdbcClient;
     private final ImagesService imagesService;
 
-    public ImagesController(MinioClient minioClient, JdbcClient jdbcClient, ImagesService imagesService) {
-        this.minioClient = minioClient;
-        this.jdbcClient = jdbcClient;
+    public ImagesController(ImagesService imagesService) {
         this.imagesService = imagesService;
     }
 
@@ -51,4 +47,10 @@ public class ImagesController {
                 .body(image);
     }
 
+    @GetMapping("/exists/{bucketName}/{originalName}")
+    public ResponseEntity<ApiResponse<?>> exists(
+            @PathVariable String bucketName,
+            @PathVariable String originalName) {
+        return ResponseEntity.ok(new ApiResponse<>(true, null, imagesService.exists(originalName, bucketName)));
+    }
 }

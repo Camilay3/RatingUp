@@ -38,7 +38,7 @@ public class ImagesService {
                         .build()
         );
 
-        Images image = new Images(objectId, imageName);
+        Images image = new Images(objectId, imageName, bucketName);
 
         return imagesRepository.save(image);
     }
@@ -55,5 +55,9 @@ public class ImagesService {
         );
 
         return IOUtils.toByteArray(stream);
+    }
+
+    public boolean exists(String originalName, String bucketName) {
+        return imagesRepository.existsByOriginalNameAndBucketName(originalName, bucketName);
     }
 }
