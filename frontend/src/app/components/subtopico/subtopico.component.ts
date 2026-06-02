@@ -2,16 +2,18 @@ import { AuthService } from './../../services/user/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
+import { ChessBoard } from '../chess-board/chess-board';
 
 @Component({
   selector: 'app-subtopico',
   templateUrl: './subtopico.component.html',
   styleUrls: ['./subtopico.component.scss'],
-  imports: [RouterLink]
+  imports: [RouterLink, ChessBoard]
 })
 export class SubtopicoComponent implements OnInit {
 	capitulo: number;
 	subtopico: number;
+	fenDoBackend = 'start';
 
 	constructor(
 		private readonly router: Router,

@@ -7,6 +7,7 @@
 :host {
 	padding: 4rem 16rem 0 16rem;
 	background-color: var(--primary);
+	overflow-y: auto;
 	@include size;
 }
 
