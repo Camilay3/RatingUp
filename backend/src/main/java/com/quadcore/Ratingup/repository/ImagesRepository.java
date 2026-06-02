@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ImagesRepository extends JpaRepository<Images, Long> {
     Optional<Images> findByImageName(String imageName);
-    boolean existsByOriginalNameAndBucketName(String originalName, String bucketName);
+    boolean existsByImageNameAndBucketName(String imageName, String bucketName);
 }

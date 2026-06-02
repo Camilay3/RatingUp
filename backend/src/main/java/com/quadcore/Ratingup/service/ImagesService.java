@@ -57,7 +57,7 @@ public class ImagesService {
         return IOUtils.toByteArray(stream);
     }
 
-    public boolean exists(String originalName, String bucketName) {
-        return imagesRepository.existsByOriginalNameAndBucketName(originalName, bucketName);
+    public boolean exists(String imageName, String bucketName) {
+        return imagesRepository.existsByImageNameAndBucketName(imageName, bucketName);
     }
 }

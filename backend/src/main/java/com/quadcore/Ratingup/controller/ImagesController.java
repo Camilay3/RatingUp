@@ -47,10 +47,10 @@ public class ImagesController {
                 .body(image);
     }
 
-    @GetMapping("/exists/{bucketName}/{originalName}")
+    @GetMapping("/exists/{bucketName}/{imageName}")
     public ResponseEntity<ApiResponse<?>> exists(
             @PathVariable String bucketName,
-            @PathVariable String originalName) {
-        return ResponseEntity.ok(new ApiResponse<>(true, null, imagesService.exists(originalName, bucketName)));
+            @PathVariable String imageName) {
+        return ResponseEntity.ok(new ApiResponse<>(true, null, imagesService.exists(imageName, bucketName)));
     }
 }
