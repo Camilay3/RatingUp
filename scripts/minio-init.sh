@@ -1,18 +1,25 @@
 #!/bin/sh
 set -e
 
+apk add --no-cache curl grep
+curl -sSL https://dl.min.io/client/mc/release/linux-amd64/mc -o /usr/local/bin/mc
+chmod +x /usr/local/bin/mc
+
 upload_if_not_exists() {
   file="$1"
   bucket="$2"
   filename=$(basename "$file")
-  exists=$(curl -sf "http://backend:8080/api/images/exists/$bucket/$filename" | grep -o '"data":true')
+  exists=$(curl -s "http://backend:8080/images/exists/$bucket/$filename" | grep -o '"data":true' || true)
 
   if [ -z "$exists" ]; then
-    echo "Pulando $filename, já existe"
-  else
     echo "Upando $filename para $bucket..."
-    curl -f -X POST "http://backend:8080/api/images/upload/$bucket" \
-      -F "file=@$file;filename=$filename"
+    if ! curl -f -X POST "http://backend:8080/images/upload/$bucket" \
+      -F "file=@$file;filename=$filename"; then
+      echo "Falha ao upar $filename (HTTP Error)"
+      exit 1
+    fi
+  else
+    echo "Pulando $filename, já existe"
   fi
 }
 
