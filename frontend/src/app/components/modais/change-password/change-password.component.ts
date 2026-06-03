@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfileService } from '../../../services/user/profile.service';
-import { LoadingService } from '../../../services/loading.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -32,7 +31,6 @@ export class ChangePasswordComponent implements OnInit {
 		private readonly profileService: ProfileService,
 		private readonly authService: AuthService,
 		private readonly snackBar: MatSnackBar,
-		private readonly loading: LoadingService,
 		private readonly fb: FormBuilder,
 		private readonly router: Router,
 	) {}
@@ -66,7 +64,6 @@ export class ChangePasswordComponent implements OnInit {
 			controlConfirm?.setErrors({ mismatch: 'As senhas não coincidem' });
 			return;
 		}
-		this.loading.show();
 		this.profileService.editPassword(senhaAtual, senhaNova).subscribe({
 			next: (response) => {
 				this.snackBar.open('Senha alterada com sucesso', 'Fechar', { duration: 2500, panelClass: ['snack-success'] });
@@ -94,10 +91,7 @@ export class ChangePasswordComponent implements OnInit {
 					controlNova?.setErrors({ backendError: msg });
 					controlConfirm?.setErrors({ backendError: msg });
 				}
-
-				this.loading.hide();
-			},
-			complete: () => { this.loading.hide(); }
+			}
 		})
 	}
 }
