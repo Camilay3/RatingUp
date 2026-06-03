@@ -3,13 +3,16 @@ package com.quadcore.Ratingup.dto.profile;
 import com.quadcore.Ratingup.enums.Roles;
 import com.quadcore.Ratingup.model.profile.User;
 
+import java.time.LocalDateTime;
+
 public record ProfileResponseDTO(
         Long id,
         String name,
         String nickname,
         String email,
         String telefone,
-        Roles role
+        Roles role,
+        LocalDateTime creationDate
 ) {
     public ProfileResponseDTO(User user) {
         this(
@@ -18,7 +21,8 @@ public record ProfileResponseDTO(
                 user.getNickname(),
                 user.getEmail(),
                 user.getTelefone(),
-                user.getRole()
-                );
+                user.getRole(),
+                user.getCreationDate()
+        );
     }
 }

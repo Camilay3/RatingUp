@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -54,6 +55,10 @@ public class User implements UserDetails {
     private Progress progress;
 
     private String avatarurl;
+
+    @Column(name = "creation_date", updatable = false)
+    @CreationTimestamp
+    private LocalDateTime creationDate;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
