@@ -27,7 +27,7 @@ export class SubtopicoComponent implements OnInit {
 	}
 
 	concluirSubtopico() {
-		this.authService.atualizarProgresso(0, 0).subscribe({
+		this.authService.atualizarProgresso(this.capitulo, this.subtopico).subscribe({
 			next: () => {
 				this.router.navigate(['/'], {
 					state: { executarAnimacao: true }
