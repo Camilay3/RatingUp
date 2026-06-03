@@ -15,21 +15,17 @@
 				<span>Enxadrista:</span>{{ user?.name }}
 				<i (click)="abrirModal('Nome', user?.name)" class="fa-solid fa-pencil"></i>
 			</p>
-			<p>
-				<span>Email:</span>{{ user?.email }}
-				<i (click)="abrirModal('Email', user?.email)" class="fa-solid fa-pencil"></i>
-			</p>
+			<p><span>Email:</span>{{ user?.email }}</p>
 			<p>
 				<span>Telefone:</span>{{ formatPhone(user?.telefone) }}
 				<i (click)="abrirModal('Telefone', user?.telefone)" class="fa-solid fa-pencil"></i>
 			</p>
-			<p>
-				<span>Início do aprendizado:</span>xx/xx/xxxx</p>
+			<p><span>Início do aprendizado:</span>{{ formatDate(user?.creationDate) }}</p>
 		</div>
 
 		<div class="controls">
 			<button class="small" routerLink="/">Voltar para o início</button>
-			<button class="outline small">Alterar senha</button>
+			<button class="outline small" (click)="solicitarSenha()">Alterar senha</button>
 		</div>
 	</div>
 </section>

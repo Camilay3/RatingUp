@@ -115,12 +115,6 @@
 				cursor: default;
 				&:hover { font-weight: normal; }
 			}
-
-			&:not(.blocked):not(:has(~ li:not(.blocked))) {
-				font-weight: bold;
-				&:hover { color: var(--primaryHover); }
-				i.fa-star::before { content: "\f09c"; } // Cadeado desbloqueado
-			}
 		}
 	}
 }

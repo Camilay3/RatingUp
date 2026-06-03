@@ -67,8 +67,12 @@ export class BookComponent implements OnInit {
 									current.chapterId === this.capituloAtual &&
 									current.displayOrder > this.subtopicoAtual;
 
+								const lockOpen =
+									current.chapterId === this.capituloAtual &&
+									current.displayOrder === this.subtopicoAtual;
+
 								currentItem = isAfterCurrentChapter || isAfterCurrentSubtopic;
-								page[side] = { ...current, isBlocked: currentItem };
+								page[side] = { ...current, isBlocked: currentItem, lockOpen };
 							}
 						});
 						return page;
