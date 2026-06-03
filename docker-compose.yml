@@ -19,7 +19,7 @@ services:
     volumes:
       - ./backups/postgres:/backups
       - ./scripts/postgres:/scripts
-    entrypoint: /bin/sh /scripts/postgres-init.sh
+    entrypoint: /bin/sh /scripts/postgres-restore.sh
     networks:
       - back-network
     restart: "no"
@@ -85,9 +85,9 @@ services:
       backend:
         condition: service_healthy
     volumes:
-      - ./scripts/minio-init.sh:/scripts/minio-init.sh
+      - ./scripts/minio/minio-restore.sh:/scripts/minio-restore.sh
       - ./assets/images:/images
-    entrypoint: /bin/sh /scripts/minio-init.sh
+    entrypoint: /bin/sh /scripts/minio-restore.sh
     networks:
       - back-network
     restart: "no"

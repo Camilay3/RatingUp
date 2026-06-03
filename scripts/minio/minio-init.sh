@@ -9,7 +9,7 @@ upload_if_not_exists() {
   file="$1"
   bucket="$2"
   filename=$(basename "$file")
-  exists=$(curl -s "http://backend:8080/images/exists/$bucket/$filename" | grep -o '"data":true' || true)
+  exists=$(curl -s "http://backend:8080/images/exists/$bucket/$filename" | grep -o '"data":[[:space:]]*true' || true)
 
   if [ -z "$exists" ]; then
     echo "Upando $filename para $bucket..."
