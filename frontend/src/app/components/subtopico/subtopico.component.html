@@ -16,10 +16,12 @@
 		</div>
 	</section>
 
-	<app-chess-board
-    [fen]="fenDoBackend"
-    [orientation]="'white'">
-    </app-chess-board>
+	<div class="tabuleiro">
+	 <app-chess-board
+     [fen]="fenDoBackend"
+     [orientation]="'white'">
+     </app-chess-board>
+	</div>
 
 	<button (click)="concluirSubtopico()">Concluir Subtópico</button>
 </div>

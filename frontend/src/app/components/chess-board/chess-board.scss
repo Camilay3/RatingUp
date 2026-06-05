@@ -1,5 +1,32 @@
+.xadrez{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: nowrap;
 
-.chess-board {
-  width: 500px;
-  height: 500px;
+  .chess-board {
+  width: 370px;
+  height: 370px;
+  }
+
+  .jogadas{
+    font-size: small;
+    color: var(--text-color);
+  }
+
+  .chat-jogadas{
+    width: 200px;
+    height: 370px;
+
+    border: 4px solid rgb(56, 29, 29);
+    color: var(--secondary);
+    border-radius: 20px;
+
+    h3{
+      color: var(--neutral);
+      text-align: center;
+    }
+  }
+
+
 }

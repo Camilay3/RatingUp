@@ -1,5 +1,5 @@
 import { AuthService } from './../../services/user/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
 import { ChessBoard } from '../chess-board/chess-board';

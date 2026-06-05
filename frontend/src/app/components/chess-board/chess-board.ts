@@ -14,6 +14,11 @@ export class ChessBoard implements OnInit, OnChanges {
   @Input() orientation: 'white'|'black' = 'white';
 
   private cg: any;
+  moves: {
+    from: string,
+    to: string,
+    piece?: string
+  }[] = [];
 
   ngOnInit(): void {
     this.cg = Chessground(this.boardRef.nativeElement, {
@@ -38,6 +43,12 @@ export class ChessBoard implements OnInit, OnChanges {
     //Por enquanto só vai printar a jogada, mas quando a logica estiver pronta no backend
     //quando o back estiver pronto coloca a logica de chamada
     console.log(`Jogada: ${orig} → ${dest}`);
+
+    this.moves.push({
+      from: orig,
+      to: dest
+    })
+
   }
 
 }

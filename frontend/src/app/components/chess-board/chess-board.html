@@ -1,1 +1,15 @@
-<div #board class="chess-board"></div>
+<section class="xadrez">
+ <div #board class="chess-board"></div>
+
+ <div class="chat-jogadas">
+   <h3>Historico de jogadas</h3>
+
+  @for (move of moves; track $index){
+   <div class="jogadas">
+    {{ move.from }} -> {{ move.to }}
+   </div>
+  }
+
+ </div>
+
+</section>
