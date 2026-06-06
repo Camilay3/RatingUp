@@ -5,6 +5,7 @@ import { Login } from './components/login/login';
 import { authGuard } from './core/guards/auth-guard';
 import { loginGuard } from './core/guards/login-guard';
 import { NotFoundComponent } from './components/not-found.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 export const routes: Routes = [
 
@@ -12,10 +13,8 @@ export const routes: Routes = [
 
 	{ path: '', component: BookComponent, canActivate: [authGuard] },
 	{ path: 'subtopico', component: SubtopicoComponent, canActivate: [authGuard] },
+	{ path: 'perfil', component: ProfileComponent, canActivate: [authGuard] },
+
     { path: '**', component: NotFoundComponent },
-
-
-	/* { path: '', component: Login, canActivate: [loginGuard] },
-	{ path: 'book', component: BookComponent, canActivate: [authGuard] }, */
 
 ];

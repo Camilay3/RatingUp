@@ -47,6 +47,7 @@ export class PageComponent {
 
 	setIconList(page: any) {
 		if (page.isBlocked) return "fa-solid fa-lock";
+		if (page.lockOpen) return "fa-solid fa-lock-open";
 		return "fa-solid fa-star";
 	}
 
@@ -146,5 +147,9 @@ export class PageComponent {
 			next: () => this.router.navigateByUrl('/acesso'),
 			error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 }),
 		});
+	}
+
+	verPerfil() {
+		this.router.navigateByUrl('/perfil');
 	}
 }

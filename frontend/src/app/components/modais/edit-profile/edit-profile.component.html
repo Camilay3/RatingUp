@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>{{ data.header }}</h2>
+
+<mat-dialog-content>
+	<form [formGroup]="EditForm" (ngSubmit)="onEdit()">
+		<mat-form-field appearance="outline" floatLabel="auto">
+			<mat-label>{{ data.header.replace('Editar ', '') }}</mat-label>
+			<input #valueInput matInput type="text" [placeholder]="data.value || ''" formControlName="value" (input)="handleInput($event)">
+			<mat-error *ngIf="EditForm.get('value')?.hasError('required')">Campo obrigatório</mat-error>
+
+			<mat-error *ngIf="data?.fieldKey === 'email' && EditForm.get('value')?.hasError('email')">E-mail inválido</mat-error>
+
+			<mat-error *ngIf="data?.fieldKey === 'nickname' && EditForm.get('value')?.hasError('pattern')">Use apenas letras e números</mat-error>
+			<mat-error *ngIf="data?.fieldKey === 'nickname' && EditForm.get('value')?.hasError('minlength')">Deve conter no mínimo {{ EditForm.get('value')?.getError('minlength')?.requiredLength }} caracteres</mat-error>
+			<mat-error *ngIf="data?.fieldKey === 'nickname' && EditForm.get('value')?.hasError('maxlength')">Deve conter no máximo {{ EditForm.get('value')?.getError('maxlength')?.requiredLength }} caracteres</mat-error>
+
+			<mat-error *ngIf="data?.fieldKey === 'name' && EditForm.get('value')?.hasError('pattern')">Nome não pode conter emojis ou caracteres especiais</mat-error>
+			<mat-error *ngIf="data?.fieldKey === 'name' && EditForm.get('value')?.hasError('minlength')">Deve conter no mínimo {{ EditForm.get('value')?.getError('minlength')?.requiredLength }} caracteres</mat-error>
+			<mat-error *ngIf="data?.fieldKey === 'name' && EditForm.get('value')?.hasError('maxlength')">Deve conter no máximo {{ EditForm.get('value')?.getError('maxlength')?.requiredLength }} caracteres</mat-error>
+
+			<mat-error *ngIf="data?.fieldKey === 'telefone' && EditForm.get('value')?.hasError('pattern')">Telefone deve conter apenas números, entre 8 e 11 dígitos</mat-error>
+
+			<mat-error *ngIf="EditForm.get('value')?.hasError('backendError')" >
+			{{ EditForm.get('value')?.getError('backendError') }}
+			</mat-error>
+		</mat-form-field>
+	</form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close>Cancelar</button>
+	<button mat-button type="submit" [disabled]="EditForm.invalid" (click)="onEdit()" cdkFocusInitial>Salvar</button>
+</mat-dialog-actions>
+

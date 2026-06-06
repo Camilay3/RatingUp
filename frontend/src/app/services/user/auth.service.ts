@@ -2,7 +2,7 @@ import { Injectable, signal } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { IMyUser, IProgresso } from "../../interfaces/user/IMyUser";
-import { tap } from "rxjs";
+import { of, tap } from "rxjs";
 import { Router } from "@angular/router";
 import { IResponse } from "../../interfaces/IResponse";
 
@@ -15,9 +15,12 @@ export class AuthService {
 
 	constructor(private readonly http: HttpClient, private readonly router: Router) {}
 
-	me() {
+	me(forceRefresh = false) {
+		const user = this.currentUser();
+		if (user && !forceRefresh) return of(user);
+
 		return this.http.get<IMyUser>(`${this.apiUrl}/conta/me`).pipe(
-    		tap(user => this.currentUser.set(user))
+			tap(user => this.currentUser.set(user))
 		);
 	}
 
@@ -30,7 +33,9 @@ export class AuthService {
 	}
 
 	logout() {
-		return this.http.delete<IResponse>(`${this.apiUrl}/auth/logout`);
+		return this.http.delete<IResponse>(`${this.apiUrl}/auth/logout`).pipe(
+			tap(() => this.currentUser.set(null))
+		);
 	}
 
 	get getMyUser() { return this.currentUser.asReadonly(); }
