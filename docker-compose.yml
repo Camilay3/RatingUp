@@ -24,7 +24,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP || exit 1" ]
       interval: 10s
@@ -59,11 +60,17 @@ services:
       - .env
     expose:
       - "5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - back-network
-  postgres-init:
+  postgres-restore:
     image: postgres:18-alpine
-    container_name: ratingup_db_init
+    container_name: ratingup_db_restore
     env_file:
       - .env
     depends_on:
@@ -71,8 +78,16 @@ services:
         condition: service_healthy
     volumes:
       - ./backups/postgres:/backups
-      - ./scripts/postgres:/scripts
-    entrypoint: /bin/sh /scripts/postgres-restore.sh
+    command: >
+      sh -c "
+        if [ -f /backups/ratingup-db-backup.sql ]; then
+          echo '[RESTORE] Restauração backup do PostgreSQL...' &&
+          PGPASSWORD=$$POSTGRES_PASSWORD psql -h postgres_db -U $$POSTGRES_USER -d $$POSTGRES_DB < /backups/ratingup-db-backup.sql
+          echo '[OK] Restauração concluída.'
+        else
+          echo '[INFO] Nnehum backup encontrado, pulando restauração.'
+        fi
+      "
     networks:
       - back-network
     restart: "no"
@@ -97,30 +112,57 @@ services:
       start_period: 10s
     networks:
       - back-network
-  minio-init:
-    image: alpine:latest
-    container_name: ratingup_images
+  minio-restore:
+    image: minio/mc
+    container_name: ratingup_minio_restore
     env_file:
       - .env
     depends_on:
       minio:
         condition: service_healthy
-      backend:
-        condition: service_healthy
     volumes:
-      - ./scripts/minio/minio-restore.sh:/scripts/minio-restore.sh
-      - ./assets/images:/images
-    entrypoint: /bin/sh /scripts/minio-restore.sh
+      - ./backups/minio:/backups
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+    - >-
+      mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
+      mc mb --ignore-existing local/book &&
+      mc mb --ignore-existing local/avatars &&
+      mc mirror /backups/ local/ --quiet;
+      echo '[OK] MinIO pronto.'
     networks:
       - back-network
     restart: "no"
 
-
+  # Upload Service
+  image-upload:
+    build:
+      context: ./scripts
+      dockerfile: Dockerfile
+    container_name: ratingup_image_upload
+    env_file:
+      - .env
+    depends_on:
+      backend:
+        condition: service_healthy
+      postgres-restore:
+        condition: service_completed_successfully
+      minio-restore:
+        condition: service_completed_successfully
+    volumes:
+      - ./assets/images:/images
+      - ./backups:/backups
+      - ./scripts/upload.sh:/upload.sh
+    command: sh /upload.sh
+    networks:
+      - back-network
+    restart: "no"
 
 networks:
   back-network:
     driver: bridge
   front-network:
     driver: bridge
+
 volumes:
   minio_data:
