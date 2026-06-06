@@ -1,4 +1,57 @@
 services:
+  # Reverse Proxy | Cache Service
+  nginx:
+    image: nginx:alpine
+    container_name: ratingup_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/http.d:/etc/nginx/http.d:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - back-network
+      - front-network
+
+  # API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ratingup_back
+    env_file:
+      - .env
+    depends_on:
+      - postgres_db
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    expose:
+      - "8080"
+    networks:
+      - back-network
+      - front-network
+
+  # UI/UX
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ratingup_front
+    expose:
+      - "4200"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - front-network
+
+  # Database Service
   postgres_db:
     image: postgres:18-alpine
     container_name: ratingup_db
@@ -23,38 +76,8 @@ services:
     networks:
       - back-network
     restart: "no"
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: ratingup_back
-    env_file:
-      - .env
-    depends_on:
-      - postgres_db
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
-    expose:
-      - "8080"
-    networks:
-      - back-network
-      - front-network
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: ratingup_front
-    expose:
-      - "4200"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    networks:
-      - front-network
+
+  # Object Storage Service
   minio:
     image: minio/minio
     container_name: ratingup_minio
@@ -67,7 +90,7 @@ services:
     volumes:
       - minio_data:/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -91,20 +114,9 @@ services:
     networks:
       - back-network
     restart: "no"
-  nginx:
-    image: nginx:alpine
-    container_name: ratingup_proxy
-    ports:
-      - "80:80"
-    volumes:
-      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./config/nginx/http.d:/etc/nginx/http.d:ro
-    depends_on:
-      - backend
-      - frontend
-    networks:
-      - back-network
-      - front-network
+
+
+
 networks:
   back-network:
     driver: bridge
