@@ -37,4 +37,7 @@ public class SubtopicPracticeSession {
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(length = 500)
+    private String movesPlayed;
 }

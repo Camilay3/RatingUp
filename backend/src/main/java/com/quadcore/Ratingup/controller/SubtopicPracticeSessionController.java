@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class SubtopicPracticeSessionController {
 
     @Autowired
-    SubtopicPracticeSessionService subtopicPracticeSessionService;
+    private SubtopicPracticeSessionService subtopicPracticeSessionService;
 
     @PostMapping("/session/start")
     public ResponseEntity<SubtopicPracticeSessionResponseDTO> startSession(

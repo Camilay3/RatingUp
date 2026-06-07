@@ -28,4 +28,7 @@ public class Subtopics {
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column
+    private String solutionMoves;
 }

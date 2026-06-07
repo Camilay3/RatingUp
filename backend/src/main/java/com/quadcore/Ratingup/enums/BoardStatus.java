@@ -1,8 +1,10 @@
 package com.quadcore.Ratingup.enums;
 
 public enum BoardStatus {
+    NORMAL,
+    CHECK,
     CHECKMATE,
     DRAW,
-    CHECK,
-    NORMAL
+    WRONG_MOVE,
+    COMPLETED
 }
