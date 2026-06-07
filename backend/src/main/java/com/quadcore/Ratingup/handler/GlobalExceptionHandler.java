@@ -102,18 +102,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleMinioError (ErrorResponseException ex) {
         String errorCode = ex.errorResponse().code();
 
-        if (errorCode.equals("NoSuchKey")) {
-            return ResponseEntity
+        return switch (errorCode) {
+            case "NoSuchKey" -> ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse<>(false, "Imagem não encontrada", null));
-        } else if (errorCode.equals("NoSuchBucket")) {
-            return ResponseEntity
+
+            case "NoSuchBucket" -> ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse<>(false, "Bucket não encontrado", null));
-        }
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_GATEWAY)
-                .body(new ApiResponse<>(false, "Erro no armazenamento: " + ex.getMessage(), null));
+            case "AccessDenied" -> ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(new ApiResponse<>(false, "Sem permissão para acessar o armazenamento", null));
+
+            default -> ResponseEntity
+                    .status(HttpStatus.BAD_GATEWAY)
+                    .body(new ApiResponse<>(false, "Erro no armazenamento: " + ex.getMessage(), null));
+        };
     }
 }
