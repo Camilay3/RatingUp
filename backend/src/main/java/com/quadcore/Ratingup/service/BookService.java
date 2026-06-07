@@ -58,7 +58,7 @@ public class BookService {
         }
         subtopicsRepository.saveAll(subtopicos);
 
-        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo,null,null));
+        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo,null,null,null));
         subtopicos.add(salvo);
         subtopicos.sort(Comparator.comparingInt(Subtopics::getDisplayOrder));
 
