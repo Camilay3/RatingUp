@@ -39,4 +39,14 @@ public class BookController {
                         "Subtópico salvo com sucesso",
                         bookService.addSubtopic(dto)));
     }
+
+    @Operation(summary = "Busca o conteúdo de um subtópico")
+    @GetMapping("/subtopico/{id}")
+    public ResponseEntity<ApiResponse<?>> getSubtopicContent(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Conteúdo encontrado",
+                        bookService.getSubtopicContent(id)));
+    }
 }

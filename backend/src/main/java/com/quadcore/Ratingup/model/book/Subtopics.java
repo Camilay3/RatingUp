@@ -25,4 +25,7 @@ public class Subtopics {
 
     @Column(length = 100)
     private String initialFen;//LEMBRAR DE GERAR ESSE FEN NA MIGRATION(mateus)
+
+    @Column(columnDefinition = "TEXT")
+    private String content;
 }

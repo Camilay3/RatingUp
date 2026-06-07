@@ -58,7 +58,7 @@ public class BookService {
         }
         subtopicsRepository.saveAll(subtopicos);
 
-        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo));
+        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo,null,null));
         subtopicos.add(salvo);
         subtopicos.sort(Comparator.comparingInt(Subtopics::getDisplayOrder));
 
@@ -66,5 +66,11 @@ public class BookService {
                 .stream()
                 .map(SubtopicsMapper::toResponseDTO)
                 .toList();
+    }
+
+    public SubtopicResponseDTO getSubtopicContent(Long id) {
+        Subtopics sub = subtopicsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Subtópico não encontrado"));
+        return SubtopicsMapper.toResponseDTO(sub);
     }
 }

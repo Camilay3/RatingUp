@@ -6,14 +6,16 @@ public record SubtopicResponseDTO(
         Long id,
         Long chapterId,
         String title,
-        Integer displayOrder
-) {
+        Integer displayOrder,
+        String content
+        ) {
     public SubtopicResponseDTO(Subtopics subtopic) {
         this(
                 subtopic.getId(),
                 subtopic.getChapter().getId(),
                 subtopic.getTitle(),
-                subtopic.getDisplayOrder()
+                subtopic.getDisplayOrder(),
+                subtopic.getContent()
         );
     }
 }
