@@ -92,6 +92,14 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
   # Navegar até a pasta
   $ cd RatingUp
 
+  # Caso for adicionar uma nova imagem
+  # Antes de inicializar a aplicação
+  # Adicione a imagem na pasta /assets
+  # E dentro da subpasta /book ou /avatars
+  # /book se for uma imagem do livro
+  # /avatars se for uma imagem de avatar
+  # Após inicializar a aplicação
+  # Delete todas as imagens da pasta
   # Iniciar a aplicação (Requisitos: Docker)
   $ docker compose up --build
 
