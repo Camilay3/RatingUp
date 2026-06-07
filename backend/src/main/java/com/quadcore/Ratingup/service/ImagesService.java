@@ -43,14 +43,14 @@ public class ImagesService {
         return imagesRepository.save(image);
     }
 
-    public byte[] getImage(String imageName, String bucketName) throws Exception {
-        var image = imagesRepository.findByImageName(imageName)
-                .orElseThrow(() -> new EntityNotFoundException("Imagem não encontrada"));
+    public byte[] getImage(String objectId, String bucketName) throws Exception {
+//        var image = imagesRepository.findByImageName(imageName)
+//                .orElseThrow(() -> new EntityNotFoundException("Imagem não encontrada"));
 
         var stream = minioClient.getObject(
                 GetObjectArgs.builder()
                         .bucket(bucketName)
-                        .object(image.getObjectId())
+                        .object(objectId)
                         .build()
         );
 
