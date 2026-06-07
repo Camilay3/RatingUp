@@ -5,6 +5,7 @@ import com.github.bhlangonijr.chesslib.move.Move;
 import com.quadcore.Ratingup.dto.board.SubtopicPracticeSessionRequestDTO;
 import com.quadcore.Ratingup.dto.board.SubtopicPracticeSessionResponseDTO;
 import com.quadcore.Ratingup.enums.BoardStatus;
+import com.quadcore.Ratingup.mapper.SubtopicPracticeSessionMapper;
 import com.quadcore.Ratingup.model.board.SubtopicPracticeSession;
 import com.quadcore.Ratingup.model.book.Subtopics;
 import com.quadcore.Ratingup.repository.SubtopicPracticeSessionRepository;
@@ -29,17 +30,17 @@ public class SubtopicPracticeSessionService {
         Subtopics subtopic = subtopicsRepository.findById(subtopicId)
                 .orElseThrow(() -> new EntityNotFoundException("Subtópico não encontrado"));
 
-        SubtopicPracticeSession session = new SubtopicPracticeSession();
-        session.setUserId(userId);
-        session.setSubtopicId(subtopicId);
-        session.setCurrentFen(subtopic.getInitialFen());
-        session.setStatus(BoardStatus.NORMAL);
+        subtopicPracticeSessionRepository
+                .findByUserIdAndSubtopicId(userId, subtopicId)
+                .ifPresent(subtopicPracticeSessionRepository::delete);
 
-        return toDTO(subtopicPracticeSessionRepository.save(session), subtopic);
+        SubtopicPracticeSession session = SubtopicPracticeSessionMapper.toNewSession(userId, subtopicId, subtopic);
+
+        return SubtopicPracticeSessionMapper.toDTO(subtopicPracticeSessionRepository.save(session), subtopic);
     }
 
-    public SubtopicPracticeSessionResponseDTO performMovement(Long sessionId, SubtopicPracticeSessionRequestDTO moveDto) {
-        SubtopicPracticeSession session = subtopicPracticeSessionRepository.findById(sessionId)
+    public SubtopicPracticeSessionResponseDTO performMovement(SubtopicPracticeSessionRequestDTO moveDto) {
+        SubtopicPracticeSession session = subtopicPracticeSessionRepository.findById(moveDto.sessionId())
                 .orElseThrow(() -> new EntityNotFoundException("Sessão não encontrada"));
 
         Subtopics subtopic = subtopicsRepository.findById(session.getSubtopicId())
@@ -56,6 +57,7 @@ public class SubtopicPracticeSessionService {
 
         board.doMove(move);
 
+        //transforma ambas sequencias de jogada em lista pra comparar
         String moveNotation = moveDto.posInitial().toString().toLowerCase()
                 + moveDto.posFinal().toString().toLowerCase();
         String movesPlayed = session.getMovesPlayed() == null
@@ -66,28 +68,25 @@ public class SubtopicPracticeSessionService {
         List<String> solution = Arrays.asList(subtopic.getSolutionMoves().split(","));
         List<String> played = Arrays.asList(movesPlayed.split(","));
 
-        // Movimento errado → reinicia
+        // Movimento errado,reinicia
         if (!solution.get(played.size() - 1).equals(played.get(played.size() - 1))) {
             session.setCurrentFen(subtopic.getInitialFen());
             session.setMovesPlayed(null);
             session.setStatus(BoardStatus.WRONG_MOVE);
-            subtopicPracticeSessionRepository.save(session);
-            return toDTO(session, subtopic);
+            return SubtopicPracticeSessionMapper.toDTO(subtopicPracticeSessionRepository.save(session), subtopic);
         }
 
-        // Sequência completa → sucesso
+        // Sequência completa,sucesso
         if (played.equals(solution)) {
             session.setCurrentFen(board.getFen());
             session.setStatus(BoardStatus.COMPLETED);
-            subtopicPracticeSessionRepository.save(session);
-            return toDTO(session, subtopic);
+            return SubtopicPracticeSessionMapper.toDTO(subtopicPracticeSessionRepository.save(session), subtopic);
         }
 
         // Movimento correto, sequência ainda não terminou
         session.setCurrentFen(board.getFen());
         session.setStatus(BoardStatus.valueOf(checkStatus(board)));
-        subtopicPracticeSessionRepository.save(session);
-        return toDTO(session, subtopic);
+        return SubtopicPracticeSessionMapper.toDTO(subtopicPracticeSessionRepository.save(session), subtopic);
     }
 
     private String checkStatus(Board board) {
@@ -102,23 +101,4 @@ public class SubtopicPracticeSessionService {
         }
     }
 
-    private SubtopicPracticeSessionResponseDTO toDTO(SubtopicPracticeSession session, Subtopics subtopic) {
-        return new SubtopicPracticeSessionResponseDTO(
-                session.getCurrentFen(),
-                session.getStatus().name(),
-                subtopic.getInitialFen()
-        );
-    }
-
-    private SubtopicPracticeSessionResponseDTO toDTO(SubtopicPracticeSession session) {
-        Subtopics subtopic = subtopicsRepository.findById(session.getSubtopicId())
-                .orElseThrow(() -> new EntityNotFoundException("Subtópico não encontrado"));
-        return toDTO(session, subtopic);
-    }
-
-    public SubtopicPracticeSessionResponseDTO getSession(Long sessionId) {
-        SubtopicPracticeSession session = subtopicPracticeSessionRepository.findById(sessionId)
-                .orElseThrow(() -> new EntityNotFoundException("Sessão não encontrada"));
-        return toDTO(session);
-    }
 }

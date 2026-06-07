@@ -2,12 +2,15 @@ package com.quadcore.Ratingup.controller;
 
 import com.quadcore.Ratingup.dto.board.SubtopicPracticeSessionRequestDTO;
 import com.quadcore.Ratingup.dto.board.SubtopicPracticeSessionResponseDTO;
+import com.quadcore.Ratingup.dto.book.SubtopicIdRequestDto;
+import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.service.SubtopicPracticeSessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Movimentos", description = "Endpoints para gerenciamento dos movimentos das peças")
@@ -20,20 +23,14 @@ public class SubtopicPracticeSessionController {
 
     @PostMapping("/session/start")
     public ResponseEntity<SubtopicPracticeSessionResponseDTO> startSession(
-            @RequestParam Long userId,
-            @RequestParam Long subtopicId) {
-        return ResponseEntity.ok(subtopicPracticeSessionService.startSession(userId, subtopicId));
+            @AuthenticationPrincipal User logged,
+            @RequestBody SubtopicIdRequestDto dto) {
+        return ResponseEntity.ok(subtopicPracticeSessionService.startSession(logged.getId(), dto.subtopicId()));
     }
 
-    @PostMapping("/session/{sessionId}/move")
+    @PostMapping("/session/move")
     public ResponseEntity<SubtopicPracticeSessionResponseDTO> performSessionMove(
-            @PathVariable Long sessionId,
             @RequestBody @Valid SubtopicPracticeSessionRequestDTO moveDto) {
-        return ResponseEntity.ok(subtopicPracticeSessionService.performMovement(sessionId, moveDto));
-    }
-
-    @GetMapping("/session/{sessionId}")
-    public ResponseEntity<SubtopicPracticeSessionResponseDTO> getSession(@PathVariable Long sessionId) {
-        return ResponseEntity.ok(subtopicPracticeSessionService.getSession(sessionId));
+        return ResponseEntity.ok(subtopicPracticeSessionService.performMovement(moveDto));
     }
 }

@@ -23,11 +23,11 @@ public class Subtopics {
     @JoinColumn(name = "chapter_id")
     private Chapters chapter;
 
-    @Column(length = 100)
-    private String initialFen;//LEMBRAR DE GERAR ESSE FEN NA MIGRATION(mateus)
-
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column(length = 100)
+    private String initialFen;
 
     @Column
     private String solutionMoves;
