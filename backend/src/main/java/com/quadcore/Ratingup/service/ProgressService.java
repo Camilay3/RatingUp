@@ -56,6 +56,10 @@ public class ProgressService {
             dto.subtopic() == maxSubtopic) {
             throw new IllegalArgumentException("Progresso máximo alcançado!");
         }
+        else if (dto.chapter() < progressoUser.getChapters() ||
+                dto.subtopic() < progressoUser.getSubtopics()) {
+            throw new IllegalArgumentException("Fase já concluída.");
+        }
         else if (dto.chapter() != progressoUser.getChapters() ||
                 dto.subtopic() != progressoUser.getSubtopics()) {
             throw new IllegalArgumentException("Progresso inválido");
