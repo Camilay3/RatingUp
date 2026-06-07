@@ -26,6 +26,8 @@ services:
     depends_on:
       postgres_db:
         condition: service_healthy
+      minio:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP || exit 1" ]
       interval: 10s
@@ -123,11 +125,13 @@ services:
     volumes:
       - ./backups/minio:/backups
     entrypoint: ["/bin/sh", "-c"]
+#    Depois colocar o anonymous nas imagens de avatars se elas forem fixas mesmo
     command:
     - >-
       mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
       mc mb --ignore-existing local/book &&
       mc mb --ignore-existing local/avatars &&
+      mc anonymous set download local/book &&
       mc mirror /backups/ local/ --quiet;
       echo '[OK] MinIO pronto.'
     networks:

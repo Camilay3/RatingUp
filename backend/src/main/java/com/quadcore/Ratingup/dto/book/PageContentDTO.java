@@ -5,5 +5,6 @@ public record PageContentDTO(
         Long id,
         Long chapterId,
         String title,
-        Integer displayOrder
+        Integer displayOrder,
+        String subtopicImageUrl
 ) {}

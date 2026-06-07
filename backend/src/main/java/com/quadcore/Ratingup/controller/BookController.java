@@ -22,7 +22,7 @@ public class BookController {
 
     @Operation(summary = "Lista as páginas do livro")
     @GetMapping("/paginas")
-    public ResponseEntity<ApiResponse<?>> listPages() {
+    public ResponseEntity<ApiResponse<?>> listPages() throws Exception {
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
