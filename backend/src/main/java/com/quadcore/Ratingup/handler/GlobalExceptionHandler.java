@@ -16,9 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
@@ -35,11 +33,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<?>> handleBadRequest(MethodArgumentNotValidException ex) {
-        Map<String, String> erros = new LinkedHashMap<>();
+        Map<String, List<String>> erros = new LinkedHashMap<>();
 
         ex.getBindingResult()
                 .getFieldErrors()
-                .forEach(e -> erros.put(e.getField(), e.getDefaultMessage()));
+                .forEach(e ->
+                        erros.computeIfAbsent(
+                                e.getField(),
+                                k -> new ArrayList<>()
+                        ).add(e.getDefaultMessage())
+                );
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -137,5 +140,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(false, "Requisição inválida", null));
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiResponse<?>> handleValidation(ValidationException ex) {
+
+        Map<String, List<String>> erros = new LinkedHashMap<>();
+        erros.put(ex.getField(), List.of(ex.getMessage()));
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(
+                        false,
+                        "Dados inválidos",
+                        erros
+                ));
     }
 }
