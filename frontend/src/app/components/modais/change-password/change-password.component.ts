@@ -80,7 +80,7 @@ export class ChangePasswordComponent implements OnInit {
 				const data = e?.error?.data;
 				if (data && typeof data === 'object') {
 					if (data.newPassword) controlNova?.setErrors({ backendError: data.newPassword });
-					if (data.currentPassword) controlAtual?.setErrors({ backendError: data.currentPassword });
+					if (data.oldPassword) controlAtual?.setErrors({ backendError: data.oldPassword });
 					if (data.confirmPassword) controlConfirm?.setErrors({ backendError: data.confirmPassword });
 
 				} else {

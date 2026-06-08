@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<img draggable="false" loading="lazy" [src]="'/subtopicos/' + sub.chapterId + '.' + sub.displayOrder + '.png'" [alt]="'Img do subtópico' + sub.displayOrder" (error)="onImageError($event)">
-		<button (click)="$event.stopPropagation(); acessarSubtopico(sub.chapterId, sub.displayOrder)">Acessar</button>
+		<button (click)="$event.stopPropagation(); acessarSubtopico(sub.id)">Acessar</button>
 	} @else if (asType(page(), 'home'); as home) {
 		@if (home.isFirstHome) {
 			<div class="header">

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { IBook } from '../../interfaces/book/IBook';
+import { IBook, ISubtopicoContent } from '../../interfaces/book/IBook';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,5 +12,11 @@ export class BookService {
 
 	getSheets() {
 		return this.http.get<IBook>(`${this.apiUrl}/livro/paginas`);
+	}
+
+	getSubtopicContent(subtopicId: number) {
+		return this.http.post<ISubtopicoContent>(`${this.apiUrl}/livro/subtopico`, {
+			subtopicId
+		});
 	}
 }
