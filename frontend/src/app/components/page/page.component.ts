@@ -51,9 +51,9 @@ export class PageComponent {
 		return "fa-solid fa-star";
 	}
 
-	acessarSubtopico(capitulo: number, subtopico: number) {
+	acessarSubtopico(subtopicoId: number) {
 		this.router.navigate(['/subtopico'], {
-            state: { capitulo, subtopico }
+            state: { subtopicoId }
         });
 	}
 
