@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.controller;
 
+import com.quadcore.Ratingup.dto.book.SubtopicIdRequestDto;
 import com.quadcore.Ratingup.dto.book.SubtopicRequestDTO;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.service.BookService;
@@ -38,5 +39,14 @@ public class BookController {
                         true,
                         "Subtópico salvo com sucesso",
                         bookService.addSubtopic(dto)));
+    }
+
+    @Operation(summary = "Busca o conteúdo de um subtópico")
+    @PostMapping("/subtopico")
+    public ResponseEntity<?> getSubtopicContent(
+            @RequestBody SubtopicIdRequestDto dto) {
+        return ResponseEntity.ok(new ApiResponse<>(true,
+                "Conteúdo encontrado",
+                bookService.getSubtopicContent(dto.subtopicId())));
     }
 }

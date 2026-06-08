@@ -65,7 +65,7 @@ public class BookService {
         }
         subtopicsRepository.saveAll(subtopicos);
 
-        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo));
+        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo,null,null,null));
         subtopicos.add(salvo);
         subtopicos.sort(Comparator.comparingInt(Subtopics::getDisplayOrder));
 
@@ -84,7 +84,7 @@ public class BookService {
 
         var image = imageOptional.orElseThrow(() -> new EntityNotFoundException("Imagem não encontrada"));
 
-        return "/api/images/" + bucketName + "/" + image.getObjectId();
+        return "images/" + bucketName + "/" + image.getObjectId();
     }
 
     private String normalizedName(String name) {
@@ -92,5 +92,11 @@ public class BookService {
         name = name.replace(" ", "-").replace(",", "");
         name += ".png";
         return name;
+    }
+
+    public SubtopicResponseDTO getSubtopicContent(Long id) {
+        Subtopics sub = subtopicsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Subtópico não encontrado"));
+        return SubtopicsMapper.toResponseDTO(sub);
     }
 }
