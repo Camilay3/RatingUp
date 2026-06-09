@@ -1,17 +1,21 @@
 services:
-  postgres_db:
-    image: postgres:18-alpine
-    container_name: ratingup_db
-    env_file:
-      - .env
-    environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    expose:
-      - "5432"
+  # Reverse Proxy | Cache Service
+  nginx:
+    image: nginx:alpine
+    container_name: ratingup_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/http.d:/etc/nginx/http.d:ro
+    depends_on:
+      - backend
+      - frontend
     networks:
       - back-network
+      - front-network
+
+  # API
   backend:
     build:
       context: ./backend
@@ -20,12 +24,23 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     expose:
       - "8080"
     networks:
       - back-network
       - front-network
+
+  # UI/UX
   frontend:
     build:
       context: ./frontend
@@ -38,40 +53,120 @@ services:
       - /app/node_modules
     networks:
       - front-network
+
+  # Database Service
+  postgres_db:
+    image: postgres:18-alpine
+    container_name: ratingup_db
+    env_file:
+      - .env
+    expose:
+      - "5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - back-network
+  postgres-restore:
+    image: postgres:18-alpine
+    container_name: ratingup_db_restore
+    env_file:
+      - .env
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./backups/postgres:/backups
+    command: >
+      sh -c "
+        if [ -f /backups/ratingup-db-backup.sql ]; then
+          echo '[RESTORE] Restauração backup do PostgreSQL...' &&
+          PGPASSWORD=$$POSTGRES_PASSWORD psql -h postgres_db -U $$POSTGRES_USER -d $$POSTGRES_DB < /backups/ratingup-db-backup.sql
+          echo '[OK] Restauração concluída.'
+        else
+          echo '[INFO] Nnehum backup encontrado, pulando restauração.'
+        fi
+      "
+    networks:
+      - back-network
+    restart: "no"
+
+  # Object Storage Service
   minio:
     image: minio/minio
     container_name: ratingup_minio
     env_file:
       - .env
-    environment:
-      - MINIO_ROOT_USER=${MINIO_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}
-      - MINIO_BROWSER_SESSION_DURATION=${MINIO_SESSION}
     command: server /data --console-address ":9001"
     ports:
       - "9000:9000"
       - "9001:9001"
     volumes:
       - minio_data:/data
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - back-network
-  nginx:
-    image: nginx:alpine
-    container_name: ratingup_proxy
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+  minio-restore:
+    image: minio/mc
+    container_name: ratingup_minio_restore
+    env_file:
+      - .env
     depends_on:
-      - backend
-      - frontend
+      minio:
+        condition: service_healthy
+    volumes:
+      - ./backups/minio:/backups
+    entrypoint: ["/bin/sh", "-c"]
+#    Depois colocar o anonymous nas imagens de avatars se elas forem fixas mesmo
+    command:
+    - >-
+      mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
+      mc mb --ignore-existing local/book &&
+      mc mb --ignore-existing local/avatars &&
+      mc anonymous set download local/book &&
+      mc mirror /backups/ local/ --quiet;
+      echo '[OK] MinIO pronto.'
     networks:
       - back-network
-      - front-network
+    restart: "no"
+
+  # Upload Service
+  image-upload:
+    build:
+      context: ./scripts
+      dockerfile: Dockerfile
+    container_name: ratingup_image_upload
+    env_file:
+      - .env
+    depends_on:
+      backend:
+        condition: service_healthy
+      postgres-restore:
+        condition: service_completed_successfully
+      minio-restore:
+        condition: service_completed_successfully
+    volumes:
+      - ./assets/images:/images
+      - ./backups:/backups
+      - ./scripts/upload.sh:/upload.sh
+    command: sh /upload.sh
+    networks:
+      - back-network
+    restart: "no"
+
 networks:
   back-network:
     driver: bridge
   front-network:
     driver: bridge
+
 volumes:
   minio_data:

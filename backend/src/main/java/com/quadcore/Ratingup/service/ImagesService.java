@@ -38,22 +38,26 @@ public class ImagesService {
                         .build()
         );
 
-        Images image = new Images(objectId, imageName);
+        Images image = new Images(objectId, imageName, bucketName);
 
         return imagesRepository.save(image);
     }
 
-    public byte[] getImage(String imageName, String bucketName) throws Exception {
-        var image = imagesRepository.findByImageName(imageName)
-                .orElseThrow(() -> new EntityNotFoundException("Imagem não encontrada"));
+    public byte[] getImage(String objectId, String bucketName) throws Exception {
+//        var image = imagesRepository.findByImageName(imageName)
+//                .orElseThrow(() -> new EntityNotFoundException("Imagem não encontrada"));
 
         var stream = minioClient.getObject(
                 GetObjectArgs.builder()
                         .bucket(bucketName)
-                        .object(image.getObjectId())
+                        .object(objectId)
                         .build()
         );
 
         return IOUtils.toByteArray(stream);
+    }
+
+    public boolean exists(String imageName, String bucketName) {
+        return imagesRepository.existsByImageNameAndBucketName(imageName, bucketName);
     }
 }

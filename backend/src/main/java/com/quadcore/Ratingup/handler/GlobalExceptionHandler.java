@@ -5,10 +5,10 @@ import com.quadcore.Ratingup.dto.response.ApiResponse;
 import io.jsonwebtoken.JwtException;
 import io.minio.errors.ErrorResponseException;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mail.MailException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -16,8 +16,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -31,11 +33,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<?>> handleBadRequest(MethodArgumentNotValidException ex) {
-        Map<String, String> erros = new LinkedHashMap<>();
+        Map<String, List<String>> erros = new LinkedHashMap<>();
 
         ex.getBindingResult()
                 .getFieldErrors()
-                .forEach(e -> erros.put(e.getField(), e.getDefaultMessage()));
+                .forEach(e ->
+                        erros.computeIfAbsent(
+                                e.getField(),
+                                k -> new ArrayList<>()
+                        ).add(e.getDefaultMessage())
+                );
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -102,18 +109,55 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleMinioError (ErrorResponseException ex) {
         String errorCode = ex.errorResponse().code();
 
-        if (errorCode.equals("NoSuchKey")) {
-            return ResponseEntity
+        return switch (errorCode) {
+            case "NoSuchKey" -> ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse<>(false, "Imagem não encontrada", null));
-        } else if (errorCode.equals("NoSuchBucket")) {
-            return ResponseEntity
+
+            case "NoSuchBucket" -> ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse<>(false, "Bucket não encontrado", null));
+
+            case "AccessDenied" -> ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(new ApiResponse<>(false, "Sem permissão para acessar o armazenamento", null));
+
+            default -> ResponseEntity
+                    .status(HttpStatus.BAD_GATEWAY)
+                    .body(new ApiResponse<>(false, "Erro no armazenamento: " + ex.getMessage(), null));
+        };
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<?>> handleInvalidEnum(HttpMessageNotReadableException ex) {
+        if (ex.getCause() instanceof InvalidFormatException ife && ife.getTargetType().isEnum()) {
+            String valoresAceitos = Arrays.stream(ife.getTargetType().getEnumConstants())
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", "));
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>(false,
+                            "Valor inválido: '" + ife.getValue() + "'. Valores aceitos para "
+                                    + ife.getTargetType().getSimpleName() + ": " + valoresAceitos, null));
         }
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(false, "Requisição inválida", null));
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiResponse<?>> handleValidation(ValidationException ex) {
+
+        Map<String, List<String>> erros = new LinkedHashMap<>();
+        erros.put(ex.getField(), List.of(ex.getMessage()));
 
         return ResponseEntity
-                .status(HttpStatus.BAD_GATEWAY)
-                .body(new ApiResponse<>(false, "Erro no armazenamento: " + ex.getMessage(), null));
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(
+                        false,
+                        "Dados inválidos",
+                        erros
+                ));
     }
 }

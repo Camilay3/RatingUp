@@ -22,4 +22,13 @@ public class Subtopics {
     @ManyToOne
     @JoinColumn(name = "chapter_id")
     private Chapters chapter;
+
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
+    @Column(length = 100)
+    private String initialFen;
+
+    @Column
+    private String solutionMoves;
 }

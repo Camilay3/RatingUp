@@ -1,18 +1,17 @@
 <div class="leasson">
 	<header>
 		<span class="link" [routerLink]="''">← Voltar</span>
-		<span>Subtópico {{subtopico}} <span>|</span> Capítulo {{capitulo}}</span>
+		<span>Subtópico {{subtopicoContent?.displayOrder}} <span>|</span> Capítulo {{subtopicoContent?.chapterId}}</span>
 	</header>
 
 	<section>
 		<div class="teoria">
-			<h1>{{ content.titulo }}</h1>
-			<p>{{ content.texto }}</p>
+			<h1>{{ subtopicoContent?.title }}</h1>
+			<p>{{ subtopicoContent?.content }}</p>
 		</div>
 
 		<div class="pratica">
 			<h2>Vamos praticar?</h2>
-			<p>{{ content.contextoPratica }}</p>
 		</div>
 	</section>
 

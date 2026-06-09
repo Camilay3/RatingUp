@@ -1,0 +1,31 @@
+<section>
+	<div class="hole-left"></div>
+	<div class="hole-right"></div>
+
+	<img class="foto" src="/userDefault.png" alt="Foto de perfil">
+
+	<div class="infos">
+		<div class="header">
+			<h1>{{ user?.nickname }} <i (click)="abrirModal('Apelido', user?.nickname)" class="fa-solid fa-pencil"></i></h1>
+			<p>Nível {{ capAtual }}</p>
+		</div>
+
+		<div class="section">
+			<p>
+				<span>Enxadrista:</span>{{ user?.name }}
+				<i (click)="abrirModal('Nome', user?.name)" class="fa-solid fa-pencil"></i>
+			</p>
+			<p><span>Email:</span>{{ user?.email }}</p>
+			<p>
+				<span>Telefone:</span>{{ formatPhone(user?.telefone) }}
+				<i (click)="abrirModal('Telefone', user?.telefone)" class="fa-solid fa-pencil"></i>
+			</p>
+			<p><span>Início do aprendizado:</span>{{ formatDate(user?.creationDate) }}</p>
+		</div>
+
+		<div class="controls">
+			<button class="small" routerLink="/">Voltar para o início</button>
+			<button class="outline small" (click)="solicitarSenha()">Alterar senha</button>
+		</div>
+	</div>
+</section>

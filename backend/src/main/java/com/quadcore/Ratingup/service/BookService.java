@@ -5,8 +5,12 @@ import com.quadcore.Ratingup.mapper.SubtopicsMapper;
 import com.quadcore.Ratingup.model.book.Chapters;
 import com.quadcore.Ratingup.model.book.Subtopics;
 import com.quadcore.Ratingup.repository.ChaptersRepository;
+import com.quadcore.Ratingup.repository.ImagesRepository;
 import com.quadcore.Ratingup.repository.SubtopicsRepository;
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,22 +22,25 @@ public class BookService {
 
     private final ChaptersRepository chaptersRepository;
     private final SubtopicsRepository subtopicsRepository;
+    private final ImagesRepository imagesRepository;
 
-    public BookService(ChaptersRepository chaptersRepository, SubtopicsRepository subtopicsRepository) {
+    public BookService(ChaptersRepository chaptersRepository, SubtopicsRepository subtopicsRepository, ImagesRepository imagesRepository) {
         this.chaptersRepository = chaptersRepository;
         this.subtopicsRepository = subtopicsRepository;
+        this.imagesRepository = imagesRepository;
     }
 
-    public BookDTO buildBook() {
+    public BookDTO buildBook() throws Exception {
         List<Chapters> chapters = chaptersRepository.findAllByOrderbyOrderAsc();
 
         List<PageContentDTO> contents = new ArrayList<>();
 
         for (Chapters cap : chapters) {
-            contents.add(new PageContentDTO("capitulo", cap.getId(), null, cap.getTitle(), cap.getDisplayOrder()));
+            contents.add(new PageContentDTO("capitulo", cap.getId(), null, cap.getTitle(), cap.getDisplayOrder(), null));
 
             for (Subtopics sub : cap.getSubtopics()) {
-                contents.add(new PageContentDTO("subtópico", sub.getId(), cap.getId(), sub.getTitle(), sub.getDisplayOrder()));
+                var image = buildImageUrl(normalizedName(sub.getTitle()), "book");
+                contents.add(new PageContentDTO("subtópico", sub.getId(), cap.getId(), sub.getTitle(), sub.getDisplayOrder(), image));
             }
         }
 
@@ -58,7 +65,7 @@ public class BookService {
         }
         subtopicsRepository.saveAll(subtopicos);
 
-        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo));
+        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo,null,null,null));
         subtopicos.add(salvo);
         subtopicos.sort(Comparator.comparingInt(Subtopics::getDisplayOrder));
 
@@ -66,5 +73,30 @@ public class BookService {
                 .stream()
                 .map(SubtopicsMapper::toResponseDTO)
                 .toList();
+    }
+
+    private String buildImageUrl(String imageName, String bucketName) {
+        var imageOptional = imagesRepository.findByImageName(imageName);
+
+        if (imageOptional.isEmpty() && !imageName.equals("default.png")) {
+            imageOptional = imagesRepository.findByImageName("default.png");
+        }
+
+        var image = imageOptional.orElseThrow(() -> new EntityNotFoundException("Imagem não encontrada"));
+
+        return "images/" + bucketName + "/" + image.getObjectId();
+    }
+
+    private String normalizedName(String name) {
+        if (name == null) return "";
+        name = name.replace(" ", "-").replace(",", "");
+        name += ".png";
+        return name;
+    }
+
+    public SubtopicResponseDTO getSubtopicContent(Long id) {
+        Subtopics sub = subtopicsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Subtópico não encontrado"));
+        return SubtopicsMapper.toResponseDTO(sub);
     }
 }

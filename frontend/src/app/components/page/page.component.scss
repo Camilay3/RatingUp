@@ -59,13 +59,21 @@
 	.header {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 		width: 100%;
+
+		.actions {
+			display: flex;
+			gap: 1rem;
+			align-items: center;
+		}
 
 		span {
 			font-weight: bold;
 			color: var(--alert);
 			&:hover { color: var(--alertHover); }
 		}
+		h2 { margin-bottom: 0; }
 	}
 
 	.niveis {
@@ -106,12 +114,6 @@
 				color: var(--neutralOpacity);
 				cursor: default;
 				&:hover { font-weight: normal; }
-			}
-
-			&:not(.blocked):not(:has(~ li:not(.blocked))) {
-				font-weight: bold;
-				&:hover { color: var(--primaryHover); }
-				i.fa-star::before { content: "\f09c"; } // Cadeado desbloqueado
 			}
 		}
 	}

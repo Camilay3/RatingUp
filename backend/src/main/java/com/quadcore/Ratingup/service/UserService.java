@@ -8,6 +8,7 @@ import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileUpdateRequestDTO;
 import com.quadcore.Ratingup.enums.Roles;
 import com.quadcore.Ratingup.handler.DuplicateFieldException;
+import com.quadcore.Ratingup.handler.ValidationException;
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.Progress;
 import com.quadcore.Ratingup.model.profile.User;
@@ -112,12 +113,18 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Nenhum Usuário encontrado para esse email"));
 
-        if(!passwordEncoder.matches(dto.oldPassword(), user.getPassword())){
-            throw new RuntimeException("Senha antiga não está correta");
+        if (!passwordEncoder.matches(dto.oldPassword(), user.getPassword())) {
+            throw new ValidationException(
+                    "oldPassword",
+                    "Senha antiga não está correta"
+            );
         }
 
-        if(dto.oldPassword().equals(dto.newPassword())){
-            throw new RuntimeException("A nova senha não pode ser igual a antiga");
+        if (dto.oldPassword().equals(dto.newPassword())) {
+            throw new ValidationException(
+                    "newPassword",
+                    "A nova senha não pode ser igual à antiga"
+            );
         }
 
         user.setPassword(passwordEncoder.encode(dto.newPassword()));

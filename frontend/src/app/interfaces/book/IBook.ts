@@ -36,7 +36,13 @@ interface ICapitulo extends IBasePage {
 }
 
 export interface ISubtopico extends IBasePage {
+	id: number
 	type: 'subtópico'
 	chapterId: number
 	isBlocked: boolean
+	lockOpen?: boolean
+}
+
+export interface ISubtopicoContent extends ISubtopico, IResponse {
+	content: string
 }
