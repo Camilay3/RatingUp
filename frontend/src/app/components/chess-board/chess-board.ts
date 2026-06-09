@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild, Input, OnChanges, ElementRef } from '@angular/core';
 import { Chessground } from 'chessground';
+import { ChessService } from '../../services/chess/chess.service';
+import { ChessPiece } from '../../interfaces/chess/chess-piece.enum';
 
 @Component({
   selector: 'app-chess-board',
@@ -48,6 +50,10 @@ export class ChessBoard implements OnInit, OnChanges {
       from: orig,
       to: dest
     })
+
+  }
+
+  onStartChess(subtopico: number){
 
   }
 
