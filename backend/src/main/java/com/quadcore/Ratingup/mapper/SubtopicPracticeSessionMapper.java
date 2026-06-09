@@ -8,6 +8,7 @@ import com.quadcore.Ratingup.model.book.Subtopics;
 public abstract class SubtopicPracticeSessionMapper {
     public static SubtopicPracticeSessionResponseDTO toDTO(SubtopicPracticeSession session, Subtopics subtopic) {
         return new SubtopicPracticeSessionResponseDTO(
+                session.getId(),
                 session.getCurrentFen(),
                 session.getStatus().name(),
                 subtopic.getInitialFen()
