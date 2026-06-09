@@ -84,7 +84,7 @@ public class BookService {
 
         var image = imageOptional.orElseThrow(() -> new EntityNotFoundException("Imagem não encontrada"));
 
-        return "images/" + bucketName + "/" + image.getObjectId();
+        return "/images/" + bucketName + "/" + image.getObjectId();
     }
 
     private String normalizedName(String name) {

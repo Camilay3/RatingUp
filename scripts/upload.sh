@@ -6,6 +6,10 @@ AVATARS_DIR="/images/avatars"
 API_URL="http://backend:8080"
 NEW_IMAGES=0
 
+echo "[DEBUG] Começando script..."
+echo "[DEBUG] BOOK_DIR=$BOOK_DIR"
+echo "[DEBUG] AVATARS_DIR=$AVATARS_DIR"
+
 echo "[INIT] Verificando buckets no MinIO..."
 mc alias set local http://minio:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"
 mc mb --ignore-existing local/book
@@ -20,6 +24,9 @@ upload_images() {
     echo "[INFO] Pasta $dir não encontrada, pulando..."
     return
   fi
+
+  echo "[DEBUG] Pasta $dir existe. Listando conteúdo:"
+    ls -la "$dir" || echo "[ERRO] Não conseguiu listar $dir"
 
   if [ -z "$(ls -A "$dir" 2>/dev/null)" ]; then
     echo "[INFO] Nenhuma imagem encontrada em $dir, pulando..."

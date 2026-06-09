@@ -40,6 +40,7 @@ export interface ISubtopico extends IBasePage {
 	type: 'subtópico'
 	chapterId: number
 	isBlocked: boolean
+	subtopicImageUrl: string
 	lockOpen?: boolean
 }
 
