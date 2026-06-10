@@ -13,7 +13,7 @@ import { ChessBoard } from '../chess-board/chess-board';
   imports: [RouterLink, ChessBoard]
 })
 export class SubtopicoComponent implements OnInit {
-	subtopicoId: number;
+	subtopicId: number;
 	subtopicoContent: ISubtopicoContent | null = null;
 	fenDoBackend = 'start';
 
@@ -24,13 +24,13 @@ export class SubtopicoComponent implements OnInit {
 		private readonly snackBar : MatSnackBar,
 		private readonly cdr: ChangeDetectorRef,
 	) {
-		this.subtopicoId = history.state?.subtopicoId;
+		this.subtopicId = history.state?.subtopicoId;
 	}
 
 	ngOnInit() {
-		if(!this.subtopicoId) this.router.navigate(['']);
+		if(!this.subtopicId) this.router.navigate(['']);
 
-		this.bookService.getSubtopicContent(this.subtopicoId).subscribe({
+		this.bookService.getSubtopicContent(this.subtopicId).subscribe({
 			next: (response) => {
 				this.subtopicoContent = response.data;
 				this.cdr.detectChanges();
