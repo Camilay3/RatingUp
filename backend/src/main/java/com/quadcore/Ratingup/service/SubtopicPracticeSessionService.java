@@ -50,16 +50,20 @@ public class SubtopicPracticeSessionService {
         board.loadFromFen(session.getCurrentFen());
 
         Move move = new Move(moveDto.posInitial(), moveDto.posFinal(), moveDto.piece());
-
-        if (!board.legalMoves().contains(move)) {
-            throw new IllegalArgumentException("Movimento inválido!");
-        }
-
-        board.doMove(move);
+        System.out.println("Move criado: " + move);
+        System.out.println("Legal moves: " + board.legalMoves());
+        System.out.println("Contém? " + board.legalMoves().contains(move));
 
         //transforma ambas sequencias de jogada em lista pra comparar
         String moveNotation = moveDto.posInitial().toString().toLowerCase()
                 + moveDto.posFinal().toString().toLowerCase();
+
+        if (!board.legalMoves().stream().anyMatch(m -> m.toString().startsWith(moveNotation))) {
+            throw new IllegalArgumentException("Movimento inválido!");
+        }
+        board.doMove(move);
+
+
         String movesPlayed = session.getMovesPlayed() == null
                 ? moveNotation
                 : session.getMovesPlayed() + "," + moveNotation;
