@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ChessPiece } from '../../interfaces/chess/chess-piece.enum';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,12 +12,27 @@ export class ChessService {
 
   constructor(private http: HttpClient){}
 
-  getStartChess(subtopicId: number){
-    this.http.post(`${this.apiUrl}/move/session/start`, {
-      subtopicId
-    })
+  async startChess(subtopicId: number){
+    const response = await firstValueFrom(
+      this.http.post<{ sessionId: number; fen: string; status: string; initialFen: string }>(
+        `${this.apiUrl}/mover/sessao/iniciar`,
+        { subtopicId }
+      )
+    );
+
+    return response;
+
   }
 
-  postMoveChess(){}
+  async moveChess(sessaoId: number, piece: string, posInitial: string, posFinal: string){
+    const response = await firstValueFrom(
+      this.http.post<{sessaoId: number, fen: string, status: string, initialFen: string}>(
+        `${this.apiUrl}/mover/sessao/mover`,
+        { sessaoId, piece , posInitial , posFinal }
+      )
+    );
+
+    return response;
+  }
   
 }
