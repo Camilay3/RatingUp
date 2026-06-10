@@ -17,9 +17,9 @@
 
 	<div class="tabuleiro">
 	 <app-chess-board
-     [fen]="fenDoBackend"
+     (fenAtualizado)="fenDoBackend = $event"
      [orientation]="'white'"
-	 [subtopicoId]="subtopicoId"
+	 [subtopicId]="subtopicId"
 	 >
      </app-chess-board>
 	</div>

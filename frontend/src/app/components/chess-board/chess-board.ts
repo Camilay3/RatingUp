@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, ElementRef, Output, EventEmitter } from '@angular/core';
 import { Chessground } from 'chessground';
 import { ChessService } from '../../services/chess/chess.service';
 import { ChessPiece } from '../../interfaces/chess/chess-piece.enum';
@@ -13,9 +13,9 @@ import { ChessPiece } from '../../interfaces/chess/chess-piece.enum';
 
 export class ChessBoard implements OnInit, OnChanges {
   @ViewChild('board', {static: true}) boardRef!: ElementRef;
-  @Input() fen: string = 'start';
   @Input() orientation: 'white'|'black' = 'white';
-  @Input() subtopicoId!: number;
+  @Input() subtopicId!: number;
+  @Output() fenAtualizado = new EventEmitter<string>();
 
   constructor(private chessService : ChessService){}
 
@@ -32,12 +32,12 @@ export class ChessBoard implements OnInit, OnChanges {
 
   ngOnInit(): void {
   this.cg = Chessground(this.boardRef.nativeElement, {
-    fen: this.fen,
+    fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
     orientation: this.orientation,
     movable: {
       free: true,
       events: {
-        after: (orig: string, dest: string) => this.onMove(orig, dest)
+         after: (orig: string, dest: string) => this.onMove(orig, dest)
       }
     },
     events: {
@@ -52,49 +52,60 @@ export class ChessBoard implements OnInit, OnChanges {
   });
 
   // ngOnInit roda DEPOIS dos @Inputs chegarem, então subtopicoId já existe aqui
-  console.log('subtopicoId no ngOnInit:', this.subtopicoId);
-  this.onStartChess(this.subtopicoId);
+  console.log('subtopicoId no ngOnInit:', this.subtopicId);
+  this.onStartChess(this.subtopicId);
  }
 
   ngOnChanges(): void {
-    if (this.cg && this.subtopicoId && !this.sessionId) {
-    this.onStartChess(this.subtopicoId);
+    if (this.cg && this.subtopicId && !this.sessionId) {
+    this.onStartChess(this.subtopicId);
     }
-    if (this.cg) {
-      this.cg.set({ fen: this.fen });
-    }
+    
   }
 
-  async onMove(orig: string, dest: string){
-
-      console.log('sessionId:', this.sessionId);
-  console.log('piece:', this.currentPiece);
-  console.log('orig:', orig.toUpperCase());
-  console.log('dest:', dest.toUpperCase());
-
-
-    const { fen , status } = await this.chessService.moveChess(
+  async onMove(orig: string, dest: string) {
+   try {
+    const { fen, status } = await this.chessService.moveChess(
       this.sessionId,
       this.currentPiece,
       orig.toUpperCase(),
       dest.toUpperCase()
-    )
+    );
+
+    console.log('fen retornado:', fen);
+    console.log('status retornado:', status);
 
     this.cg.set({ fen });
 
-    this.moves.push({
-      from: orig,
-      to: dest,
-      piece: this.currentPiece,
-      status: status
-    })
+    if (status === 'WRONG_MOVE') {
+      console.log('Movimento errado, tente novamente!');
+    } else if (status === 'COMPLETED') {
+      console.log('Parabéns! Sequência concluída!');
+    }
 
+    this.moves.push({ from: orig, to: dest, piece: this.currentPiece, status });
+
+   } catch (e: any) {
+    // movimento inválido — back retorna 400
+    console.log('Movimento inválido, resetando tabuleiro');
+    await this.onStartChess(this.subtopicId); // reinicia a sessão
+   }
   }
 
   async onStartChess(subtopicoId: number){
-    const { sessionId , fen } = await this.chessService.startChess(subtopicoId)
-    this.sessionId = sessionId
-    this.cg.set({ fen })
+    console.log("Chamando os startChess");
+
+    try{
+     const { sessionId , fen } = await this.chessService.startChess(subtopicoId)
+     console.log("Session id", sessionId);
+     this.sessionId = sessionId
+     this.cg.set({ fen })
+     this.fenAtualizado.emit(fen)
+    }catch(e){
+      console.error("Erro no start chess",e);
+      
+    }
+
   }
 
 }
