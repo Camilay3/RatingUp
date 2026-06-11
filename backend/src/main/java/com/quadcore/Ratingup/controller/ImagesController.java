@@ -49,8 +49,8 @@ public class ImagesController {
                     schema = @Schema(type = "string", format = "binary")
             )
     )
-    public ResponseEntity<byte[]> getImage(@PathVariable String objectId, @PathVariable String bucketName) throws Exception {
-        byte[] image = imagesService.getImage(objectId, bucketName);
+    public ResponseEntity<byte[]> getImage(@PathVariable String bucketName, @PathVariable String objectId) throws Exception {
+        byte[] image = imagesService.getImage(bucketName, objectId);
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline")
