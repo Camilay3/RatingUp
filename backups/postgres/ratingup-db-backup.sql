@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict QRf2qmgDHsLUuOCiaYlAbvLHcGgY4X19em09oyaDhfhpUNLz8tVmJKnmhNdrP2s
+\restrict p4j8en9vR9iFhuS2cTWSF5dlmT34h3AGvA5GQNPmeErLHNYh6hqXzUjM7rWusPm
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -18,53 +18,6 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
-
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
-
---
--- Name: images; Type: TABLE; Schema: public; Owner: admin
---
-
-CREATE TABLE public.images (
-    id integer NOT NULL,
-    object_id character varying(255) NOT NULL,
-    image_name character varying(255) NOT NULL,
-    bucket_name character varying(255)
-);
-
-
-ALTER TABLE public.images OWNER TO admin;
-
---
--- Name: images_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
---
-
-CREATE SEQUENCE public.images_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.images_id_seq OWNER TO admin;
-
---
--- Name: images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
---
-
-ALTER SEQUENCE public.images_id_seq OWNED BY public.images.id;
-
-
---
--- Name: images id; Type: DEFAULT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.images ALTER COLUMN id SET DEFAULT nextval('public.images_id_seq'::regclass);
-
 
 --
 -- Data for Name: images; Type: TABLE DATA; Schema: public; Owner: admin
@@ -86,14 +39,13 @@ COPY public.images (id, object_id, image_name, bucket_name) FROM stdin;
 13	d215da66-43a8-433c-aef4-79bc912a1a97	Controle-do-centro.png	book
 14	2e004ccf-ed23-484c-ba27-3f48d59e437a	Coordenacao-de-pecas.png	book
 15	54ad3fb1-1f22-4055-9528-885a42c4f129	Cravada.png	book
-16	cd9c0cf9-1d86-4d83-9ddf-c7bf834c2adb	Descoberta.png	book
+42	1d5b8801-703a-41a5-870e-111001e16e79	Pecas-boas-vs-ruins.png	book
 17	c4babb7d-92b7-4663-9987-df5152214c04	Desenvolvimento-das-pecas.png	book
 18	e0b6c695-fd31-482e-8b58-12c88ef36b96	Empate-por-afogamento.png	book
 19	3d1055d1-5df0-432e-b572-5b2dd43f4498	Empate-por-repeticao.png	book
 20	ecb7b5ff-d6e3-4a81-8805-a308cf3a272c	En-passant.png	book
 21	424780f6-1990-41d7-ba7d-051fb2f81073	Estrutura-de-peoes.png	book
 22	8ed59b08-31cf-4cdf-94cb-409893858a50	Estrutura-do-tabuleiro.png	book
-23	92241a3c-0e91-42c6-a22a-a3de0474da63	Garfo.png	book
 24	3c62291c-1213-447e-9889-31e9b2c73418	Historia-do-xadrez.png	book
 25	6ee79af8-2b03-45af-a9d4-cbb795c19378	Mate-em-1.png	book
 26	43ef8f34-8beb-4b0c-aa0a-bf9617c48da5	Material-insuficiente.png	book
@@ -112,7 +64,6 @@ COPY public.images (id, object_id, image_name, bucket_name) FROM stdin;
 39	7778a9c0-03e5-4a10-838e-fe4a8444383c	Objetivo-do-jogo.png	book
 40	da48d19b-eb19-4250-9306-c8fac4dfa1af	Oposicao-de-reis.png	book
 41	25bde385-55f7-4911-9754-341bc42a0cb4	Padronizacao-de-aberturas.png	book
-42	1d5b8801-703a-41a5-870e-111001e16e79	Pecas-boas-vs-pecas-ruins.png	book
 43	44111fe1-6d82-4d0e-ac70-7b0e5cf3158a	Planos-no-meio-jogo.png	book
 44	7eaff8a0-7f74-43e1-8091-e6ea7a68cecf	Promocao-do-peao.png	book
 45	5712eb28-e1b0-4e8d-a379-f7005970d870	Regra-do-quadrado-do-peao.png	book
@@ -129,6 +80,8 @@ COPY public.images (id, object_id, image_name, bucket_name) FROM stdin;
 56	a1a1fb08-8f1e-47a7-ab1a-468020d61841	Xeque-mate.png	book
 57	a89d8efa-2000-49ad-bb40-55a97040a939	Xeque.png	book
 58	a7cd0469-8f1a-4e58-be85-d10d5804cf2b	default.png	book
+23	92241a3c-0e91-42c6-a22a-a3de0474da63	Descoberto.png	book
+16	cd9c0cf9-1d86-4d83-9ddf-c7bf834c2adb	Espeto.png	book
 \.
 
 
@@ -140,32 +93,8 @@ SELECT pg_catalog.setval('public.images_id_seq', 58, true);
 
 
 --
--- Name: images images_image_name_key; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.images
-    ADD CONSTRAINT images_image_name_key UNIQUE (image_name);
-
-
---
--- Name: images images_object_id_key; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.images
-    ADD CONSTRAINT images_object_id_key UNIQUE (object_id);
-
-
---
--- Name: images images_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.images
-    ADD CONSTRAINT images_pkey PRIMARY KEY (id);
-
-
---
 -- PostgreSQL database dump complete
 --
 
-\unrestrict QRf2qmgDHsLUuOCiaYlAbvLHcGgY4X19em09oyaDhfhpUNLz8tVmJKnmhNdrP2s
+\unrestrict p4j8en9vR9iFhuS2cTWSF5dlmT34h3AGvA5GQNPmeErLHNYh6hqXzUjM7rWusPm
 
