@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { IPage, ISheet, ISubtopico, PageData } from '../../interfaces/book/IBook';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-page',
@@ -12,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   imports: [MatTooltipModule],
 })
 export class PageComponent {
+	readonly apiUrl = environment.apiUrl;
 	page = input<PageData | IPage>();
 	side = input<'frente' | 'verso'>();
 	isWaiting = output<boolean>();
@@ -68,6 +70,7 @@ export class PageComponent {
 		this.navigate.emit({ qnt });
 	}
 
+	//
 	onImageError(event: Event) {
 		(event.target as HTMLImageElement).src = '/subtopicos/default.png';
 	}
