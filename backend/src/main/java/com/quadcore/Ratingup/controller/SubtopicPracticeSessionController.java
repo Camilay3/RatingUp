@@ -20,7 +20,7 @@ public class SubtopicPracticeSessionController {
     @Autowired
     private SubtopicPracticeSessionService subtopicPracticeSessionService;
 
-    @GetMapping("/session/type")
+    @PostMapping("/session/type")
     public ResponseEntity<SubtopicTypeResponseDto> getSubtopicType(@RequestBody @Valid SubtopicIdRequestDto subtopicIdRequestDto) {
         return ResponseEntity.ok(subtopicPracticeSessionService.getSubtopicType(subtopicIdRequestDto.subtopicId()));
     }

@@ -25,20 +25,14 @@
     animation: slideUpFade 1s ease forwards 0.1s;
 
 	button { margin-right: 0; }
-	h1, h2 { font-weight: 800; }
-	p, h1, h2 { &::selection {
-		background-color: var(--primaryHover);
-		color: var(--secondary);
-		text-shadow: 2px 2px 4px var(--primary);
-	} }
+	h1, h2 {
+		font-weight: 800;
 
-	p {
-		text-indent: 2rem;
-		line-height: 1.7;
-		font-size: 1rem;
-		text-align: justify;
-		hyphens: auto;
-		overflow-wrap: break-word;
+		&::selection {
+			background-color: var(--primaryHover);
+			color: var(--secondary);
+			text-shadow: 2px 2px 4px var(--primary);
+		}
 	}
 
 	section {
@@ -46,6 +40,27 @@
 		flex-direction: column;
 		display: flex;
 		gap: 4rem;
+
+		::ng-deep .teoria .conteudo {
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+
+			p {
+				text-indent: 2rem;
+				line-height: 1.7;
+				font-size: 1rem;
+				text-align: justify;
+				hyphens: auto;
+				overflow-wrap: break-word;
+
+				&::selection {
+					background-color: var(--primaryHover);
+					color: var(--secondary);
+					text-shadow: 2px 2px 4px var(--primary);
+				}
+			}
+		}
 	}
 }
 

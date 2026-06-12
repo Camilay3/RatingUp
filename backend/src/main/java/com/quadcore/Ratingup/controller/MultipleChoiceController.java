@@ -19,7 +19,7 @@ public class MultipleChoiceController {
     @Autowired
     private MultipleChoiceService multipleChoiceService;
 
-    @GetMapping("/session/quiz")
+    @PostMapping("/session/quiz")
     public ResponseEntity<QuizResponseDTO> getQuiz(@RequestBody @Valid SubtopicIdRequestDto subtopicIdRequestDto) {
         return ResponseEntity.ok(multipleChoiceService.getQuiz(subtopicIdRequestDto.subtopicId()));
     }
