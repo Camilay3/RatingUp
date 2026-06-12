@@ -175,11 +175,11 @@ INSERT INTO multiple_choice_question (subtopic_id, question_text)
 VALUES ((SELECT id FROM subtopics WHERE title = 'Não mover a mesma peça várias vezes' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6)), 'Qual o item certo?');
 
 INSERT INTO multiple_choice_option (question_id, option_text, is_correct) VALUES
-                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Padronização de aberturas' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6))), 'aaa', true),
-                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Padronização de aberturas' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6))), 'bbb', false),
-                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Padronização de aberturas' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6))), 'ccc', false),
-                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Padronização de aberturas' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6))), 'ddd', false),
-                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Padronização de aberturas' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6))), 'eee', false);
+                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Não mover a mesma peça várias vezes' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6))), 'aaa', true),
+                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Não mover a mesma peça várias vezes' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6))), 'bbb', false),
+                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Não mover a mesma peça várias vezes' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6))), 'ccc', false),
+                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Não mover a mesma peça várias vezes' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6))), 'ddd', false),
+                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Não mover a mesma peça várias vezes' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6))), 'eee', false);
 
 
 -- Padronização de aberturas
@@ -258,14 +258,14 @@ INSERT INTO multiple_choice_option (question_id, option_text, is_correct) VALUES
 
 -- Peças boas vs peças ruins
 INSERT INTO multiple_choice_question (subtopic_id, question_text)
-VALUES ((SELECT id FROM subtopics WHERE title = 'Peças boas vs peças ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8)), 'Qual o item certo?');
+VALUES ((SELECT id FROM subtopics WHERE title = 'Peças boas vs ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8)), 'Qual o item certo?');
 
 INSERT INTO multiple_choice_option (question_id, option_text, is_correct) VALUES
-                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Peças boas vs peças ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8))), 'aaa', true),
-                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Peças boas vs peças ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8))), 'bbb', false),
-                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Peças boas vs peças ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8))), 'ccc', false),
-                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Peças boas vs peças ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8))), 'ddd', false),
-                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Peças boas vs peças ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8))), 'eee', false);
+                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Peças boas vs ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8))), 'aaa', true),
+                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Peças boas vs ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8))), 'bbb', false),
+                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Peças boas vs ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8))), 'ccc', false),
+                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Peças boas vs ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8))), 'ddd', false),
+                                                                              ((SELECT id FROM multiple_choice_question WHERE subtopic_id = (SELECT id FROM subtopics WHERE title = 'Peças boas vs ruins' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8))), 'eee', false);
 
 
 -- =============================================
