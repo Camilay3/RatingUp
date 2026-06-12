@@ -2,10 +2,11 @@ package com.quadcore.Ratingup.service;
 
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.move.Move;
-import com.quadcore.Ratingup.dto.board.SubtopicPracticeSessionRequestDTO;
-import com.quadcore.Ratingup.dto.board.SubtopicPracticeSessionResponseDTO;
+import com.quadcore.Ratingup.dto.board.*;
 import com.quadcore.Ratingup.enums.BoardStatus;
 import com.quadcore.Ratingup.mapper.SubtopicPracticeSessionMapper;
+import com.quadcore.Ratingup.model.board.MultipleChoiceOption;
+import com.quadcore.Ratingup.model.board.MultipleChoiceQuestion;
 import com.quadcore.Ratingup.model.board.SubtopicPracticeSession;
 import com.quadcore.Ratingup.model.book.Subtopics;
 import com.quadcore.Ratingup.repository.SubtopicPracticeSessionRepository;
@@ -101,4 +102,8 @@ public class SubtopicPracticeSessionService {
         }
     }
 
+    public SubtopicTypeResponseDto getSubtopicType(Long subtopicId) {
+        Subtopics subtopic = subtopicsRepository.findById(subtopicId).orElseThrow(()->new RuntimeException("subtópico não encontrado"));
+        return new SubtopicTypeResponseDto(subtopicId,subtopic.getType());
+    }
 }

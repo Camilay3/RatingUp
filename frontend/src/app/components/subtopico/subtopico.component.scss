@@ -92,3 +92,7 @@ header {
 		}
 	}
 }
+
+:host ::ng-deep .teoria div p {
+	margin-bottom: 1rem;
+}

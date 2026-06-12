@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.model.book;
 
+import com.quadcore.Ratingup.enums.SubtopicType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,4 +32,7 @@ public class Subtopics {
 
     @Column
     private String solutionMoves;
+
+    @Enumerated(EnumType.STRING)
+    private SubtopicType type;
 }
