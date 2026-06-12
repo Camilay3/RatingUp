@@ -76,14 +76,15 @@ export class ChessBoard implements OnInit, OnChanges {
 
     this.cg.set({ fen });
 
-    this.moves = [...this.moves, { from: orig, to: dest, piece: this.currentPiece, status }];
+    if(status == 'COMPLETED') {
+     this.moves = [...this.moves, { from: orig, to: dest, piece: this.currentPiece, status }];
+    }
 
     this.cdr.detectChanges();
 
    } catch (e: any) {
-    // movimento inválido — back retorna 400
-    console.log('Movimento inválido, resetando tabuleiro');
-    await this.onStartChess(this.subtopicId); // reinicia a sessão
+    this.moves = [];
+    await this.onStartChess(this.subtopicId); 
    }
   }
 
