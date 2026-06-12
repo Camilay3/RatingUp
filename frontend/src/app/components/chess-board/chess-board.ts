@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, Input, OnChanges, ElementRef, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Chessground } from 'chessground';
 import { ChessService } from '../../services/chess/chess.service';
-import { ChessPiece } from '../../interfaces/chess/chess-piece.enum';
 
 @Component({
   selector: 'app-chess-board',
