@@ -1,7 +1,6 @@
 package com.quadcore.Ratingup.controller;
 
-import com.quadcore.Ratingup.dto.board.SubtopicPracticeSessionRequestDTO;
-import com.quadcore.Ratingup.dto.board.SubtopicPracticeSessionResponseDTO;
+import com.quadcore.Ratingup.dto.board.*;
 import com.quadcore.Ratingup.dto.book.SubtopicIdRequestDto;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.service.SubtopicPracticeSessionService;
@@ -20,6 +19,11 @@ public class SubtopicPracticeSessionController {
 
     @Autowired
     private SubtopicPracticeSessionService subtopicPracticeSessionService;
+
+    @GetMapping("/session/type")
+    public ResponseEntity<SubtopicTypeResponseDto> getSubtopicType(@RequestBody @Valid SubtopicIdRequestDto subtopicIdRequestDto) {
+        return ResponseEntity.ok(subtopicPracticeSessionService.getSubtopicType(subtopicIdRequestDto.subtopicId()));
+    }
 
     @PostMapping("/session/start")
     public ResponseEntity<SubtopicPracticeSessionResponseDTO> startSession(
