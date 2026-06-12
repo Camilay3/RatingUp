@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, ElementRef, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Chessground } from 'chessground';
 import { ChessService } from '../../services/chess/chess.service';
 import { ChessPiece } from '../../interfaces/chess/chess-piece.enum';
@@ -17,7 +17,11 @@ export class ChessBoard implements OnInit, OnChanges {
   @Input() subtopicId!: number;
   @Output() fenAtualizado = new EventEmitter<string>();
 
-  constructor(private chessService : ChessService){}
+  constructor(
+    private chessService : ChessService,
+    private cdr : ChangeDetectorRef
+  )
+  {}
 
   private cg: any;
   private sessionId!: number;
@@ -51,8 +55,6 @@ export class ChessBoard implements OnInit, OnChanges {
     }
   });
 
-  // ngOnInit roda DEPOIS dos @Inputs chegarem, então subtopicoId já existe aqui
-  console.log('subtopicoId no ngOnInit:', this.subtopicId);
   this.onStartChess(this.subtopicId);
  }
 
@@ -72,18 +74,11 @@ export class ChessBoard implements OnInit, OnChanges {
       dest.toUpperCase()
     );
 
-    console.log('fen retornado:', fen);
-    console.log('status retornado:', status);
-
     this.cg.set({ fen });
 
-    if (status === 'WRONG_MOVE') {
-      console.log('Movimento errado, tente novamente!');
-    } else if (status === 'COMPLETED') {
-      console.log('Parabéns! Sequência concluída!');
-    }
+    this.moves = [...this.moves, { from: orig, to: dest, piece: this.currentPiece, status }];
 
-    this.moves.push({ from: orig, to: dest, piece: this.currentPiece, status });
+    this.cdr.detectChanges();
 
    } catch (e: any) {
     // movimento inválido — back retorna 400
