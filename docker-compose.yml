@@ -8,6 +8,7 @@ services:
     volumes:
       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./config/nginx/http.d:/etc/nginx/http.d:ro
+      - nginx_cache:/var/cache/nginx/images
     depends_on:
       - backend
       - frontend
@@ -170,3 +171,4 @@ networks:
 
 volumes:
   minio_data:
+  nginx_cache:

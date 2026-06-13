@@ -4,6 +4,9 @@
 	align-items: center;
 	justify-content: center;
 	background-color: color-mix(in srgb, var(--secondary) 95%, var(--neutral));
+	z-index: 999;
+	inset: 0;
+	position: absolute;
 }
 
 .loader-wrap {

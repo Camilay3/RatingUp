@@ -13,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -65,7 +66,7 @@ public class BookService {
         }
         subtopicsRepository.saveAll(subtopicos);
 
-        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo,null,null,null));
+        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo,null,null,null,null));
         subtopicos.add(salvo);
         subtopicos.sort(Comparator.comparingInt(Subtopics::getDisplayOrder));
 
@@ -84,14 +85,17 @@ public class BookService {
 
         var image = imageOptional.orElseThrow(() -> new EntityNotFoundException("Imagem não encontrada"));
 
-        return "images/" + bucketName + "/" + image.getObjectId();
+        return "/images/" + bucketName + "/" + image.getObjectId();
     }
 
     private String normalizedName(String name) {
         if (name == null) return "";
-        name = name.replace(" ", "-").replace(",", "");
-        name += ".png";
-        return name;
+
+        return Normalizer.normalize(name, Normalizer.Form.NFD)
+                .replaceAll("[^\\p{ASCII}]", "")
+                .replaceAll("[(),]", "")
+                .replaceAll("\\s+", "-")
+                + ".png";
     }
 
     public SubtopicResponseDTO getSubtopicContent(Long id) {

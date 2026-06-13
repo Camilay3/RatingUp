@@ -79,11 +79,11 @@ export class BookComponent implements OnInit {
 					}) || [];
 
 					this.buildBookFromPages();
+					this.isLoading = false;
 					this.cdr.detectChanges();
 				},
 				error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 }),
 				complete: () => {
-					this.isLoading = false
 					if (history.state?.executarAnimacao) this.multiplasPaginas(0);
 				}
 			})
