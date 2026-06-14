@@ -21,7 +21,7 @@ public class AvatarService {
     }
 
     public List<AvatarResponseDTO> listAvaliableImages(){
-        return imagesRepository.findAll()
+        return imagesRepository.findAllByBucketName("avatars")
                 .stream()
                 .map(AvatarResponseDTO::new)
                 .toList();
@@ -36,7 +36,7 @@ public class AvatarService {
         Images image = imagesRepository.findByImageName(imageName)
                 .orElseThrow(() -> new RuntimeException("Imagem não encontrada"));
 
-        user.setAvatarurl(imageName);
+        user.setAvatarurl("/images/avatars/" + image.getObjectId());
         userRepository.save(user);
     }
 
