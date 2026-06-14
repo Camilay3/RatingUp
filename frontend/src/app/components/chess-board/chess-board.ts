@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild, Input, OnChanges, ElementRef, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Chessground } from 'chessground';
 import { ChessService } from '../../services/chess/chess.service';
+import { IQuiz } from '../../interfaces/chess/iquiz';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chess-board',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './chess-board.html',
   styleUrl: './chess-board.scss',
 })
@@ -15,6 +17,12 @@ export class ChessBoard implements OnInit, OnChanges {
   @Input() orientation: 'white'|'black' = 'white';
   @Input() subtopicId!: number;
   @Output() fenAtualizado = new EventEmitter<string>();
+
+  pergunta: IQuiz | null = null;
+  opcaoSelecionada: number | null = null;
+  quizResolvido = false;   // controla se o blur some
+  errou = false;
+  loading = true;
 
   constructor(
     private chessService : ChessService,
@@ -55,6 +63,20 @@ export class ChessBoard implements OnInit, OnChanges {
   });
 
   this.onStartChess(this.subtopicId);
+  console.log('subtopicId:', this.subtopicId);
+
+  this.chessService.searchQuiz(this.subtopicId).subscribe({
+  next: (data) => {
+    console.log('quiz recebido:', data); // 👈
+    this.pergunta = data;
+    this.loading = false;
+    this.cdr.detectChanges(); // 👈 força atualização da tela
+  },
+  error: (err) => {
+    console.error('erro no quiz:', err); // 👈
+    this.loading = false;
+  }
+  });
  }
 
   ngOnChanges(): void {
@@ -102,5 +124,26 @@ export class ChessBoard implements OnInit, OnChanges {
     }
 
   }
+
+  selecionarOpcao(optionId: number) {
+    this.opcaoSelecionada = optionId;
+  }
+
+  confirmarResposta() {
+  if (this.opcaoSelecionada === null) return;
+
+  this.chessService.answerQuiz(this.subtopicId, this.opcaoSelecionada).subscribe({
+    next: (res) => {
+      if (res.correct) {
+        this.quizResolvido = true;
+        this.cdr.detectChanges();
+      } else {
+        this.errou = true;
+        this.opcaoSelecionada = null;
+        this.cdr.detectChanges();
+      }
+    }
+  });
+}
 
 }
