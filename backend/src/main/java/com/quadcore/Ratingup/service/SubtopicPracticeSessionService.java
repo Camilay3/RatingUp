@@ -1,6 +1,7 @@
 package com.quadcore.Ratingup.service;
 
 import com.github.bhlangonijr.chesslib.Board;
+import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 import com.quadcore.Ratingup.dto.board.*;
 import com.quadcore.Ratingup.enums.BoardStatus;
@@ -89,6 +90,11 @@ public class SubtopicPracticeSessionService {
         }
 
         // Movimento correto, sequência ainda não terminou
+
+        int opponentMoveIndex = played.size() - 1;
+        executeOpponentMoveIfExists(board, subtopic, opponentMoveIndex);
+
+
         session.setCurrentFen(board.getFen());
         session.setStatus(BoardStatus.valueOf(checkStatus(board)));
         return SubtopicPracticeSessionMapper.toDTO(subtopicPracticeSessionRepository.save(session), subtopic);
@@ -109,5 +115,21 @@ public class SubtopicPracticeSessionService {
     public SubtopicTypeResponseDto getSubtopicType(Long subtopicId) {
         Subtopics subtopic = subtopicsRepository.findById(subtopicId).orElseThrow(()->new RuntimeException("subtópico não encontrado"));
         return new SubtopicTypeResponseDto(subtopicId,subtopic.getType());
+    }
+
+    private void executeOpponentMoveIfExists(Board board, Subtopics subtopic, int index) {
+        if (subtopic.getOpponentMoves() == null || subtopic.getOpponentMoves().isBlank()) return;
+
+        String[] opponentMoves = subtopic.getOpponentMoves().split(",");
+        if (index >= opponentMoves.length) return;
+
+        String notation = opponentMoves[index].trim();
+        Square from = Square.fromValue(notation.substring(0, 2).toUpperCase());
+        Square to   = Square.fromValue(notation.substring(2, 4).toUpperCase());
+
+        Move move = new Move(from, to);
+        if (board.legalMoves().contains(move)) {
+            board.doMove(move);
+        }
     }
 }
