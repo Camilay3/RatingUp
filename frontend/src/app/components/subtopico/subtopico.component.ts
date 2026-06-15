@@ -4,16 +4,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
 import { BookService } from '../../services/book/book.service';
 import { ISubtopicoContent } from '../../interfaces/book/IBook';
+import { ChessBoard } from '../chess-board/chess-board';
 
 @Component({
   selector: 'app-subtopico',
   templateUrl: './subtopico.component.html',
   styleUrls: ['./subtopico.component.scss'],
-  imports: [RouterLink]
+  imports: [RouterLink, ChessBoard]
 })
 export class SubtopicoComponent implements OnInit {
-	subtopicoId: number;
+	subtopicId: number;
 	subtopicoContent: ISubtopicoContent | null = null;
+	fenDoBackend = 'start';
 
 	constructor(
 		private readonly router: Router,
@@ -22,13 +24,13 @@ export class SubtopicoComponent implements OnInit {
 		private readonly snackBar : MatSnackBar,
 		private readonly cdr: ChangeDetectorRef,
 	) {
-		this.subtopicoId = history.state?.subtopicoId;
+		this.subtopicId = history.state?.subtopicoId;
 	}
 
 	ngOnInit() {
-		if(!this.subtopicoId) this.router.navigate(['']);
+		if(!this.subtopicId) this.router.navigate(['']);
 
-		this.bookService.getSubtopicContent(this.subtopicoId).subscribe({
+		this.bookService.getSubtopicContent(this.subtopicId).subscribe({
 			next: (response) => {
 				this.subtopicoContent = response.data;
 				this.cdr.detectChanges();

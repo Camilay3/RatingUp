@@ -52,7 +52,8 @@ body {
 	color-scheme: dark;
 	width: 100dvw;
 	height: 100dvh;
-	// overflow: hidden;
+	overflow-y: auto;
+	overflow-x: hidden;
 
 	background-color: var(--mat-sys-surface);
 	color: var(--mat-sys-on-surface);

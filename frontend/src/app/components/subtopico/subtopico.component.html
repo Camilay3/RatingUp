@@ -15,5 +15,14 @@
 		</div>
 	</section>
 
+	<div class="tabuleiro">
+	 <app-chess-board
+     (fenAtualizado)="fenDoBackend = $event"
+     [orientation]="'white'"
+	 [subtopicId]="subtopicId"
+	 >
+     </app-chess-board>
+	</div>
+
 	<button (click)="concluirSubtopico()">Concluir Subtópico</button>
 </div>

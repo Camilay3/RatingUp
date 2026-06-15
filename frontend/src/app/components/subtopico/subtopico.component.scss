@@ -7,6 +7,7 @@
 :host {
 	padding: 4rem 20rem 0 20rem;
 	background-color: var(--primary);
+	overflow-y: auto;
 	@include size;
 }
 
@@ -62,6 +63,16 @@
 			}
 		}
 	}
+
+	.tabuleiro{
+		display: flex;
+		justify-content: flex-start;
+		width: 100%;
+
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
 }
 
 @keyframes slideUpFade {
