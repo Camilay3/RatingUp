@@ -38,4 +38,7 @@ public class Subtopics {
 
     @Column(name = "opponent_moves")
     private String opponentMoves;
+
+    @Column(columnDefinition = "TEXT")
+    private String practiceExplanation;
 }
