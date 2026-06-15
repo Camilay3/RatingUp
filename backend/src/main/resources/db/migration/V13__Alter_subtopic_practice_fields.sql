@@ -197,25 +197,27 @@ WHERE title = 'Coordenação de peças'
 -- =============================================
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '8/8/2p1p1pp/2p5/4kPP1/PPP1P3/8/4K3 w - - 0 1',
+                     solution_moves = 'e1e2'
 WHERE title = 'Oposição de reis'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 9);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '8/8/8/8/2P2k2/3K4/8/8 w - - 0 1',
+                     solution_moves = 'd3d4,d4d5,d5d6,d6d7,c4c5,c5c6,c6c7,c7c8',
+                     opponent_moves = 'f4f5,f5f6,f6f7,f7f6,f6e5,e5d5,d5c5'
 WHERE title = 'Rei e peão vs rei'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 9);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '8/2k5/P7/4P3/7P/8/8/3K4 w - - 0 1',
+                     solution_moves = 'h4h5'
 WHERE title = 'Regra do quadrado do peão'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 9);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '8/8/8/8/7k/1Q6/2R5/K7 w - - 0 1',
+                     solution_moves = 'c2c4,b3b5,c4c6,b5b7,c6c8',
+                     opponent_moves = 'h4h5,h5h6,h6h7,h7h8'
 WHERE title = 'Padrões básicos de mate'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 9);
