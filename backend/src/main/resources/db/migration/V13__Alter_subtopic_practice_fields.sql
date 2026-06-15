@@ -1,4 +1,4 @@
-ALTER TABLE subtopics ADD COLUMN opponent_moves VARCHAR(255);
+ALTER TABLE subtopics ADD COLUMN opponent_moves VARCHAR(255) default null;
 
 -- =============================================
 -- Capítulo 3 — Movimento das Peças
@@ -109,31 +109,28 @@ WHERE title = 'Promoção do peão'
 
 UPDATE subtopics SET
                      initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     solution_moves = 'e2e4,d2d4',
+                     opponent_moves = 'b8c6'
 WHERE title = 'Controle do centro'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = 'r1bqkb1r/pppppppp/2n2n2/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 1',
+                     solution_moves = 'b1c3,g1f3,c1d2,f1b5',
+                     opponent_moves = 'e7e6,f8b4,d7d5'
 WHERE title = 'Desenvolvimento das peças'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = 'rnbqkb1r/pp2pppp/3p1n2/2p5/4P3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 0 1',
+                     solution_moves = 'f1e2,e1g1',
+                     opponent_moves = 'e7e6'
 WHERE title = 'Segurança do rei'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
-WHERE title = 'Não mover a mesma peça várias vezes'
-  AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6);
-
-UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = 'rn1q1rk1/pp1bbppp/3ppn2/2p3B1/4P3/2NP1N2/PPP1BPPP/R2Q1RK1 w - - 0 1',
+                     solution_moves = 'd1d2'
 WHERE title = 'Conectar as torres'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6);
 
