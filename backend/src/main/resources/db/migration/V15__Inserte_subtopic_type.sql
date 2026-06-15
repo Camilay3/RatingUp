@@ -19,6 +19,8 @@ WHERE
    OR (title = 'Valor relativo das peças' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 2))
 
    -- Capítulo 4
+   OR (title = 'Empate por repetição' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4))
+   OR (title = 'Regra dos 50 lances' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4))
    OR (title = 'Tempo' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4))
 
    -- Capítulo 6
@@ -55,8 +57,6 @@ WHERE
    OR (title = 'Xeque' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4))
    OR (title = 'Xeque-mate' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4))
    OR (title = 'Empate por afogamento' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4))
-   OR (title = 'Empate por repetição' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4))
-   OR (title = 'Regra dos 50 lances' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4))
    OR (title = 'Material insuficiente' AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4))
 
    -- Capítulo 5

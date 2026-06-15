@@ -52,38 +52,26 @@ WHERE title = 'Captura de peças'
 -- =============================================
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '7k/8/8/8/3K4/8/7B/8 w - - 0 1',
+                     solution_moves = 'h2e5'
 WHERE title = 'Xeque'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '8/7k/8/4B3/3K4/8/8/6Q1 w - - 0 1',
+                     solution_moves = 'g1h7'
 WHERE title = 'Xeque-mate'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '2k5/2P5/2K5/8/8/8/8/8 w - - 0 1',
+                     solution_moves = 'c6d6'
 WHERE title = 'Empate por afogamento'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
-WHERE title = 'Empate por repetição'
-  AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4);
-
-UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
-WHERE title = 'Regra dos 50 lances'
-  AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4);
-
-UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '3k4/3q4/8/8/3Q4/8/3K4/8 w - - 0 1',
+                     solution_moves = 'd4d7'
 WHERE title = 'Material insuficiente'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4);
 
@@ -92,26 +80,26 @@ WHERE title = 'Material insuficiente'
 -- =============================================
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = 'r1bqkbnr/pppp1pp1/2n4p/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+                     solution_moves = 'e1g1'
 WHERE title = 'Roque pequeno'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 5);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = 'r1bqk2r/1pppbppp/p1n2n2/4p1B1/4P3/2NP4/PPP1QPPP/R3KBNR w KQkq - 0 1',
+                     solution_moves = 'e1c1'
 WHERE title = 'Roque grande'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 5);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = 'r1bq1rk1/2ppbppp/p1n2n2/Pp2p1B1/4P3/2NP4/1PP1QPPP/R3KBNR w KQ - 0 1',
+                     solution_moves = 'a5b6'
 WHERE title = 'En passant'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 5);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '8/4P1k1/8/3K4/8/8/8/8 w - - 0 1',
+                     solution_moves = 'e7e8'
 WHERE title = 'Promoção do peão'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 5);
 
