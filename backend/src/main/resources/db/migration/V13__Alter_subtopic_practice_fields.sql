@@ -127,7 +127,7 @@ UPDATE subtopics SET
                      initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
                      solution_moves = 'e2e4,d2d4',
                      opponent_moves = 'b8c6',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'O centro é uma das regiões do tabuleiro mais disputada na fase inicial. Avance seus peões de forma correta para garantir o controle desse espaço.'
 WHERE title = 'Controle do centro'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6);
 
@@ -135,7 +135,7 @@ UPDATE subtopics SET
                      initial_fen = 'r1bqkb1r/pppppppp/2n2n2/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 1',
                      solution_moves = 'b1c3,g1f3,c1d2,f1b5',
                      opponent_moves = 'e7e6,f8b4,d7d5',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'No início de uma partida de xadrez é extremamente importante que o jogador desenvolva suas peças ao mesmo tempo que defende e cria ameaças para a posição do adversário. Nesse subtópico você deve desenvolver seus cavalos e posteriormente seus bispos, sempre tendo em mente as ameaças que seu oponente está criando, a fim de se defender delas e retrucá-las'
 WHERE title = 'Desenvolvimento das peças'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6);
 
@@ -143,14 +143,14 @@ UPDATE subtopics SET
                      initial_fen = 'rnbqkb1r/pp2pppp/3p1n2/2p5/4P3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 0 1',
                      solution_moves = 'f1e2,e1g1',
                      opponent_moves = 'e7e6',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Proteger o rei é uma das tarefas mais essenciais do início de uma partida de xadrez. Faça a sequência de dois lances que protege o rei de forma mais eficiente, ao mesmo tempo que desenvolve suas peças.'
 WHERE title = 'Segurança do rei'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6);
 
 UPDATE subtopics SET
                      initial_fen = 'rn1q1rk1/pp1bbppp/3ppn2/2p3B1/4P3/2NP1N2/PPP1BPPP/R2Q1RK1 w - - 0 1',
                      solution_moves = 'd1d2',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'A abertura das brancas está quase concluída, falta apenas o último passo. Execute o único lance que encerra de vez a fase de abertura das brancas.'
 WHERE title = 'Conectar as torres'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 6);
 
