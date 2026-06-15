@@ -1,15 +1,64 @@
-<section class="xadrez">
- <div #board class="chess-board"></div>
+<!-- chess-board.html -->
 
- <div class="chat-jogadas">
-   <h3>Historico de jogadas</h3>
+<div class="chess-wrapper">
 
-  @for (move of moves; track $index){
-   <div class="jogadas">
-    {{ move.from }} -> {{ move.to }}
-   </div>
+  <!-- TABULEIRO REAL com blur -->
+  <section class="xadrez" [class.blur]="!quizResolvido">
+    <div #board class="chess-board"></div>
+
+    <div class="chat-jogadas">
+      <h2 class="titulo">Historico de jogadas</h2>
+
+      @for (move of moves; track $index){
+        <div class="jogadas">
+          {{ move.from }} -> {{ move.to }}
+        </div>
+        <div class="jogadas" >
+          {{ move.extra }}
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- OVERLAY DO QUIZ (flutua sobre o tabuleiro) -->
+  @if (!quizResolvido) {
+    <div class="quiz-overlay">
+
+      @if (!loading && pergunta) {
+        <div class="quiz-card">
+          <h2>Responda antes de jogar!</h2>
+          <p>{{ pergunta.questionText }}</p>
+
+          <div class="opcoes">
+            @for (opcao of pergunta.options; track opcao.id) {
+              <button
+                (click)="selecionarOpcao(opcao.id)"
+                [class.selecionada]="opcaoSelecionada === opcao.id"
+              >
+                {{ opcao.optionText }}
+              </button>
+            }
+          </div>
+
+          @if (errou) {
+            <p class="erro">❌ Resposta errada! Tente novamente.</p>
+          }
+
+          <button
+            class="confirmar"
+            (click)="confirmarResposta()"
+            [disabled]="opcaoSelecionada === null"
+          >
+            Confirmar
+          </button>
+        </div>
+      }
+
+      @if (loading) {
+        <div>Carregando pergunta...</div>
+      }
+
+    </div>
   }
 
- </div>
-
-</section>
+</div>

@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, ElementRef, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Chessground } from 'chessground';
 import { ChessService } from '../../services/chess/chess.service';
-import { ChessPiece } from '../../interfaces/chess/chess-piece.enum';
+import { IQuiz } from '../../interfaces/chess/iquiz';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chess-board',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './chess-board.html',
   styleUrl: './chess-board.scss',
 })
@@ -17,7 +18,17 @@ export class ChessBoard implements OnInit, OnChanges {
   @Input() subtopicId!: number;
   @Output() fenAtualizado = new EventEmitter<string>();
 
-  constructor(private chessService : ChessService){}
+  pergunta: IQuiz | null = null;
+  opcaoSelecionada: number | null = null;
+  quizResolvido = false;   // controla se o blur some
+  errou = false;
+  loading = true;
+
+  constructor(
+    private chessService : ChessService,
+    private cdr : ChangeDetectorRef
+  )
+  {}
 
   private cg: any;
   private sessionId!: number;
@@ -27,7 +38,8 @@ export class ChessBoard implements OnInit, OnChanges {
     from: string,
     to: string,
     piece?: string,
-    status?:string
+    status?:string,
+    extra?: string
   }[] = [];
 
   ngOnInit(): void {
@@ -51,9 +63,21 @@ export class ChessBoard implements OnInit, OnChanges {
     }
   });
 
-  // ngOnInit roda DEPOIS dos @Inputs chegarem, então subtopicoId já existe aqui
-  console.log('subtopicoId no ngOnInit:', this.subtopicId);
   this.onStartChess(this.subtopicId);
+  console.log('subtopicId:', this.subtopicId);
+
+  this.chessService.searchQuiz(this.subtopicId).subscribe({
+  next: (data) => {
+    console.log('quiz recebido:', data); // 👈
+    this.pergunta = data;
+    this.loading = false;
+    this.cdr.detectChanges(); // 👈 força atualização da tela
+  },
+  error: (err) => {
+    console.error('erro no quiz:', err); // 👈
+    this.loading = false;
+  }
+  });
  }
 
   ngOnChanges(): void {
@@ -72,23 +96,17 @@ export class ChessBoard implements OnInit, OnChanges {
       dest.toUpperCase()
     );
 
-    console.log('fen retornado:', fen);
-    console.log('status retornado:', status);
-
     this.cg.set({ fen });
 
-    if (status === 'WRONG_MOVE') {
-      console.log('Movimento errado, tente novamente!');
-    } else if (status === 'COMPLETED') {
-      console.log('Parabéns! Sequência concluída!');
+    if(status == 'COMPLETED') {
+     this.moves = [...this.moves, { from: orig, to: dest, piece: this.currentPiece, status , extra: 'PARABÉNS, VOCÊ CONCLUIU A PRÁTICA. Por enquanto nos não temos mais jogadas, mas estamos trabalhando nisso' }];
     }
 
-    this.moves.push({ from: orig, to: dest, piece: this.currentPiece, status });
+    this.cdr.detectChanges();
 
    } catch (e: any) {
-    // movimento inválido — back retorna 400
-    console.log('Movimento inválido, resetando tabuleiro');
-    await this.onStartChess(this.subtopicId); // reinicia a sessão
+    this.moves = [];
+    await this.onStartChess(this.subtopicId); 
    }
   }
 
@@ -107,5 +125,26 @@ export class ChessBoard implements OnInit, OnChanges {
     }
 
   }
+
+  selecionarOpcao(optionId: number) {
+    this.opcaoSelecionada = optionId;
+  }
+
+  confirmarResposta() {
+  if (this.opcaoSelecionada === null) return;
+
+  this.chessService.answerQuiz(this.subtopicId, this.opcaoSelecionada).subscribe({
+    next: (res) => {
+      if (res.correct) {
+        this.quizResolvido = true;
+        this.cdr.detectChanges();
+      } else {
+        this.errou = true;
+        this.opcaoSelecionada = null;
+        this.cdr.detectChanges();
+      }
+    }
+  });
+}
 
 }
