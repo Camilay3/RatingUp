@@ -16,13 +16,18 @@
 	</section>
 
 	<div class="tabuleiro">
-	 <app-chess-board
-     (fenAtualizado)="fenDoBackend = $event"
-     [orientation]="'white'"
-	 [subtopicId]="subtopicId"
-	 >
-     </app-chess-board>
-	</div>
+     @if (tipoFase === 'BOARD') {
+     <app-chess-board
+      (fenAtualizado)="fenDoBackend = $event"
+      [orientation]="'white'"
+      [subtopicId]="subtopicId">
+      </app-chess-board>
+     }
+
+    @if (tipoFase === 'MULTIPLE_CHOICE') {
+     <app-quiz [subtopicId]="subtopicId" />
+    }
+    </div>
 
 	<button (click)="concluirSubtopico()">Concluir Subtópico</button>
 </div>
