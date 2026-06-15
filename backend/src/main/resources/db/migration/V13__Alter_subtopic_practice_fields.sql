@@ -1,46 +1,49 @@
+ALTER TABLE subtopics ADD COLUMN opponent_moves VARCHAR(255);
+
 -- =============================================
 -- Capítulo 3 — Movimento das Peças
 -- =============================================
 
 UPDATE subtopics SET
-                     initial_fen = '8/8/8/8/4P3/8/8/8 w - - 0 1',
-                     solution_moves = 'e4e5'
+                     initial_fen = '7k/8/8/8/3P4/8/8/K7 w - - 0 1',
+                     solution_moves = 'd4d5'
 WHERE title = 'Movimento do peão'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 3);
 
 UPDATE subtopics SET
-                     initial_fen = '8/8/8/8/8/8/8/R7 w - - 0 1',
-                     solution_moves = 'a1h1'
+                     initial_fen = '7k/8/8/8/8/8/8/K2R1B2 w - - 0 1',
+                     solution_moves = 'd1d8'
 WHERE title = 'Movimento da torre'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 3);
 
 UPDATE subtopics SET
-                     initial_fen = '8/8/8/8/3N4/8/8/8 w - - 0 1',
-                     solution_moves = 'd4f5'
+                     initial_fen = '1r5k/6bb/2Bp2p1/1P3P2/3N4/1R3Q2/2P1P3/BK6 w - - 0 1',
+                     solution_moves = 'd4e6'
 WHERE title = 'Movimento do cavalo'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 3);
 
 UPDATE subtopics SET
-                     initial_fen = '8/8/8/8/8/8/8/B7 w - - 0 1',
-                     solution_moves = 'a1h8'
+                     initial_fen = '2p4k/3p4/4p3/5p2/6p1/7p/8/K6B w - - 0 1',
+                     solution_moves = 'h1a8'
 WHERE title = 'Movimento do bispo'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 3);
 
 UPDATE subtopics SET
-                     initial_fen = '8/8/8/8/8/8/8/3Q4 w - - 0 1',
-                     solution_moves = 'd1d8'
+                     initial_fen = '7k/6pr/5p2/4p3/3Q4/8/8/K7 w - - 0 1',
+                     solution_moves = 'd4d8'
 WHERE title = 'Movimento da dama'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 3);
 
 UPDATE subtopics SET
-                     initial_fen = '8/8/8/8/4K3/8/8/8 w - - 0 1',
-                     solution_moves = 'e4e5'
+                     initial_fen = '7k/8/2ppp3/1p3p2/n2K2n1/2N1B3/8/R5R1 w - - 0 1',
+                     solution_moves = 'd4d3'
 WHERE title = 'Movimento do rei'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 3);
 
 UPDATE subtopics SET
-                     initial_fen = '8/8/8/3p4/4P3/4p3/8/2B5 w - - 0 1',
-                     solution_moves = 'e4d5 c1e3'
+                     initial_fen = '7k/8/8/2n5/4p3/8/3P4/K5B1 w - - 0 1',
+                     solution_moves = 'g1c5,d2e3',
+                     opponent_moves = 'e4e3'
 WHERE title = 'Captura de peças'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 3);
 
