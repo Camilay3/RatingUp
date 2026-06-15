@@ -139,45 +139,33 @@ WHERE title = 'Conectar as torres'
 -- =============================================
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '7k/8/5r2/6q1/8/Q1N5/KP6/8 w - - 0 1',
+                     solution_moves = 'c3e4'
 WHERE title = 'Ataque duplo'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = 'r1bqkbnr/ppp2ppp/2n5/1B2p3/3pP3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
+                     solution_moves = 'f3e5'
 WHERE title = 'Cravada'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
-WHERE title = 'Garfo'
+                     initial_fen = '8/6k1/5q2/8/3N4/2B5/1K6/8 w - - 0 1',
+                     solution_moves = 'd4d5'
+WHERE title = 'Descoberto'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
-WHERE title = 'Descoberta'
+                     initial_fen = '8/2q5/5k2/8/3N4/2B5/1K6/8 w - - 0 1',
+                     solution_moves = 'd4b5'
+WHERE title = 'Espeto'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
-WHERE title = 'Ataque descoberto'
-  AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
-
-UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '1k5b/8/1PR5/2K5/PQ2pr2/N7/8/8 w - - 0 1',
+                     solution_moves = 'b4a5'
 WHERE title = 'Mate em 1'
-  AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
-
-UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
-WHERE title = 'Estrutura de peões'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
 
 -- =============================================
