@@ -173,20 +173,22 @@ WHERE title = 'Mate em 1'
 -- =============================================
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '1krq3r/ppp2bpp/4p3/3p1p2/3P4/2N1PNP1/PPPB1PBP/R2Q1RK1 w - - 0 1',
+                     solution_moves = 'f3e5,e5c6',
+                     opponent_moves = 'b7b6'
 WHERE title = 'Casas fracas'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = 'r3qrk1/p2nbppp/5n2/3p4/3PPB2/2N2NP1/P1P2PBP/R2QK2R w K - 0 1',
+                     solution_moves = 'a1a2,b1b7',
+                     opponent_moves = 'h7h6'
 WHERE title = 'Colunas abertas e semi-abertas'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8);
 
 UPDATE subtopics SET
-                     initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-                     solution_moves = 'e2e4'
+                     initial_fen = '6kr/pR1n1pp1/5r1q/3p4/3P4/6P1/P1PN1P1N/3Q1RK1 w - - 0 1',
+                     solution_moves = 'd2f3'
 WHERE title = 'Coordenação de peças'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 8);
 
