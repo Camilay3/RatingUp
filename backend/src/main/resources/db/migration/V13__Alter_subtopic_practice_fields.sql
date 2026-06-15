@@ -51,7 +51,7 @@ UPDATE subtopics SET
                      initial_fen = '7k/8/8/2n5/4p3/8/3P4/K5B1 w - - 0 1',
                      solution_moves = 'g1c5,d2e3',
                      opponent_moves = 'e4e3',
-                     practice_explanation = 'Você agora sabe como funciona'
+                     practice_explanation = 'Você agora sabe como capturar peças adversárias. Faça dois movimentos precisos para conseguir capturar ambas as peças adversárias em poucos movimentos.'
 WHERE title = 'Captura de peças'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 3);
 
@@ -62,28 +62,28 @@ WHERE title = 'Captura de peças'
 UPDATE subtopics SET
                      initial_fen = '7k/8/8/8/3K4/8/7B/8 w - - 0 1',
                      solution_moves = 'h2e5',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Nesse subtópico foi visto uma das maiores ameaças que você pode fazer ao seu adversário. Faça um xeque com seu bispo para atacar o rei do oponente.'
 WHERE title = 'Xeque'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4);
 
 UPDATE subtopics SET
                      initial_fen = '8/7k/8/4B3/3K4/8/8/6Q1 w - - 0 1',
                      solution_moves = 'g1h7',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Agora você sabe uma das formas mais eficientes de como ganhar uma partida. Aproveite do rei exposto do adversário ganhe esse jogo com um xeque-mate'
 WHERE title = 'Xeque-mate'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4);
 
 UPDATE subtopics SET
                      initial_fen = '2k5/2P5/2K5/8/8/8/8/8 w - - 0 1',
                      solution_moves = 'c6d6',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Afogar partidas é algo muito perigoso, principalmente quando o jogador possui plena vantagem. Encontre o lance que evita o afogamento e permite a vitória para as brancas.'
 WHERE title = 'Empate por afogamento'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4);
 
 UPDATE subtopics SET
                      initial_fen = '3k4/3q4/8/8/3Q4/8/3K4/8 w - - 0 1',
                      solution_moves = 'd4d7',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Um final entre damas é considerado empatado e as brancas ainda estão em uma posição pior. Há casos onde empatar é a melhor opção, faça o lance que evita a derrota das brancas aproveitando do conceito aprendido nesse capítulo.'
 WHERE title = 'Material insuficiente'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 4);
 
@@ -94,7 +94,7 @@ WHERE title = 'Material insuficiente'
 UPDATE subtopics SET
                      initial_fen = 'r1bqkbnr/pppp1pp1/2n4p/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
                      solution_moves = 'e1g1',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Mover duas peças com uma jogada só é algo muito forte em um jogo de xadrez. Aplique o conceito que foi visto nesse capítulo para conseguir mover mais de uma peça em apenas uma jogada e ainda proteger seu rei'
 WHERE title = 'Roque pequeno'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 5);
 
