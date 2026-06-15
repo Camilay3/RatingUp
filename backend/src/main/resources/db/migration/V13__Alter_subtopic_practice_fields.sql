@@ -101,21 +101,21 @@ WHERE title = 'Roque pequeno'
 UPDATE subtopics SET
                      initial_fen = 'r1bqk2r/1pppbppp/p1n2n2/4p1B1/4P3/2NP4/PPP1QPPP/R3KBNR w KQkq - 0 1',
                      solution_moves = 'e1c1',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Visando uma abordagem mais ofensiva pra seu jogo, use o conceito aprendido nesse subtópico para ter uma postura mais agressiva ao mesmo tempo que se protege.'
 WHERE title = 'Roque grande'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 5);
 
 UPDATE subtopics SET
                      initial_fen = 'r1bq1rk1/2ppbppp/p1n2n2/Pp2p1B1/4P3/2NP4/1PP1QPPP/R3KBNR w KQ - 0 1',
                      solution_moves = 'a5b6',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'O movimento en passant é um dos movimentos que mais passa desapercebido pelos jogadores. Ache uma situação que você pode utilizar dessa regra especial.'
 WHERE title = 'En passant'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 5);
 
 UPDATE subtopics SET
                      initial_fen = '8/4P1k1/8/3K4/8/8/8/8 w - - 0 1',
                      solution_moves = 'e7e8',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Para ganhar um jogo de xadrez é extremamente necessário promover peões para que se tornem peças mais fortes. Faça o movimento que garante a vitória para as brancas por meio desse conceito'
 WHERE title = 'Promoção do peão'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 5);
 
