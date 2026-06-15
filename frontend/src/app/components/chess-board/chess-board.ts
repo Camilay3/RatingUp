@@ -38,7 +38,8 @@ export class ChessBoard implements OnInit, OnChanges {
     from: string,
     to: string,
     piece?: string,
-    status?:string
+    status?:string,
+    extra?: string
   }[] = [];
 
   ngOnInit(): void {
@@ -98,7 +99,7 @@ export class ChessBoard implements OnInit, OnChanges {
     this.cg.set({ fen });
 
     if(status == 'COMPLETED') {
-     this.moves = [...this.moves, { from: orig, to: dest, piece: this.currentPiece, status }];
+     this.moves = [...this.moves, { from: orig, to: dest, piece: this.currentPiece, status , extra: 'PARABÉNS, VOCÊ CONCLUIU A PRÁTICA. Por enquanto nos não temos mais jogadas, mas estamos trabalhando nisso' }];
     }
 
     this.cdr.detectChanges();
