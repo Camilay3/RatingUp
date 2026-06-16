@@ -1,0 +1,4 @@
+*** Variables ***
+${BASE_URL}       http://localhost/api
+${ADMIN_EMAIL}    seu-email@exemplo.com
+${ADMIN_PASS}     sua-senha
