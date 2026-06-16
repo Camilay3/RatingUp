@@ -10,26 +10,25 @@
     </div>
 
     <div class="quiz-corpo">
-      <div class="opcoes">
-        @for (opcao of pergunta.options; track opcao.id) {
-          <button
-            (click)="selecionarOpcao(opcao.id)"
-            [class.selecionada]="opcaoSelecionada === opcao.id"
-             [disabled]="quizConcluido"
-          >
-            {{ opcao.optionText }}
-          </button>
-        }
-      </div>
+  <div class="opcoes">
+    @for (opcao of pergunta.options; track opcao.id) {
+      <button
+        (click)="selecionarOpcao(opcao.id)"
+        [class.selecionada]="opcaoSelecionada === opcao.id"
+        [disabled]="quizConcluido"
+      >
+        {{ opcao.optionText }}
+      </button>
+    }
+  </div>
 
-      <div style="display:flex; flex-direction:column; justify-content:flex-end; gap:6px">
-        @if (errou) {
-          <p class="erro">❌ Resposta errada! Tente novamente.</p>
-        }
-        <button class="confirmar" (click)="confirmarResposta()" [disabled]="opcaoSelecionada === null || quizConcluido">
-          Confirmar
-        </button>
-      </div>
-    </div>
+  @if (errou) {
+    <p class="erro">❌ Resposta errada! Tente novamente.</p>
+  }
+
+  <button class="confirmar" (click)="confirmarResposta()" [disabled]="opcaoSelecionada === null || quizConcluido">
+    Confirmar
+  </button>
+</div>
   </div>
 }

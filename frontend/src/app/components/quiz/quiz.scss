@@ -27,9 +27,8 @@
 
 .quiz-corpo {
   display: flex;
-  flex-direction: row;
+  flex-direction: column; // ← era row
   gap: 16px;
-  align-items: flex-end;
   margin-top: 20px;
 }
 
@@ -39,9 +38,10 @@
   gap: 8px;
   flex: 1;
   font-size: 0.95rem;
+  width: 100%;
 
   button {
-    //width: 100% !important;
+    width: 100% !important;
     padding: 4px 6px;
     border: 4px solid #ccc;
     border-radius: 8px;
@@ -51,6 +51,7 @@
     font-size: 0.75rem;
     line-height: 1.4;
     transition: all 0.2s;
+    box-sizing: border-box; 
 
     &.selecionada {
       border-color: #4CAF50;
@@ -67,15 +68,15 @@
 }
 
 .confirmar {
-  align-self: flex-end;
-  padding: 8px 14px;
+  align-self: stretch; // ← ocupa toda a largura
+  padding: 12px 14px;
   background: #4CAF50;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.85rem;
-  white-space: nowrap;
+  margin-top: 20px !important; // ← margem extra acima do botão
 
   &:disabled {
     background: #ccc;
