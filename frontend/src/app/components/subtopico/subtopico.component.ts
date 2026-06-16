@@ -5,17 +5,20 @@ import { Router, RouterLink } from '@angular/router';
 import { BookService } from '../../services/book/book.service';
 import { ISubtopicoContent } from '../../interfaces/book/IBook';
 import { ChessBoard } from '../chess-board/chess-board';
+import { Quiz } from '../quiz/quiz';
 
 @Component({
   selector: 'app-subtopico',
   templateUrl: './subtopico.component.html',
   styleUrls: ['./subtopico.component.scss'],
-  imports: [RouterLink, ChessBoard]
+  imports: [RouterLink, ChessBoard, Quiz]
 })
 export class SubtopicoComponent implements OnInit {
 	subtopicId: number;
 	subtopicoContent: ISubtopicoContent | null = null;
 	fenDoBackend = 'start';
+	tipoFase: 'BOARD' | 'MULTIPLE_CHOICE' | null = null;
+	praticaConcluida = false;
 
 	constructor(
 		private readonly router: Router,
@@ -42,7 +45,15 @@ export class SubtopicoComponent implements OnInit {
 				});
 			}
 		})
-	}
+
+		this.bookService.getSubtopicType(this.subtopicId).subscribe({
+            next: (response) => {
+                this.tipoFase = response.type;
+                this.cdr.detectChanges();
+            },
+            error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 })
+            });
+	    }
 
 	concluirSubtopico() {
 		this.authService.atualizarProgresso(this.subtopicoContent?.chapterId!, this.subtopicoContent?.displayOrder!).subscribe({
