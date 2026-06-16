@@ -161,35 +161,35 @@ WHERE title = 'Conectar as torres'
 UPDATE subtopics SET
                      initial_fen = '7k/8/5r2/6q1/8/Q1N5/KP6/8 w - - 0 1',
                      solution_moves = 'c3e4',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Utilizar movimentos que envolvem conceitos táticos é muito importante para pegar adversários de surpresa, porém também é necessário que o jogador identifique tais oportunidades. Faça o movimento que realiza um ataque duplo e garante o ganho de uma peça para as brancas.'
 WHERE title = 'Ataque duplo'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
 
 UPDATE subtopics SET
                      initial_fen = 'r1bqkbnr/ppp2ppp/2n5/1B2p3/3pP3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',
                      solution_moves = 'f3e5',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Tática está presente em qualquer momento de um jogo de xadrez, por isso é muito importante ter noções básicas sobre ela. Utilize o que foi aprendido nesse subtópico para ganhar uma peça por meio de uma cravada.'
 WHERE title = 'Cravada'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
 
 UPDATE subtopics SET
-                     initial_fen = '8/6k1/5q2/8/3N4/2B5/1K6/8 w - - 0 1',
+                     initial_fen = '8/6k1/5q2/8/3P4/2B5/1K6/8 w - - 0 1',
                      solution_moves = 'd4d5',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Possibilitar criar ameaças com uma peça mesmo sem mexê-la é o que torna o descoberto tão poderoso. Utilize dele para garantir o ganho de uma peça nesse subtópico.'
 WHERE title = 'Descoberto'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
 
 UPDATE subtopics SET
                      initial_fen = '8/2q5/5k2/8/3N4/2B5/1K6/8 w - - 0 1',
                      solution_moves = 'd4b5',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Encontre o moviemento que garante a vitória do jogo para as brancas ao utilizar o conceito de tática aprendido nesse subtópico'
 WHERE title = 'Espeto'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
 
 UPDATE subtopics SET
-                     initial_fen = '1k5b/8/1PR5/2K5/PQ2pr2/N7/8/8 w - - 0 1',
+                     initial_fen = '1k5b/8/1PR5/2K5/PQ2pr2/N7/7q/8 w - - 0 1',
                      solution_moves = 'b4a5',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'A posição abaixo está emapata, exceto se as brancas jogarem um único lance, que ameaça o mate em 1, ao encontrar esse lance torna-se impossível as pretas ganharem.'
 WHERE title = 'Mate em 1'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 7);
 
