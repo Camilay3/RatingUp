@@ -196,5 +196,9 @@ maskPhone(event: Event){
   setTimeout(() => { input.value = masked; }, 0)
 }
 
+forgotPassword(){
+  this.router.navigate(['/esqueci-senha'])
+}
+
 
 }

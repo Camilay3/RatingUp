@@ -18,22 +18,22 @@ export class LoginService {
     return this.http.post(`${this.apiUrl}/conta/cadastro`, data);
   }
 
-  // Atualizar perfil
 updateProfile(data: any) {
 	return this.http.patch(`${this.apiUrl}/conta/me/atualizar`, data);
 }
 
-// Deletar conta
+
 deleteAccount() {
   return this.http.delete(`${this.apiUrl}/conta/meu/deletar`);
 }
 
-// Recuperar senha
+
 recoverPassword(email: string) {
   return this.http.post(`${this.apiUrl}/auth/recover-password`, { email });
 }
 
-// Resetar senha
+validateCode(code: string){}
+
 resetPassword(data: any) {
   return this.http.post(`${this.apiUrl}/auth/reset-password`, data);
 }
