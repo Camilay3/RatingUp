@@ -34,16 +34,5 @@ export class ChessService {
 
     return response;
   }
-
-  searchQuiz(subtopicId: number){
-    return this.http.post<IQuiz>(`${this.apiUrl}/move/session/quiz` , {subtopicId})
-  }
-
-  answerQuiz(subtopicId: number, selectedOptionId: number){
-  return this.http.post<{ correct: boolean }>(
-    `${this.apiUrl}/move/session/quiz/answer`, 
-    { subtopicId, selectedOptionId }
-  )
-}
   
 }

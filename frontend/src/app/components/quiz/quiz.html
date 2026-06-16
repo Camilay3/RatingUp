@@ -1,0 +1,34 @@
+@if (loading) {
+  <div>Carregando pergunta...</div>
+}
+
+@if (!loading && pergunta) {
+  <div class="quiz-card">
+    <div class="quiz-header">
+      <h2>Responda antes de jogar!</h2>
+      <p>{{ pergunta.questionText }}</p>
+    </div>
+
+    <div class="quiz-corpo">
+  <div class="opcoes">
+    @for (opcao of pergunta.options; track opcao.id) {
+      <button
+        (click)="selecionarOpcao(opcao.id)"
+        [class.selecionada]="opcaoSelecionada === opcao.id"
+        [disabled]="quizConcluido"
+      >
+        {{ opcao.optionText }}
+      </button>
+    }
+  </div>
+
+  @if (errou) {
+    <p class="erro">❌ Resposta errada! Tente novamente.</p>
+  }
+
+  <button class="confirmar" (click)="confirmarResposta()" [disabled]="opcaoSelecionada === null || quizConcluido">
+    Confirmar
+  </button>
+</div>
+  </div>
+}
