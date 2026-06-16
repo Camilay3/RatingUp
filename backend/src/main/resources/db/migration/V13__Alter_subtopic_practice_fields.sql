@@ -225,9 +225,9 @@ WHERE title = 'Coordenação de peças'
 -- =============================================
 
 UPDATE subtopics SET
-                     initial_fen = '8/8/2p1p1pp/2p5/4kPP1/PPP1P3/8/4K3 w - - 0 1',
+                     initial_fen = '8/8/2p1p1pp/8/4kPP1/1PP1P3/8/4K3 w - - 0 1',
                      solution_moves = 'e1e2',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Encontre o movimento que utiliza o conceito que foi visto nesse subtópico para evitar que o rei adversário possa invadir sua posição e começar a capturar seus peões.'
 WHERE title = 'Oposição de reis'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 9);
 
@@ -235,14 +235,14 @@ UPDATE subtopics SET
                      initial_fen = '8/8/8/8/2P2k2/3K4/8/8 w - - 0 1',
                      solution_moves = 'd3d4,d4d5,d5d6,d6d7,c4c5,c5c6,c6c7,c7c8',
                      opponent_moves = 'f4f5,f5f6,f6f7,f7f6,f6e5,e5d5,d5c5',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Esse final é um dos mais simples, mas ao mesmo tempo exige moviementos precisos do jogador. Encontre esses movimentos ate conseguir promover seu peão e tornar o final ganho.'
 WHERE title = 'Rei e peão vs rei'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 9);
 
 UPDATE subtopics SET
-                     initial_fen = '8/2k5/P7/4P3/7P/8/8/3K4 w - - 0 1',
+                     initial_fen = '8/2k5/8/P7/4P2P/8/8/3K4 w - - 0 1',
                      solution_moves = 'h4h5',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'É muito importante saber qual peão será o escolhido para avançar e ser promovido. O jogador deve tomar essa decisão o quanto antes, faça apenas o primeiro movimento para indicar qual peão deve ser o escolhido para promover.'
 WHERE title = 'Regra do quadrado do peão'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 9);
 
@@ -250,6 +250,6 @@ UPDATE subtopics SET
                      initial_fen = '8/8/8/8/7k/1Q6/2R5/K7 w - - 0 1',
                      solution_moves = 'c2c4,b3b5,c4c6,b5b7,c6c8',
                      opponent_moves = 'h4h5,h5h6,h6h7,h7h8',
-                     practice_explanation = 'Oi, vamos praticar'
+                     practice_explanation = 'Nesse subtópico foi ensinado uma das formas mais mais rápidas de garantir uma vitória. Use o mate escadinha para ganhar essa partida de xadrez.'
 WHERE title = 'Padrões básicos de mate'
   AND chapter_id = (SELECT id FROM chapters WHERE display_order = 9);
