@@ -20,14 +20,19 @@
      <app-chess-board
       (fenAtualizado)="fenDoBackend = $event"
       [orientation]="'white'"
-      [subtopicId]="subtopicId">
+      [subtopicId]="subtopicId"
+	  (concluido)="praticaConcluida = true"
+	  >
       </app-chess-board>
      }
 
     @if (tipoFase === 'MULTIPLE_CHOICE') {
-     <app-quiz [subtopicId]="subtopicId" />
+     <app-quiz 
+	 [subtopicId]="subtopicId" 
+	 (concluido)="praticaConcluida = true"
+	 />
     }
     </div>
 
-	<button (click)="concluirSubtopico()">Concluir Subtópico</button>
+	<button (click)="concluirSubtopico()" [disabled]="!praticaConcluida" >Concluir Subtópico</button>
 </div>

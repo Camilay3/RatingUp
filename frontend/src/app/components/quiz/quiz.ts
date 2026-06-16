@@ -1,8 +1,9 @@
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChessService } from '../../services/chess/chess.service';
 import { IQuiz } from '../../interfaces/chess/iquiz';
 import { QuizService } from '../../services/quiz/quiz.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-quiz',
@@ -13,11 +14,13 @@ import { QuizService } from '../../services/quiz/quiz.service';
 })
 export class Quiz implements OnInit {
   @Input() subtopicId!: number;
+  @Output() concluido = new EventEmitter<void>();
 
   pergunta: IQuiz | null = null;
   opcaoSelecionada: number | null = null;
   errou = false;
   loading = true;
+  quizConcluido = false;
 
   constructor(
     private quizService: QuizService,
@@ -48,7 +51,22 @@ export class Quiz implements OnInit {
     this.quizService.answerQuiz(this.subtopicId, this.opcaoSelecionada).subscribe({
       next: (res) => {
         if (res.correct) {
-          // aqui você pode emitir um evento pro subtopico ou navegar
+          this.errou = false;  // ← reseta o erro
+          this.quizConcluido = true;
+          this.concluido.emit();
+          this.cdr.detectChanges();
+
+          Swal.fire({
+          title: '🎉 Resposta correta!',
+          text: 'Parabéns! Você concluiu a prática.',
+          icon: 'success',
+          confirmButtonText: 'Continuar',
+          confirmButtonColor: '#4CAF50',
+        }).then(() => {
+          this.concluido.emit();
+        });
+
+
         } else {
           this.errou = true;
           this.opcaoSelecionada = null;

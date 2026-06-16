@@ -18,6 +18,7 @@ export class SubtopicoComponent implements OnInit {
 	subtopicoContent: ISubtopicoContent | null = null;
 	fenDoBackend = 'start';
 	tipoFase: 'BOARD' | 'MULTIPLE_CHOICE' | null = null;
+	praticaConcluida = false;
 
 	constructor(
 		private readonly router: Router,

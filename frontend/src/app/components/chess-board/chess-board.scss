@@ -11,41 +11,43 @@
 
   .jogadas {
   color: black;
-  background-color: #f0e6d3;
+  background-color: #ffffff;   // ← fundo branco
   border: 1px solid #c4a882;
   border-radius: 10px;
-  padding: 8px 14px;
-  margin: 4px 8px;
+  padding: 6px 14px;
+  margin: 4px 8px 4px auto;   // ← auto na esquerda empurra para direita
   font-size: 0.85rem;
   position: relative;
   width: fit-content;
 
-  // "rabinho" do balão
+  // rabinho do lado direito
   &::before {
     content: '';
     position: absolute;
-    left: -8px;
+    right: -8px;               // ← muda para direita
+    left: unset;
     top: 50%;
     transform: translateY(-50%);
-    border-width: 6px 8px 6px 0;
+    border-width: 6px 0 6px 8px;  // ← inverte
     border-style: solid;
-    border-color: transparent #c4a882 transparent transparent;
+    border-color: transparent transparent transparent #c4a882;
   }
 
   &::after {
     content: '';
     position: absolute;
-    left: -6px;
+    right: -6px;               // ← muda para direita
+    left: unset;
     top: 50%;
     transform: translateY(-50%);
-    border-width: 5px 7px 5px 0;
+    border-width: 5px 0 5px 7px;  // ← inverte
     border-style: solid;
-    border-color: transparent #f0e6d3 transparent transparent;
+    border-color: transparent transparent transparent #ffffff;
   }
 }
 
   .chat-jogadas{
-    width: 275px;
+    width: 300px;
     height: 370px;
 
     border: 2px solid rgb(56, 29, 29);
@@ -140,4 +142,9 @@
 .erro {
   color: red;
   margin-top: 8px;
+}
+
+.jogadas-concluido {
+  color: var(--primary);  // ← cor primária do projeto (o marrom que aparece nos títulos)
+  font-weight: bold;
 }

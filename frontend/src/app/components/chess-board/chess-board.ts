@@ -14,6 +14,7 @@ export class ChessBoard implements OnInit, OnChanges {
   @Input() orientation: 'white' | 'black' = 'white';
   @Input() subtopicId!: number;
   @Output() fenAtualizado = new EventEmitter<string>();
+  @Output() concluido = new EventEmitter<void>();
 
   private cg: any;
   private sessionId!: number;
@@ -75,6 +76,9 @@ export class ChessBoard implements OnInit, OnChanges {
 
       if (status == 'COMPLETED') {
         this.moves = [...this.moves, { from: orig, to: dest, piece: this.currentPiece, status, extra: 'PARABÉNS, VOCÊ CONCLUIU A PRÁTICA. Por enquanto nos não temos mais jogadas, mas estamos trabalhando nisso' }];
+        this.cg.set({ movable: { color: undefined } })
+        this.concluido.emit();
+        this.cdr.detectChanges();
       }
 
       this.cdr.detectChanges();

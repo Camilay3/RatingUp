@@ -15,6 +15,7 @@
           <button
             (click)="selecionarOpcao(opcao.id)"
             [class.selecionada]="opcaoSelecionada === opcao.id"
+             [disabled]="quizConcluido"
           >
             {{ opcao.optionText }}
           </button>
@@ -25,7 +26,7 @@
         @if (errou) {
           <p class="erro">❌ Resposta errada! Tente novamente.</p>
         }
-        <button class="confirmar" (click)="confirmarResposta()" [disabled]="opcaoSelecionada === null">
+        <button class="confirmar" (click)="confirmarResposta()" [disabled]="opcaoSelecionada === null || quizConcluido">
           Confirmar
         </button>
       </div>

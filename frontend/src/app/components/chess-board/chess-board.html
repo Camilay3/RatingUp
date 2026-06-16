@@ -5,7 +5,10 @@
     <h2 class="titulo">Historico de jogadas</h2>
     @for (move of moves; track $index){
       <div class="jogadas">{{ move.from }} -> {{ move.to }}</div>
-      <div class="jogadas">{{ move.extra }}</div>
+      <div class="jogadas" [class.jogadas-concluido]="move.status === 'COMPLETED'">
+        <strong>{{ move.extra?.split('.')?.[0] }}.</strong>
+        {{ move.extra?.split('.')?.[1] }}
+      </div>
     }
   </div>
 </section>
