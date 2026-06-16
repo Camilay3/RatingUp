@@ -11,24 +11,23 @@
 
   .jogadas {
   color: black;
-  background-color: #ffffff;   // ← fundo branco
+  background-color: #ffffff;  
   border: 1px solid #c4a882;
   border-radius: 10px;
   padding: 6px 14px;
-  margin: 4px 8px 4px auto;   // ← auto na esquerda empurra para direita
+  margin: 4px 8px 4px auto; 
   font-size: 0.85rem;
   position: relative;
   width: fit-content;
 
-  // rabinho do lado direito
   &::before {
     content: '';
     position: absolute;
-    right: -8px;               // ← muda para direita
+    right: -8px;               
     left: unset;
     top: 50%;
     transform: translateY(-50%);
-    border-width: 6px 0 6px 8px;  // ← inverte
+    border-width: 6px 0 6px 8px; 
     border-style: solid;
     border-color: transparent transparent transparent #c4a882;
   }
@@ -36,11 +35,11 @@
   &::after {
     content: '';
     position: absolute;
-    right: -6px;               // ← muda para direita
+    right: -6px;              
     left: unset;
     top: 50%;
     transform: translateY(-50%);
-    border-width: 5px 0 5px 7px;  // ← inverte
+    border-width: 5px 0 5px 7px; 
     border-style: solid;
     border-color: transparent transparent transparent #ffffff;
   }
@@ -71,14 +70,14 @@
 }
 
 .jogadas-concluido {
-  color: var(--primary);  // ← cor primária do projeto (o marrom que aparece nos títulos)
+  color: var(--primary);  
   font-weight: bold;
 }
 
 .jogadas-sistema {
   background-color: #e0e0e0 !important;
-  width: fit-content !important;        // ← ajusta ao conteúdo
-  margin: 4px auto 4px 8px !important; // ← 14px só para o rabinho não vazar
+  width: fit-content !important;       
+  margin: 4px auto 4px 8px !important;
 
   &::before {
     right: unset !important;
