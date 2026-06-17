@@ -68,6 +68,8 @@ public class UserService implements UserDetailsService {
         User user = UserMapper.toEntity(dto);
         user.setRole(Roles.USER);
 
+        checkRepeatedCharactersPassword(user.getPassword());
+
         String senhaCriptografada = passwordEncoder.encode(user.getPassword());
         user.setPassword(senhaCriptografada);
 
@@ -126,7 +128,7 @@ public class UserService implements UserDetailsService {
                     "A nova senha não pode ser igual à antiga"
             );
         }
-
+        checkRepeatedCharactersPassword(dto.newPassword());
         user.setPassword(passwordEncoder.encode(dto.newPassword()));
         userRepository.save(user);
     }
@@ -188,10 +190,28 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
         }
 
+        checkRepeatedCharactersPassword(dto.newPassword());
+
         user.setPassword(passwordEncoder.encode(dto.newPassword()));
         user.setResetToken(null);
         user.setResetTokenExpiry(null);
         userRepository.save(user);
+    }
+
+    private void checkRepeatedCharactersPassword(String senha){
+        int contadorSenha = 0;
+        for(int i = 0;i <= senha.length()-2; i++){
+            if(senha.charAt(i) == senha.charAt(i+1)){
+                contadorSenha++;
+
+                if(contadorSenha >= 7){
+                    throw new RuntimeException("Erro: A senha está com 8 ou mais caracteres repetidos/consecutivos!");
+                }
+            }
+            else{
+                contadorSenha = 0;
+            }
+        }
     }
 
     @Override
