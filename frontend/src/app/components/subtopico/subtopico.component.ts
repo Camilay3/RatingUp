@@ -6,12 +6,13 @@ import { BookService } from '../../services/book/book.service';
 import { ISubtopicoContent } from '../../interfaces/book/IBook';
 import { ChessBoard } from '../chess-board/chess-board';
 import { Quiz } from '../quiz/quiz';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-subtopico',
   templateUrl: './subtopico.component.html',
   styleUrls: ['./subtopico.component.scss'],
-  imports: [RouterLink, ChessBoard, Quiz]
+  imports: [RouterLink, ChessBoard, Quiz, MatIconModule]
 })
 export class SubtopicoComponent implements OnInit {
 	subtopicId: number;
@@ -36,6 +37,7 @@ export class SubtopicoComponent implements OnInit {
 		this.bookService.getSubtopicContent(this.subtopicId).subscribe({
 			next: (response) => {
 				this.subtopicoContent = response.data;
+				console.log(response.data);
 				this.cdr.detectChanges();
 			},
 			error: (e) => {
