@@ -1,0 +1,40 @@
+@if (loading) {
+  <div>Carregando pergunta...</div>
+}
+
+@if (!loading && pergunta) {
+  <div class="quiz-card">
+    <div class="quiz-header">
+      <h2>Responda para concluir a fase !!!</h2>
+      <p>{{ pergunta.questionText }}</p>
+    </div>
+
+    <div class="quiz-corpo">
+  <div class="opcoes">
+    @for (opcao of pergunta.options; track opcao.id) {
+    <label
+    [class.selecionada]="opcaoSelecionada === opcao.id"
+    [class.disabled]="quizConcluido"
+    >
+     <input
+      type="radio"
+      [name]="'pergunta-' + pergunta.subtopicId"
+      [value]="opcao.id"
+      [disabled]="quizConcluido"
+      (change)="selecionarOpcao(opcao.id)"
+     />
+     {{ opcao.optionText }}
+   </label>
+  }
+  </div>
+
+  @if (errou) {
+    <p class="erro">❌ Resposta errada! Tente novamente.</p>
+  }
+
+  <button class="confirmar" (click)="confirmarResposta()" [disabled]="opcaoSelecionada === null || quizConcluido">
+    Confirmar
+  </button>
+</div>
+  </div>
+}

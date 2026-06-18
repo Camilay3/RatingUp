@@ -35,4 +35,10 @@ public class Subtopics {
 
     @Enumerated(EnumType.STRING)
     private SubtopicType type;
+
+    @Column(name = "opponent_moves")
+    private String opponentMoves;
+
+    @Column(columnDefinition = "TEXT")
+    private String practiceExplanation;
 }

@@ -19,4 +19,11 @@ export class BookService {
 			subtopicId
 		});
 	}
+
+	getSubtopicType(subtopicId: number){
+     return this.http.post<{ subtopicId: number, type: 'BOARD' | 'MULTIPLE_CHOICE' }>(
+     `${this.apiUrl}/move/session/type`,
+     { subtopicId }
+    );
+   }
 }

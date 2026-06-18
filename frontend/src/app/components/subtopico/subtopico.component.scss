@@ -66,7 +66,7 @@
 
 	.tabuleiro{
 		display: flex;
-		justify-content: flex-start;
+		justify-content: center;
 		width: 100%;
 
 		margin-top: 20px;
@@ -104,6 +104,44 @@ header {
 	}
 }
 
+.tabuleiro {
+  app-quiz {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 :host ::ng-deep .teoria div p {
 	margin-bottom: 1rem;
+}
+
+.div-content{
+	margin-top: 20px;
+	margin-bottom: 20px;
+
+    .dica{
+	 color: var(--primary);
+	 text-indent: 2em;
+	 text-align: justify;
+	 font-size: medium;
+    }
+
+	.dica-label {
+     margin-right: 6px;
+    }
+
+	.dica-label .material-icons {
+     font-family: 'Material Icons' !important;
+     color: var(--accent);
+     vertical-align: bottom;
+     font-size: 1.2rem;
+	 margin-right: 4px;
+    }
 }

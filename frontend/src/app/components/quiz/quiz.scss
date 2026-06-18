@@ -1,0 +1,112 @@
+.quiz-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quiz-header {
+  text-align: center;
+
+  h2 {
+    font-size: 1.2rem;
+    margin: 0 0 16px 0;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #555;
+    margin: 0;
+  }
+}
+
+.quiz-corpo {
+  display: flex;
+  flex-direction: column; 
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  width: 100%;
+
+  label {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    background: white;
+    text-align: left;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    transition: all 0.2s;
+    box-sizing: border-box;
+    display: block;
+    color: #333; // ← texto visível
+
+    input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    &:hover:not(.disabled) {
+      border-color: #999;
+      background: #f5f5f5;
+    }
+
+    &.selecionada {
+      border-color: #4caf50;
+      background: #e8f5e9;
+      font-weight: bold;
+      color: #2e7d32; // ← texto verde escuro quando selecionada
+    }
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.confirmar {
+  align-self: stretch; 
+  padding: 12px 14px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-top: 20px !important; 
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+.opcoes button:disabled,
+.confirmar:disabled {
+  pointer-events: none !important;
+  opacity: 0.6;
+  cursor: not-allowed !important;
+}
+
+.erro {
+  color: red;
+  font-size: 0.75rem;
+  margin: 0;
+}
