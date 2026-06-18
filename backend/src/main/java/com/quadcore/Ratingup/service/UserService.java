@@ -68,6 +68,18 @@ public class UserService implements UserDetailsService {
         User user = UserMapper.toEntity(dto);
         user.setRole(Roles.USER);
 
+        int contadorSenha = 0;
+        for(int i = 0;i < user.getPassword().length()-1; i++){
+            if(user.getPassword().charAt(i) - user.getPassword().charAt(i+1) == -1){
+                contadorSenha++;
+            }
+            else{
+                contadorSenha = 0;
+            }
+        }
+        if(contadorSenha >= 8){
+            throw new RuntimeException("Erro: A senha está com 8 ou mais caracteres consecutivos!");
+        }
         String senhaCriptografada = passwordEncoder.encode(user.getPassword());
         user.setPassword(senhaCriptografada);
 
@@ -163,7 +175,7 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public void PasswordRecoverRequest(String email){
+    public void passwordRecoverRequest(String email){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Nenhum usuário encontrado para esse email"));
 
@@ -175,6 +187,16 @@ public class UserService implements UserDetailsService {
 
         emailService.sendRecoverMail(user.getEmail(), token);
     }
+
+    public void validateResetToken(String token){
+        User user = userRepository.findByResetToken(token)
+                .orElseThrow(() -> new RuntimeException("Token inválido"));
+
+        if(user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Esse token está expirado");
+        }
+    }
+
     public void resetPassword(PasswordResetDTO dto){
         User user = userRepository.findByResetToken(dto.token())
                 .orElseThrow(() -> new RuntimeException("Token inválido"));

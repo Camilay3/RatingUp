@@ -58,9 +58,16 @@ public class AuthenticationController {
                 null));
     }
 
+
+    @PostMapping("/validate-token")
+    public ResponseEntity<Void> validateToken(@RequestParam String token){
+        userService.validateResetToken(token);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/recover-password")
     public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto){
-        userService.PasswordRecoverRequest(dto.email());
+        userService.passwordRecoverRequest(dto.email());
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
