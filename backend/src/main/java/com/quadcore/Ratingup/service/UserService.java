@@ -165,7 +165,7 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public void PasswordRecoverRequest(String email){
+    public void passwordRecoverRequest(String email){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Nenhum usuário encontrado para esse email"));
 
@@ -177,6 +177,16 @@ public class UserService implements UserDetailsService {
 
         emailService.sendRecoverMail(user.getEmail(), token);
     }
+
+    public void validateResetToken(String token){
+        User user = userRepository.findByResetToken(token)
+                .orElseThrow(() -> new RuntimeException("Token inválido"));
+
+        if(user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Esse token está expirado");
+        }
+    }
+
     public void resetPassword(PasswordResetDTO dto){
         User user = userRepository.findByResetToken(dto.token())
                 .orElseThrow(() -> new RuntimeException("Token inválido"));
