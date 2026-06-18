@@ -46,4 +46,5 @@ export interface ISubtopico extends IBasePage {
 
 export interface ISubtopicoContent extends ISubtopico, IResponse {
 	content: string
+	practiceExplanation: string | null;
 }

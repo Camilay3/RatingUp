@@ -12,6 +12,14 @@
 
 		<div class="pratica">
 			<h2>Vamos praticar?</h2>
+			@if(subtopicoContent?.practiceExplanation != null){
+			 <div class="div-content" >
+			   <span class="dica-label">
+                <span class="material-icons">lightbulb</span> <strong>Dica</strong>:
+               </span>
+			   <span class="dica" [innerHTML]="subtopicoContent?.practiceExplanation"></span>
+			 </div>
+		    }
 		</div>
 	</section>
 

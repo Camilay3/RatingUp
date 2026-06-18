@@ -5,21 +5,27 @@
 @if (!loading && pergunta) {
   <div class="quiz-card">
     <div class="quiz-header">
-      <h2>Responda antes de jogar!</h2>
+      <h2>Responda para concluir a fase !!!</h2>
       <p>{{ pergunta.questionText }}</p>
     </div>
 
     <div class="quiz-corpo">
   <div class="opcoes">
     @for (opcao of pergunta.options; track opcao.id) {
-      <button
-        (click)="selecionarOpcao(opcao.id)"
-        [class.selecionada]="opcaoSelecionada === opcao.id"
-        [disabled]="quizConcluido"
-      >
-        {{ opcao.optionText }}
-      </button>
-    }
+    <label
+    [class.selecionada]="opcaoSelecionada === opcao.id"
+    [class.disabled]="quizConcluido"
+    >
+     <input
+      type="radio"
+      [name]="'pergunta-' + pergunta.subtopicId"
+      [value]="opcao.id"
+      [disabled]="quizConcluido"
+      (change)="selecionarOpcao(opcao.id)"
+     />
+     {{ opcao.optionText }}
+   </label>
+  }
   </div>
 
   @if (errou) {
