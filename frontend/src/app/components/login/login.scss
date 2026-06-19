@@ -137,6 +137,20 @@
     }
   }
 
+  .esqueci-senha {  // 👈 adiciona essa classe no parágrafo do HTML
+    align-self: flex-start;
+    margin-left: 0;
+    color: var(--secondary);
+    cursor: pointer;
+    margin-top: -24px;
+    margin-bottom: 10px;
+    font-size: smaller;
+
+    &:hover{
+      color: var(--accent);
+    }
+  }
+
   p.registre{
     cursor: pointer;
     color: var(--secondary);
