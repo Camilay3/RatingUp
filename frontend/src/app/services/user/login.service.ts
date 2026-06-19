@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { IResponse } from '../../interfaces/IResponse';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -28,14 +30,18 @@ deleteAccount() {
 }
 
 
-recoverPassword(email: string) {
-  return this.http.post(`${this.apiUrl}/auth/recover-password`, { email });
+  recoverPassword(email: string): Observable<IResponse> {
+  return this.http.post<IResponse>(`${this.apiUrl}/auth/recover-password`, { email });
 }
 
-validateCode(code: string){}
+validateToken(token: string): Observable<IResponse> {
+  return this.http.post<IResponse>(`${this.apiUrl}/auth/validate-token`, null, {
+    params: { token }
+  });
+}
 
-resetPassword(data: any) {
-  return this.http.post(`${this.apiUrl}/auth/reset-password`, data);
+resetPassword(newPassword: string): Observable<IResponse> {
+  return this.http.post<IResponse>(`${this.apiUrl}/auth/reset-password`, { newPassword });
 }
 
 }
