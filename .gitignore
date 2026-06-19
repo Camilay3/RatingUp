@@ -27,3 +27,8 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# Testes
+tests/resources/variables.robot
+tests/venv/
+tests/results/
