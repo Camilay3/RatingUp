@@ -18,6 +18,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -178,31 +179,42 @@ public class UserService implements UserDetailsService {
         emailService.sendRecoverMail(user.getEmail(), token);
     }
 
-    public void validateResetToken(String token){
+    public ResponseCookie validateResetToken(String token){
         User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Token inválido"));
 
         if(user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Esse token está expirado");
         }
+
+        String jwt = tokenGenerator.gerarToken(user);
+
+        return ResponseCookie
+                .from("token",jwt)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(Duration.ofMinutes(10))
+                .build();
     }
 
-    public void resetPassword(PasswordResetDTO dto){
-        User user = userRepository.findByResetToken(dto.token())
-                .orElseThrow(() -> new RuntimeException("Token inválido"));
+    public void resetPassword(String newPassword){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
 
         if(user.getResetTokenExpiry().isBefore(LocalDateTime.now())){
             throw new RuntimeException("Esse token está expirado");
         }
 
         String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
-        if(!dto.newPassword().matches(regex)){
+        if(!newPassword.matches(regex)){
             throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
         }
 
-        checkRepeatedCharactersPassword(dto.newPassword());
+        checkRepeatedCharactersPassword(newPassword);
 
-        user.setPassword(passwordEncoder.encode(dto.newPassword()));
+        user.setPassword(passwordEncoder.encode(newPassword));
         user.setResetToken(null);
         user.setResetTokenExpiry(null);
         userRepository.save(user);
