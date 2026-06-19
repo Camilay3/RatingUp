@@ -60,8 +60,8 @@ public class AuthenticationController {
 
     @PostMapping("/validate-token")
     public ResponseEntity<Void> validateToken(@RequestParam String token){
-        userService.validateResetToken(token);
-        return ResponseEntity.ok().build();
+        ResponseCookie cookie = userService.validateResetToken(token);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }
 
     @PostMapping("/recover-password")
@@ -76,7 +76,7 @@ public class AuthenticationController {
 
     @PostMapping("/reset-password")
     public ResponseEntity<ApiResponse<?>> resetPassword(@RequestBody @Valid PasswordResetDTO dto){
-        userService.resetPassword(dto);
+        userService.resetPassword(dto.newPassword());
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
