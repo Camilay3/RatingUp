@@ -9,7 +9,7 @@ Login com credenciais válidas retorna 200
     ${body}=    Create Dictionary    email=${ADMIN_EMAIL}    password=${ADMIN_PASS}
     ${resp}=    POST On Session    api    /auth/login    json=${body}
     Should Be Equal As Strings    ${resp.status_code}    200
-    Should Be Equal As Strings    ${resp.json()['success']}    True
+    Should Be Equal As Strings    ${resp.json()['status']}    True
     Should Be Equal As Strings    ${resp.json()['message']}    Usuário realizou login com sucesso
 
 Login com senha errada retorna erro
@@ -33,4 +33,4 @@ Logout após login funciona
     Should Be Equal As Strings    ${resp_login.status_code}    200
     ${resp_logout}=    DELETE On Session    api    /auth/logout
     Should Be Equal As Strings    ${resp_logout.status_code}    200
-    Should Be Equal As Strings    ${resp_logout.json()['success']}    True
+    Should Be Equal As Strings    ${resp_logout.json()['status']}    True

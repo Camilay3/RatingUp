@@ -30,3 +30,5 @@ Thumbs.db
 
 # Testes
 tests/resources/variables.robot
+tests/venv/
+tests/results/
