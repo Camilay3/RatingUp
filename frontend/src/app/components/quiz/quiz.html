@@ -10,31 +10,38 @@
     </div>
 
     <div class="quiz-corpo">
-  <div class="opcoes">
-    @for (opcao of pergunta.options; track opcao.id) {
-    <label
-    [class.selecionada]="opcaoSelecionada === opcao.id"
-    [class.disabled]="quizConcluido"
-    >
-     <input
-      type="radio"
-      [name]="'pergunta-' + pergunta.subtopicId"
-      [value]="opcao.id"
-      [disabled]="quizConcluido"
-      (change)="selecionarOpcao(opcao.id)"
-     />
-     {{ opcao.optionText }}
-   </label>
-  }
-  </div>
+      <div class="opcoes">
+        @for (opcao of pergunta.options; track opcao.id) {
+          <label
+            [class.selecionada]="opcaoSelecionada === opcao.id && opcaoConfirmada === null"
+            [class.correta]="quizConcluido && opcaoConfirmada === opcao.id"
+            [class.incorreta]="errou && opcaoConfirmada === opcao.id"
+            [class.disabled]="quizConcluido || enviando"
+          >
+            <input
+              type="radio"
+              [name]="'pergunta-' + pergunta.subtopicId"
+              [value]="opcao.id"
+              [checked]="opcaoSelecionada === opcao.id"
+              [disabled]="quizConcluido || enviando"
+              (change)="selecionarOpcao(opcao.id)"
+            />
+            {{ opcao.optionText }}
+          </label>
+        }
+      </div>
 
-  @if (errou) {
-    <p class="erro">❌ Resposta errada! Tente novamente.</p>
-  }
+      @if (errou) {
+        <p class="erro">❌ Resposta errada! Tente novamente.</p>
+      }
 
-  <button class="confirmar" (click)="confirmarResposta()" [disabled]="opcaoSelecionada === null || quizConcluido">
-    Confirmar
-  </button>
-</div>
+      <button
+        class="confirmar"
+        (click)="confirmarResposta()"
+        [disabled]="opcaoSelecionada === null || quizConcluido || enviando"
+      >
+        Confirmar
+      </button>
+    </div>
   </div>
 }

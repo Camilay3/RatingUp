@@ -21,6 +21,8 @@ export class Quiz implements OnInit {
   errou = false;
   loading = true;
   quizConcluido = false;
+  opcaoConfirmada: number | null = null;
+  enviando = false;
 
   constructor(
     private quizService: QuizService,
@@ -42,14 +44,24 @@ export class Quiz implements OnInit {
   }
 
   selecionarOpcao(optionId: number) {
+    if (this.quizConcluido || this.enviando) return; // trava seleção se já acertou ou está enviando
+
     this.opcaoSelecionada = optionId;
+    this.errou = false;          // limpa feedback de erro ao trocar de opção
+    this.opcaoConfirmada = null;
   }
 
   confirmarResposta() {
-    if (this.opcaoSelecionada === null) return;
+    if (this.opcaoSelecionada === null || this.enviando) return;
+
+    this.enviando = true;
+    const opcaoEnviada = this.opcaoSelecionada;
 
     this.quizService.answerQuiz(this.subtopicId, this.opcaoSelecionada).subscribe({
       next: (res) => {
+        this.opcaoConfirmada = opcaoEnviada; 
+        this.enviando = false;
+
         if (res.correct) {
           this.errou = false;  // ← reseta o erro
           this.quizConcluido = true;
@@ -72,7 +84,25 @@ export class Quiz implements OnInit {
           this.opcaoSelecionada = null;
           this.cdr.detectChanges();
         }
+      },
+      error: (err) => {
+        console.error('erro ao confirmar resposta:', err);
+        this.enviando = false;
       }
     });
   }
+
+  getClasse(optionId: number): string {
+    if (this.quizConcluido && optionId === this.opcaoConfirmada) {
+      return 'correta';
+    }
+    if (this.errou && optionId === this.opcaoConfirmada) {
+      return 'incorreta';
+    }
+    if (this.opcaoSelecionada === optionId) {
+      return 'selecionada';
+    }
+    return '';
+  }
+
 }

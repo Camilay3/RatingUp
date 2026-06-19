@@ -67,10 +67,10 @@
     }
 
     &.selecionada {
-      border-color: #4caf50;
-      background: #e8f5e9;
+      border-color: var(--primary);
+      background: #e4b169;
       font-weight: bold;
-      color: #2e7d32; // ← texto verde escuro quando selecionada
+      color: var(--primary); // ← texto verde escuro quando selecionada
     }
 
     &.disabled {
@@ -78,6 +78,21 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
+
+    &.correta {
+      border-color: #2e7d32;
+      background: #4CAF50;
+      color: white;
+      font-weight: bold;
+    }
+
+    &.incorreta {
+      border-color: #c62828;
+      background: #ef5350;
+      color: white;
+      font-weight: bold;
+    }
+
   }
 }
 
