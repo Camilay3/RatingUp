@@ -1,0 +1,71 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  robot-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Cria o .env a partir dos secrets
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+
+      - name: Sobe os containers
+        run: docker compose up --build -d
+
+      - name: Aguarda backend ficar saudável
+        run: |
+          echo "Aguardando containers..."
+          for i in $(seq 1 30); do
+            STATUS=$(docker inspect --format='{{.State.Health.Status}}' ratingup_back 2>/dev/null || echo "starting")
+            echo "Tentativa $i/30 - status: $STATUS"
+            if [ "$STATUS" = "healthy" ]; then
+              echo "Backend está pronto!"
+              break
+            fi
+            sleep 5
+          done
+
+      - name: Mostra logs se algo falhar (debug)
+        if: failure()
+        run: docker compose logs
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instala dependências do Robot Framework
+        run: pip install -r tests/requirements.txt
+
+      - name: Cria variables.robot a partir dos secrets
+        run: |
+          cat > tests/resources/variables.robot << EOF
+          *** Variables ***
+          \${BASE_URL}       http://localhost/api
+          \${ADMIN_EMAIL}    ${{ secrets.TEST_ADMIN_EMAIL }}
+          \${ADMIN_PASS}     ${{ secrets.TEST_ADMIN_PASS }}
+          EOF
+
+      - name: Roda os testes Robot Framework
+        run: robot --outputdir tests/results tests/api/
+
+      - name: Salva relatório como artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-report
+          path: tests/results/
+          retention-days: 14
+
+      - name: Para os containers
+        if: always()
+        run: docker compose down -v
