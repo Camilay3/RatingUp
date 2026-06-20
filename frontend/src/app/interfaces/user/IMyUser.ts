@@ -9,6 +9,7 @@ export interface IMyUser extends IResponse {
 		telefone: string
 		role: string
 		creationDate: string
+		avatarUrl: string | null
 	}
 }
 

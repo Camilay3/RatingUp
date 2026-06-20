@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Escolher Avatar</h2>
+
+<mat-dialog-content class="avatar-dialog-content">
+	@if (isLoading) {
+		<div class="state-message">
+			<i class="fa-solid fa-spinner fa-spin"></i>
+			<span>Carregando avatares...</span>
+		</div>
+	} @else if (loadError) {
+		<div class="state-message">
+			<span>Não foi possível carregar os avatares.</span>
+			<button class="small outline" (click)="carregarAvatares()">Tentar novamente</button>
+		</div>
+	} @else if (avatars.length === 0) {
+		<div class="state-message">
+			<span>Nenhum avatar disponível no momento.</span>
+		</div>
+	} @else {
+		<div class="avatar-grid-wrapper">
+			<div class="avatar-grid">
+				@for (avatar of avatars; track avatar.imageName) {
+					<div
+						class="avatar-item"
+						[class.selecionando]="isSelecting"
+						[class.selected]="selectedImageName === avatar.imageName"
+						(click)="selecionarAvatar(avatar)">
+						<img [src]="imageUrl(avatar)" [alt]="avatar.imageName" draggable="false">
+
+						@if (isSelecting && selectedImageName === avatar.imageName) {
+							<div class="avatar-loading">
+								<i class="fa-solid fa-spinner fa-spin"></i>
+							</div>
+						}
+					</div>
+				}
+			</div>
+		</div>
+	}
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close [disabled]="isSelecting">Cancelar</button>
+</mat-dialog-actions>
