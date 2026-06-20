@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict bOMrjbjkThMbwkZrlzfzZOlC8hvMGyifG23DheWggoDGCOLzaAi5HsB1juAf7zj
+\restrict SFRM7pHYV9N3ihwThOW2snfUiahgR5Sngoxf3cCqzgntuBpFqKTpLBzpg8KdNeU
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -82,6 +82,9 @@ COPY public.images (id, object_id, image_name, bucket_name) FROM stdin;
 23	92241a3c-0e91-42c6-a22a-a3de0474da63	Descoberto.png	book
 16	cd9c0cf9-1d86-4d83-9ddf-c7bf834c2adb	Espeto.png	book
 59	4f4d88ee-1570-48a4-9e9e-a270d3aad066	Padroes-basicos-de-mate.png	book
+60	20ce6052-ffd3-462b-9b71-0184beeb9e2b	UserDefault.png	avatars
+61	f439a325-59f2-431d-812c-34d2adc25050	UserKing.png	avatars
+62	c4000f59-4949-446e-8f01-468f8f9a89bd	UserQueen.png	avatars
 \.
 
 
@@ -89,12 +92,12 @@ COPY public.images (id, object_id, image_name, bucket_name) FROM stdin;
 -- Name: images_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.images_id_seq', 59, true);
+SELECT pg_catalog.setval('public.images_id_seq', 62, true);
 
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict bOMrjbjkThMbwkZrlzfzZOlC8hvMGyifG23DheWggoDGCOLzaAi5HsB1juAf7zj
+\unrestrict SFRM7pHYV9N3ihwThOW2snfUiahgR5Sngoxf3cCqzgntuBpFqKTpLBzpg8KdNeU
 

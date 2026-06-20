@@ -2,7 +2,12 @@
 	<div class="hole-left"></div>
 	<div class="hole-right"></div>
 
-	<img class="foto" src="/userDefault.png" alt="Foto de perfil">
+	<div class="avatar-wrapper" (click)="abrirAvatarModal()" title="Alterar avatar">
+		<img class="foto" [src]="avatarSrc" alt="Foto de perfil">
+		<div class="avatar-overlay">
+			<i class="fa-solid fa-pencil"></i>
+		</div>
+	</div>
 
 	<div class="infos">
 		<div class="header">

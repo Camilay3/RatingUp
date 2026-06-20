@@ -24,12 +24,12 @@ public class AvatarController {
     @GetMapping("/avatar-list")
     public ResponseEntity<ApiResponse<List<AvatarResponseDTO>>> showAvatarList(){
         List<AvatarResponseDTO> list = avatarService.listAvaliableImages();
-        return ResponseEntity.ok(new ApiResponse<>(true, "Lista de usuários recebida", list));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Avatares encontrados com sucesso", list));
     }
 
     @PatchMapping("/update")
     public ResponseEntity<ApiResponse<?>> updateAvatar(@RequestBody @Valid AvatarSelectionDTO dto){
         avatarService.selectAvatar(dto.imageName());
-        return ResponseEntity.ok(new ApiResponse<>(true, "Imagem escolhida com sucesso", dto));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Imagem atualizada com sucesso", dto));
     }
 }

@@ -5,6 +5,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditProfileComponent } from '../modais/edit-profile/edit-profile.component';
 import { Router, RouterLink } from '@angular/router';
 import { ChangePasswordComponent } from '../modais/change-password/change-password.component';
+import { AvatarSelectorComponent } from '../modais/avatar-selector/avatar-selector.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
 	selector: 'app-profile',
@@ -63,6 +65,32 @@ export class ProfileComponent implements OnInit {
 				})
 			}
 		});
+	}
+
+	abrirAvatarModal() {
+		const dialogRef = this.dialog.open(AvatarSelectorComponent, {
+			width: 'auto',
+			panelClass: 'custom-edit-dialog',
+			disableClose: true,
+			data: {}
+		})
+
+		dialogRef.afterClosed().subscribe(result => {
+			if (result) {
+				this.authService.me(true).subscribe({
+					next: (resp) => {
+						this.user = resp.data;
+						this.cdr.detectChanges();
+					}
+				})
+			}
+		});
+	}
+
+	get avatarSrc(): string {
+		return this.user?.avatarUrl
+			? `${environment.apiUrl}${this.user.avatarUrl}`
+			: '/userDefault.png';
 	}
 
 	solicitarSenha() {
