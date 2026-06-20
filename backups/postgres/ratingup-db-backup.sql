@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict p4j8en9vR9iFhuS2cTWSF5dlmT34h3AGvA5GQNPmeErLHNYh6hqXzUjM7rWusPm
+\restrict bOMrjbjkThMbwkZrlzfzZOlC8hvMGyifG23DheWggoDGCOLzaAi5HsB1juAf7zj
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -25,7 +25,6 @@ SET row_security = off;
 
 COPY public.images (id, object_id, image_name, bucket_name) FROM stdin;
 1	08aecb5b-4ca6-4701-b8a7-42be3979e426	Ataque-ao-rei.png	book
-2	52645203-f2a1-47b1-9d47-2204f8c9b968	Ataque-descoberto.png	book
 3	f8caab54-78f1-4a81-9c2d-4f545ebac44e	Ataque-duplo.png	book
 4	37fed185-8075-4b7d-b3af-195eb0fa2f32	CCT-Checks-Captures-Threats.png	book
 5	1c39e819-f4b4-47e9-8b53-04aad1d28ef5	Captura-de-pecas.png	book
@@ -82,6 +81,7 @@ COPY public.images (id, object_id, image_name, bucket_name) FROM stdin;
 58	a7cd0469-8f1a-4e58-be85-d10d5804cf2b	default.png	book
 23	92241a3c-0e91-42c6-a22a-a3de0474da63	Descoberto.png	book
 16	cd9c0cf9-1d86-4d83-9ddf-c7bf834c2adb	Espeto.png	book
+59	4f4d88ee-1570-48a4-9e9e-a270d3aad066	Padroes-basicos-de-mate.png	book
 \.
 
 
@@ -89,12 +89,12 @@ COPY public.images (id, object_id, image_name, bucket_name) FROM stdin;
 -- Name: images_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.images_id_seq', 58, true);
+SELECT pg_catalog.setval('public.images_id_seq', 59, true);
 
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict p4j8en9vR9iFhuS2cTWSF5dlmT34h3AGvA5GQNPmeErLHNYh6hqXzUjM7rWusPm
+\unrestrict bOMrjbjkThMbwkZrlzfzZOlC8hvMGyifG23DheWggoDGCOLzaAi5HsB1juAf7zj
 
