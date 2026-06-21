@@ -21,6 +21,18 @@
   position: relative;
   width: fit-content;
 
+	.fa-xmark {
+		color: var(--alert);
+	}
+
+	.fa-arrow-right{
+		font-size: 0.75rem;
+	}
+
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+
   &::before {
     content: '';
     position: absolute;
@@ -54,8 +66,12 @@
     background-color: bisque;
     margin-left: 20px !important;
 
+	overflow-y: scroll;
+	aspect-ratio: 1 / 1;
+	padding-bottom: 1rem;
+
     .titulo{
-      margin: 24px 0;
+      margin: 24px 8px;
       color: #746850;
       font-weight: 900;
       text-align: center;

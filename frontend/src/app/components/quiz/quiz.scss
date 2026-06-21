@@ -52,7 +52,7 @@
     transition: all 0.2s;
     box-sizing: border-box;
     display: block;
-    color: #333; // ← texto visível
+    color: #333;
 
     input[type="radio"] {
       position: absolute;
@@ -70,7 +70,7 @@
       border-color: var(--primary);
       background: var(--secondary);
       font-weight: bold;
-      color: var(--primary); // ← texto verde escuro quando selecionada
+      color: var(--primary);
     }
 
     &.disabled {
