@@ -40,49 +40,14 @@ Setor                   | Tecnologia
 ----------------------- | -----------------
 Front-end               | <img src="https://img.shields.io/badge/-Angular-C3002F?logo=angular&logoColor=white&style=for-the-badge" alt="Logo do Angular">
 Back-end                | <img src="https://img.shields.io/badge/-Spring-6cb33e?logo=spring&logoColor=white&style=for-the-badge" alt="Logo do Java">
-Gestão SCRUM do projeto | <img src="https://img.shields.io/badge/clickup-BF6B99?style=for-the-badge&logo=clickup&logoColor=white" height="25"/>
-Design                  | <img src="https://img.shields.io/badge/figma-0078D6?style=for-the-badge&logo=figma&logoColor=white" height="25"/>
+Infraestrutura          | <img src="https://img.shields.io/badge/docker-1d83ed?style=for-the-badge&logo=docker&logoColor=white"/><img src="https://img.shields.io/badge/-Nginx-009638?logo=nginx&logoColor=white&style=for-the-badge" alt="Logo do Nginx">
+Gestão SCRUM do projeto | <img src="https://img.shields.io/badge/clickup-BF6B99?style=for-the-badge&logo=clickup&logoColor=white"/>
+Design                  | <img src="https://img.shields.io/badge/figma-0078D6?style=for-the-badge&logo=figma&logoColor=white"/>
 
 </div>
 
 <br><br>
 
-<!-- <details>
-<summary>
-  
-  ## Clique para ver o mapa do nosso site | 🗺
-  
-</summary>
-
-<div align="center">
-  
-  ## Login | 🔒
-  <img src="./website_screens/login_page.png">
-
-  ---
-
-  <br>
-  
-  ## Register | 📑
-  <img src="./website_screens/register_page.png">
-
-  ---
-
-  <br>
-  
-  ## Home | 🏠
-  <img src="./website_screens/home_page.png">
-
-  ---
-
-  <br>
-  
-  ## Profile | 👤
-  <img src="./website_screens/profile_page.png">
-  
-</div>
-
-</details> -->
 
 # Como executar | 💻
 ```bash
@@ -92,20 +57,16 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
   # Navegar até a pasta
   $ cd RatingUp
 
-  # Caso for adicionar uma nova imagem
-  # Antes de inicializar a aplicação
-  # Adicione a imagem na pasta /assets
-  # E dentro da subpasta /book ou /avatars
-  # /book se for uma imagem do livro
-  # /avatars se for uma imagem de avatar
-  # Após inicializar a aplicação
-  # Delete todas as imagens da pasta
   # Iniciar a aplicação (Requisitos: Docker)
   $ docker compose up --build
 
   # Acessar
   http://localhost/
+
+  # Acessar o swagger
+  http://localhost/api/swagger-ui/index.html
 ```
+> Observação: Caso for adicionar uma nova imagem, antes de inicializar a aplicação adicione ela na pasta /assets e dentro da subpasta /book (se for uma imagem do livro) ou /avatars (se for uma imagem de avatar). Após inicializar a aplicação delete todas as imagens da pasta.
 
 <br>
 
