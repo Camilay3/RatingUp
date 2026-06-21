@@ -1,20 +1,11 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthService } from './services/user/auth.service';
-import { LoaderComponent } from './components/loader/loader.component';
+import { TransitionOverlayComponent } from './components/transition-overlay/transition-overlay.component';
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet, LoaderComponent],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+	selector: 'app-root',
+	templateUrl: './app.html',
+	styleUrls: ['./app.scss'],
+	imports: [RouterOutlet, TransitionOverlayComponent],
 })
-export class App implements OnInit {
-	constructor(private readonly authService: AuthService) {}
-
-	isLoading: boolean = true;
-	@HostListener('window:load')
-	onLoad() { this.isLoading = false; }
-
-	ngOnInit() { this.authService.me().subscribe({ error: () => {} }); }
-}
+export class App {}

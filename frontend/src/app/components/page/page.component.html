@@ -22,8 +22,18 @@
 				<span>∾</span><p>{{ sub.title }}</p><span>∾</span>
 			</div>
 		</div>
-		<img draggable="false" loading="lazy" [src]="apiUrl + sub.subtopicImageUrl" [alt]="'Img do subtópico' + sub.displayOrder" (error)="onImageError($event)">
-		<button (click)="$event.stopPropagation(); acessarSubtopico(sub.id)">Acessar</button>
+
+		<img
+			class="subtopico-img"
+			draggable="false"
+			loading="lazy"
+			[src]="apiUrl + sub.subtopicImageUrl"
+			[alt]="'Img do subtópico' + sub.displayOrder"
+			(error)="onImageError($event)"
+			crossorigin="anonymous"
+		>
+
+		<button (click)="acessarSubtopico(sub.id, $event)">Acessar</button>
 	} @else if (asType(page(), 'home'); as home) {
 		@if (home.isFirstHome) {
 			<div class="header">

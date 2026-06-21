@@ -1,0 +1,93 @@
+:host {
+    display: contents;
+}
+
+$duration-zoom:  520ms;                                   
+$duration-bg:    480ms;
+$duration-blur:  480ms;
+$ease-zoom:      cubic-bezier(0.22, 0.61, 0.36, 1);       
+$ease-bg:        cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    contain: strict;   
+
+    visibility: hidden;
+    opacity: 0;
+
+    &.active {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: all;  
+    }
+}
+
+.bg-layer {
+    position: absolute;
+    inset: 0;
+    background-color: var(--dominant-color);
+    will-change: background-color, filter;
+
+    &.animating {
+        animation:
+        bgColorShift $duration-bg $ease-bg forwards,
+        bgBlur       $duration-blur $ease-bg 200ms forwards;
+    }
+}
+
+.img-clone {
+    position: absolute;
+    object-fit: cover;
+    border-radius: 4px;             
+    border: 8px ridge var(--primary-color);
+    will-change: transform, opacity;
+    transform-origin: center center;
+
+    opacity: 0;
+
+    &.animating {
+        animation: imgZoomFade $duration-zoom $ease-zoom forwards;
+    }
+}
+
+@keyframes bgColorShift {
+    from { background-color: var(--dominant-color); }
+    to   { background-color: var(--primary-color);  }
+}
+
+@keyframes bgBlur {
+    0%   { filter: blur(0px);   }
+    40%  { filter: blur(18px);  }
+    100% { filter: blur(0px);   }
+}
+
+@keyframes imgZoomFade {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    25% {
+        opacity: 0.85;
+    }
+    100% {
+        opacity: 0;
+        transform:
+        translate(
+            calc(50vw - var(--img-left, 0px) - var(--img-width, 300px) / 2),
+            calc(50vh - var(--img-top, 0px)  - var(--img-height, 200px) / 2)
+        )
+        scale(4);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bg-layer.animating {
+        animation: bgColorShift 200ms linear forwards;
+    }
+    .img-clone.animating {
+        animation: imgZoomFade 200ms linear forwards;
+    }
+}
