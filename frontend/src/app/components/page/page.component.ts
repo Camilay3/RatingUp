@@ -1,10 +1,20 @@
 import { AuthService } from '../../services/user/auth.service';
-import { Component, computed, input, output, ViewChild, ElementRef, HostListener } from '@angular/core';
+import {
+  Component,
+  computed,
+  input,
+  output,
+  ViewChild,
+  ElementRef,
+  HostListener,
+  inject,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { IPage, ISheet, ISubtopico, PageData } from '../../interfaces/book/IBook';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../environments/environment';
+import { TransitionService } from '../../services/transition/transition.service';
 
 @Component({
   selector: 'app-page',
@@ -13,146 +23,165 @@ import { environment } from '../../../environments/environment';
   imports: [MatTooltipModule],
 })
 export class PageComponent {
-	readonly apiUrl = environment.apiUrl;
-	page = input<PageData | IPage>();
-	side = input<'frente' | 'verso'>();
-	isWaiting = output<boolean>();
-	navigate = output<{ qnt?: number; next?: boolean }>();
-	paginaAtual = input<number>(0);
+  readonly apiUrl = environment.apiUrl;
+  page = input<PageData | IPage>();
+  side = input<'frente' | 'verso'>();
+  isWaiting = output<boolean>();
+  navigate = output<{ qnt?: number; next?: boolean }>();
+  paginaAtual = input<number>(0);
 
-	@ViewChild('pageRoot', { static: true }) pageRoot!: ElementRef<HTMLElement>;
-	private isHovered = false;
-	onHover(v: boolean) {
-		this.isHovered = v;
-	}
+  @ViewChild('pageRoot', { static: true }) pageRoot!: ElementRef<HTMLElement>;
+  private isHovered = false;
 
-	constructor(
-		private readonly router: Router,
-		private readonly authService: AuthService,
-		private readonly snackBar : MatSnackBar,
-	) {}
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly transitionService = inject(TransitionService);
 
-	private isSubtopicoBlocked(item: PageData | undefined): boolean {
-		const valid = (item?.type === 'subtópico' && item.isBlocked) ?? false;
-		if (valid) this.isWaiting.emit(valid);
-		return valid;
-	}
-	pageIsBlocked = computed(() => this.isSubtopicoBlocked(this.page()));
+  onHover(v: boolean) {
+    this.isHovered = v;
+  }
 
-	asType<T extends PageData['type']>( page: PageData | undefined, type: T): Extract<PageData, { type: T }> | undefined {
-		return page?.type === type ? page as Extract<PageData, { type: T }> : undefined;
-	}
+  private isSubtopicoBlocked(item: PageData | undefined): boolean {
+    const valid = (item?.type === 'subtópico' && item.isBlocked) ?? false;
+    if (valid) this.isWaiting.emit(valid);
+    return valid;
+  }
+  pageIsBlocked = computed(() => this.isSubtopicoBlocked(this.page()));
 
-	isSubtopico(page: PageData): page is ISubtopico {
-		return page.type === 'subtópico';
-	}
+  asType<T extends PageData['type']>(
+    page: PageData | undefined,
+    type: T
+  ): Extract<PageData, { type: T }> | undefined {
+    return page?.type === type ? (page as Extract<PageData, { type: T }>) : undefined;
+  }
 
-	setIconList(page: any) {
-		if (page.isBlocked) return "fa-solid fa-lock";
-		if (page.lockOpen) return "fa-solid fa-lock-open";
-		return "fa-solid fa-star";
-	}
+  isSubtopico(page: PageData): page is ISubtopico {
+    return page.type === 'subtópico';
+  }
 
-	acessarSubtopico(subtopicoId: number) {
-		this.router.navigate(['/subtopico'], {
-            state: { subtopicoId }
-        });
-	}
+  setIconList(page: any) {
+    if (page.isBlocked) return 'fa-solid fa-lock';
+    if (page.lockOpen) return 'fa-solid fa-lock-open';
+    return 'fa-solid fa-star';
+  }
 
-	getPages(item: ISheet, outerIndex: number) {
-		return [
-			{ page: item.front, offset: 1, uid: `${outerIndex}-1` },
-			{ page: item.verse, offset: 2, uid: `${outerIndex}-2` },
-		];
-	}
+  async acessarSubtopico(subtopicoId: number, event: MouseEvent): Promise<void> {
+    event.stopPropagation();
 
-	multiplasPaginas(qnt: number) {
-		this.navigate.emit({ qnt });
-	}
+    const cardEl = (event.currentTarget as HTMLElement).closest('.page') as HTMLElement;
+    const imgEl = cardEl?.querySelector<HTMLImageElement>('img.subtopico-img');
 
-	//
-	onImageError(event: Event) {
-		(event.target as HTMLImageElement).src = '/subtopicos/default.png';
-	}
+    if (!imgEl || !imgEl.complete || imgEl.naturalWidth === 0) {
+      this.router.navigate(['/subtopico'], { state: { subtopicoId } });
+      return;
+    }
 
-	onCopy(event: ClipboardEvent) {
-		const sel = window.getSelection();
-		if (!sel || sel.rangeCount === 0) return;
-		const selRange = sel.getRangeAt(0);
+    const rect = imgEl.getBoundingClientRect();
 
-		const pageRange = document.createRange();
-		pageRange.selectNodeContents(this.pageRoot.nativeElement);
-		const intersection = document.createRange();
+    const overlayEvent = new CustomEvent('transition:prepare', {
+      detail: { subtopicoId },
+      bubbles: true,
+    });
+    document.dispatchEvent(overlayEvent);
 
-		if (selRange.compareBoundaryPoints(Range.START_TO_START, pageRange) < 0) {
-			intersection.setStart(pageRange.startContainer, pageRange.startOffset);
-		} else {
-			intersection.setStart(selRange.startContainer, selRange.startOffset);
-		}
+    await this.transitionService.startTransition(imgEl, rect);
+  }
 
-		if (selRange.compareBoundaryPoints(Range.END_TO_END, pageRange) > 0) {
-			intersection.setEnd(pageRange.endContainer, pageRange.endOffset);
-		} else {
-			intersection.setEnd(selRange.endContainer, selRange.endOffset);
-		}
+  getPages(item: ISheet, outerIndex: number) {
+    return [
+      { page: item.front, offset: 1, uid: `${outerIndex}-1` },
+      { page: item.verse, offset: 2, uid: `${outerIndex}-2` },
+    ];
+  }
 
-		if (intersection.collapsed) return;
-		const container = document.createElement('div');
-		container.appendChild(intersection.cloneContents());
-		container.querySelectorAll('img, picture, svg').forEach(n => n.remove());
+  multiplasPaginas(qnt: number) {
+    this.navigate.emit({ qnt });
+  }
 
-		const html = container.innerHTML;
-		const text = container.textContent || '';
+  onImageError(event: Event) {
+    (event.target as HTMLImageElement).src = '/subtopicos/default.png';
+  }
 
-		event.preventDefault();
-		if (event.clipboardData) {
-			event.clipboardData.setData('text/plain', text);
-			event.clipboardData.setData('text/html', html);
-		} else if ((window as any).clipboardData) {
-			(window as any).clipboardData.setData('Text', text);
-		}
-	}
+  onCopy(event: ClipboardEvent) {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const selRange = sel.getRangeAt(0);
 
-	@HostListener('document:keydown', ['$event'])
-	handleKeydown(e: KeyboardEvent) {
-		if (!((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a')) return;
-		if (!this.pageRoot) return;
+    const pageRange = document.createRange();
+    pageRange.selectNodeContents(this.pageRoot.nativeElement);
+    const intersection = document.createRange();
 
-		const active = document.activeElement;
-		let shouldSelect = false;
+    if (selRange.compareBoundaryPoints(Range.START_TO_START, pageRange) < 0) {
+      intersection.setStart(pageRange.startContainer, pageRange.startOffset);
+    } else {
+      intersection.setStart(selRange.startContainer, selRange.startOffset);
+    }
 
-		if (active && this.pageRoot.nativeElement.contains(active)) shouldSelect = true;
-		if (this.isHovered) shouldSelect = true;
+    if (selRange.compareBoundaryPoints(Range.END_TO_END, pageRange) > 0) {
+      intersection.setEnd(pageRange.endContainer, pageRange.endOffset);
+    } else {
+      intersection.setEnd(selRange.endContainer, selRange.endOffset);
+    }
 
-		try {
-			const sel = window.getSelection();
-			if (sel && sel.rangeCount > 0) {
-				const r = sel.getRangeAt(0);
-				if (r && !r.collapsed) {
-					if (r.intersectsNode && r.intersectsNode(this.pageRoot.nativeElement)) shouldSelect = true;
-				}
-			}
-		} catch {}
+    if (intersection.collapsed) return;
+    const container = document.createElement('div');
+    container.appendChild(intersection.cloneContents());
+    container.querySelectorAll('img, picture, svg').forEach((n) => n.remove());
 
-		if (!shouldSelect) return;
+    const html = container.innerHTML;
+    const text = container.textContent || '';
 
-		e.preventDefault();
-		const sel = window.getSelection();
-		if (!sel) return;
-		sel.removeAllRanges();
-		const range = document.createRange();
-		range.selectNodeContents(this.pageRoot.nativeElement);
-		sel.addRange(range);
-	}
+    event.preventDefault();
+    if (event.clipboardData) {
+      event.clipboardData.setData('text/plain', text);
+      event.clipboardData.setData('text/html', html);
+    } else if ((window as any).clipboardData) {
+      (window as any).clipboardData.setData('Text', text);
+    }
+  }
 
-	logout() {
-		this.authService.logout().subscribe({
-			next: () => this.router.navigateByUrl('/acesso'),
-			error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 }),
-		});
-	}
+  @HostListener('document:keydown', ['$event'])
+  handleKeydown(e: KeyboardEvent) {
+    if (!((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a')) return;
+    if (!this.pageRoot) return;
 
-	verPerfil() {
-		this.router.navigateByUrl('/perfil');
-	}
+    const active = document.activeElement;
+    let shouldSelect = false;
+
+    if (active && this.pageRoot.nativeElement.contains(active)) shouldSelect = true;
+    if (this.isHovered) shouldSelect = true;
+
+    try {
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        const r = sel.getRangeAt(0);
+        if (r && !r.collapsed) {
+          if (r.intersectsNode && r.intersectsNode(this.pageRoot.nativeElement))
+            shouldSelect = true;
+        }
+      }
+    } catch {}
+
+    if (!shouldSelect) return;
+
+    e.preventDefault();
+    const sel = window.getSelection();
+    if (!sel) return;
+    sel.removeAllRanges();
+    const range = document.createRange();
+    range.selectNodeContents(this.pageRoot.nativeElement);
+    sel.addRange(range);
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => this.router.navigateByUrl('/acesso'),
+      error: (e) => this.snackBar.open(e.error.message, 'Fechar', { duration: 3000 }),
+    });
+  }
+
+  verPerfil() {
+    this.router.navigateByUrl('/perfil');
+  }
 }
