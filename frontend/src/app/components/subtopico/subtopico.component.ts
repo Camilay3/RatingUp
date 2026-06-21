@@ -37,7 +37,6 @@ export class SubtopicoComponent implements OnInit {
 		this.bookService.getSubtopicContent(this.subtopicId).subscribe({
 			next: (response) => {
 				this.subtopicoContent = response.data;
-				console.log(response.data);
 				this.cdr.detectChanges();
 			},
 			error: (e) => {

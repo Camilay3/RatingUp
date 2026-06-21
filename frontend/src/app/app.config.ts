@@ -19,10 +19,7 @@ export const appConfig: ApplicationConfig = {
           ];
 
           const isPublic = publicRoutes.some(route => req.url.includes(route));
-
-          if (isPublic) {
-            return next(req); // não adiciona withCredentials nas rotas públicas
-          }
+          if (isPublic) return next(req);
 
           const authReq = req.clone({ withCredentials: true });
           return next(authReq);

@@ -117,7 +117,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
 			masked = digits.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
 		}
 
-		// store raw digits in the form control (no emit to avoid recursion)
 		this.EditForm.get('value')?.setValue(digits, { emitEvent: false });
 		setTimeout(() => { input.value = masked; }, 0);
 	}

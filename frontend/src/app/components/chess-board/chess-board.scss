@@ -5,30 +5,44 @@
   flex-wrap: nowrap;
 
   .chess-board {
-    width: 100%;       
+    width: 100%;
     aspect-ratio: 1 / 1;
   }
 
   .jogadas {
   color: black;
-  background-color: #ffffff;  
+  background-color: #ffffff;
   border: 1px solid #c4a882;
   border-radius: 10px;
   padding: 6px 14px;
-  margin: 4px 8px 4px auto; 
+  margin: 4px 8px 4px auto;
   margin-right: 20px !important;
   font-size: 0.85rem;
   position: relative;
   width: fit-content;
 
+	.fa-xmark {
+		color: var(--alert);
+	}
+
+	.fa-arrow-right{
+		font-size: 0.75rem;
+	}
+
+	&:not(.jogadas-sistema){
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
   &::before {
     content: '';
     position: absolute;
-    right: -8px;               
+    right: -8px;
     left: unset;
     top: 50%;
     transform: translateY(-50%);
-    border-width: 6px 0 6px 8px; 
+    border-width: 6px 0 6px 8px;
     border-style: solid;
     border-color: transparent transparent transparent #c4a882;
   }
@@ -36,11 +50,11 @@
   &::after {
     content: '';
     position: absolute;
-    right: -6px;              
+    right: -6px;
     left: unset;
     top: 50%;
     transform: translateY(-50%);
-    border-width: 5px 0 5px 7px; 
+    border-width: 5px 0 5px 7px;
     border-style: solid;
     border-color: transparent transparent transparent #ffffff;
   }
@@ -54,12 +68,16 @@
     background-color: bisque;
     margin-left: 20px !important;
 
+	overflow-y: scroll;
+	aspect-ratio: 1 / 1;
+	padding-bottom: 1rem;
+
     .titulo{
-      margin-top: 7px;
+      margin: 24px 8px;
       color: #746850;
       font-weight: 900;
       text-align: center;
-      font-size: medium;
+      font-size: 1.2rem;
     }
   }
 }
@@ -69,14 +87,14 @@
 }
 
 .jogadas-concluido {
-  color: var(--primary);  
+  color: var(--primary);
   font-weight: bold;
 }
 
 .jogadas-sistema {
-  background-color: #e0e0e0 !important;
-  width: fit-content !important;       
-  margin: 4px auto 4px 8px !important;
+  background-color: #f2f2f2 !important;
+  width: fit-content !important;
+  margin: 8px auto 4px 8px !important;
 
   &::before {
     right: unset !important;

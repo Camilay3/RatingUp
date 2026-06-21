@@ -44,10 +44,10 @@ export class Quiz implements OnInit {
   }
 
   selecionarOpcao(optionId: number) {
-    if (this.quizConcluido || this.enviando) return; // trava seleção se já acertou ou está enviando
+    if (this.quizConcluido || this.enviando) return;
 
     this.opcaoSelecionada = optionId;
-    this.errou = false;          // limpa feedback de erro ao trocar de opção
+    this.errou = false;
     this.opcaoConfirmada = null;
   }
 
@@ -59,11 +59,11 @@ export class Quiz implements OnInit {
 
     this.quizService.answerQuiz(this.subtopicId, this.opcaoSelecionada).subscribe({
       next: (res) => {
-        this.opcaoConfirmada = opcaoEnviada; 
+        this.opcaoConfirmada = opcaoEnviada;
         this.enviando = false;
 
         if (res.correct) {
-          this.errou = false;  // ← reseta o erro
+          this.errou = false;
           this.quizConcluido = true;
           this.concluido.emit();
           this.cdr.detectChanges();
