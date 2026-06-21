@@ -137,13 +137,11 @@
     }
   }
 
-  .esqueci-senha {  // 👈 adiciona essa classe no parágrafo do HTML
-    align-self: flex-start;
-    margin-left: 0;
+  .esqueci-senha {
+    align-self: flex-end;
     color: var(--secondary);
     cursor: pointer;
-    margin-top: -24px;
-    margin-bottom: 10px;
+	margin: -10px 0 10px 0;
     font-size: smaller;
 
     &:hover{

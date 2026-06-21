@@ -27,7 +27,7 @@
 
 .quiz-corpo {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   gap: 16px;
   margin-top: 20px;
 }
@@ -68,7 +68,7 @@
 
     &.selecionada {
       border-color: var(--primary);
-      background: #e4b169;
+      background: var(--secondary);
       font-weight: bold;
       color: var(--primary); // ← texto verde escuro quando selecionada
     }
@@ -97,7 +97,7 @@
 }
 
 .confirmar {
-  align-self: stretch; 
+  align-self: stretch;
   padding: 12px 14px;
   background: #4CAF50;
   color: white;
@@ -105,7 +105,7 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.85rem;
-  margin-top: 20px !important; 
+  margin-top: 20px !important;
 
   &:disabled {
     background: #ccc;

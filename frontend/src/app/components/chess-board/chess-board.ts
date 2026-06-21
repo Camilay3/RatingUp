@@ -75,7 +75,7 @@ export class ChessBoard implements OnInit, OnChanges {
       this.cg.set({ fen });
 
       if (status == 'COMPLETED') {
-        this.moves = [...this.moves, { from: orig, to: dest, piece: this.currentPiece, status, extra: 'PARABÉNS, VOCÊ CONCLUIU A PRÁTICA. Por enquanto nos não temos mais jogadas, mas estamos trabalhando nisso' }];
+        this.moves = [...this.moves, { from: orig, to: dest, piece: this.currentPiece, status, extra: 'PARABÉNS, VOCÊ CONCLUIU A PRÁTICA. Conclua o subtópico para continuar seu aprendizado.' }];
         this.cg.set({ movable: { color: undefined } })
         this.concluido.emit();
         this.cdr.detectChanges();

@@ -2,10 +2,10 @@
   <div #board class="chess-board"></div>
 
   <div class="chat-jogadas">
-    <h2 class="titulo">Historico de jogadas</h2>
+    <h2 class="titulo">Histórico de jogadas</h2>
     @for (move of moves; track $index){
       <div class="jogadas">{{ move.from }} -> {{ move.to }}</div>
-      <div class="jogadas" 
+      <div class="jogadas"
       [class.jogadas-concluido]="move.status === 'COMPLETED'"
       [class.jogadas-sistema]="move.status === 'COMPLETED'"
       >
