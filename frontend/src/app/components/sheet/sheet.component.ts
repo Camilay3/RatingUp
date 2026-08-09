@@ -25,7 +25,7 @@ export class SheetComponent {
 	constructor( private readonly cdr: ChangeDetectorRef, private readonly audioService: AudioService ) {}
 	navigate = output<{ qnt?: number; next?: boolean }>();
 
-	virarPagina(multiplas: boolean = false): void {
+	virarPagina(multiplas: boolean = false, tocarSomDePagina: boolean = false): void {
 		if (this.isPageWaiting) return;
 		this.isPageWaiting = true;
 		this.isWaiting.emit(this.isPageWaiting);
@@ -36,6 +36,7 @@ export class SheetComponent {
 
 		if (this.capa()) {
 			(this.frenteCapa()) ? this.audioService.playOpen() : this.audioService.playClose();
+			if (tocarSomDePagina) this.audioService.playFlip();
 
 		} else if (!multiplas) {
 			this.audioService.playFlip();

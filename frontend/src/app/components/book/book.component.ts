@@ -199,7 +199,8 @@ export class BookComponent implements OnInit {
 	@HostListener('window:keydown.arrowright')
 	onArrowRight() {
 		if (this.isWaiting) return;
-		this.sheets.get(this.paginaAtual)?.virarPagina();
+		const primeiraNavegacao = this.paginaAtual === 0 && !this.pageFlipStates[0];
+		this.sheets.get(this.paginaAtual)?.virarPagina(false, primeiraNavegacao);
 	}
 
 	@HostListener('window:keydown.arrowleft')
