@@ -20,6 +20,7 @@ export class BookComponent implements OnInit, AfterViewInit {
 	onLastPage: boolean = false;
 	isWaiting: boolean = false;
 	isLoading: boolean = true;
+	showBookHint: boolean = false;
 	pageFlipStates: boolean[] = [];
 
 	capituloAtual: number = 1;
@@ -45,6 +46,13 @@ export class BookComponent implements OnInit, AfterViewInit {
 	private pagesLoaded = false;
 
 	ngOnInit() {
+		this.showBookHint = history.state?.mostrarDicaCapa === true;
+		if (this.showBookHint) {
+			const state = { ...history.state };
+			delete state.mostrarDicaCapa;
+			history.replaceState(state, '');
+		}
+
 		this.authService.getProgresso()
 			.pipe(
 				switchMap((response) => {
@@ -213,6 +221,7 @@ export class BookComponent implements OnInit, AfterViewInit {
 	}
 
 	onFlip(pageIndex: number, flipped: boolean) {
+		if (pageIndex === 0 && flipped) this.showBookHint = false;
 		this.zIndexValues[pageIndex] = Math.max(...this.zIndexValues) + 1;
 		this.pageFlipStates[pageIndex] = flipped;
 		this.checkPagesFlipped();

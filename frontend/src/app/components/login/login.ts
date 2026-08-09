@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { BookComponent } from '../book/book.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { IUser, ILoginPayload } from '../../interfaces/user/iuser';
@@ -35,7 +34,7 @@ export class Login implements OnInit {
     private readonly fb :FormBuilder,
     private readonly loginService : LoginService,
     private readonly router : Router,
-    private snackBar : MatSnackBar
+    private readonly snackBar : MatSnackBar
   ){}
 
   ngOnInit(): void {
@@ -80,7 +79,6 @@ export class Login implements OnInit {
    this.loginService.register(payload).subscribe({
     next: (response: any) => {
       this.LoginafterRegister(payload.email,payload.password)
-      this.router.navigate(['/']);
     },
     error: (err) => {
 
@@ -149,7 +147,7 @@ export class Login implements OnInit {
 private LoginafterRegister(email: string, password: string ){
   this.loginService.login(email, password).subscribe({
     next: () => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/'], { state: { mostrarDicaCapa: true } });
     },
     error: () => {
       this.snackBar.open('Um erro inesperado aconteceu, tente fazer login com os dados que cadastrou. Se não der certo, verifique sua conexão', 'Fechar', {

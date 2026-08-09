@@ -37,6 +37,22 @@ describe('BookComponent', () => {
 		history.replaceState({}, '');
 	});
 
+	it('shows the cover hint once and hides it after opening the book', () => {
+		const { component } = create();
+		history.replaceState({ mostrarDicaCapa: true }, '');
+
+		component.ngOnInit();
+
+		expect(component.showBookHint).toBe(true);
+		expect(history.state.mostrarDicaCapa).toBeUndefined();
+		component.showBookHint = true;
+		component.zIndexValues = [1];
+		component.pageFlipStates = [false];
+		component.tamanhoLivro = 1;
+		component.onFlip(0, true);
+		expect(component.showBookHint).toBe(false);
+	});
+
 	it('reports loading errors without building pages', () => {
 		const { component, auth, snack } = create();
 		auth.getProgresso.mockReturnValueOnce(throwError(() => ({ error: { message: 'failed' } })));

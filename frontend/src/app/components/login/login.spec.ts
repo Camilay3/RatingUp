@@ -85,6 +85,7 @@ describe('Login', () => {
 		component.onRegister();
 		expect(loginService.register).toHaveBeenCalled();
 		expect(loginService.login).toHaveBeenCalledWith('user@example.com', 'safe');
+		expect(router.navigate).toHaveBeenCalledWith(['/'], { state: { mostrarDicaCapa: true } });
 
 		loginService.register.mockReturnValueOnce(throwError(() => ({ error: {
 			code: 'CONFLICT', messages: ['email already exists', 'nickname already exists', 'telefone already exists'],
