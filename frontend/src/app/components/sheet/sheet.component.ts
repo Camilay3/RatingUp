@@ -45,7 +45,7 @@ export class SheetComponent {
 		const duracao = Number.parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duracao'));
 		setTimeout(() => {
 			this.isPageWaiting = false;
-			this.isWaiting.emit(this.isPageWaiting);
+			if (!multiplas) this.isWaiting.emit(this.isPageWaiting);
 		 }, duracao);
 	}
 

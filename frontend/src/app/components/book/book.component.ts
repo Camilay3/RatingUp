@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
 import { ISheet } from '../../interfaces/book/IBook';
 
@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 	styleUrls: ['./book.component.scss'],
 	imports: [SheetComponent, LoaderComponent]
 })
-export class BookComponent implements OnInit {
+export class BookComponent implements OnInit, AfterViewInit {
 	onFirstPage: boolean = true;
 	onLastPage: boolean = false;
 	isWaiting: boolean = false;
@@ -280,8 +280,9 @@ export class BookComponent implements OnInit {
 				setTimeout(() => {
 					this.duracaoAnimacao = 1000;
 					this.setVelocidade(this.duracaoAnimacao);
+					this.isWaiting = false;
+					this.cdr.detectChanges();
 				}, this.duracaoAnimacao);
-				this.isWaiting = false;
 				return;
 			}
 			setTimeout(virar, 100);
