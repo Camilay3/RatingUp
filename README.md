@@ -12,6 +12,7 @@
 - [Tecnologias](#tecnologias)
 - [O site](##Clique-para-ver-o-mapa-do-nosso-site)
 - [Como executar](#como-executar)
+- [Testes](#testes)
 - [Como contribuir](#como-contribuir)
 
 <br><br>
@@ -69,6 +70,20 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
 > Observação: Caso for adicionar uma nova imagem, antes de inicializar a aplicação adicione ela na pasta /assets e dentro da subpasta /book (se for uma imagem do livro) ou /avatars (se for uma imagem de avatar). Após inicializar a aplicação delete todas as imagens da pasta.
 
 <br>
+
+<br><br>
+
+# Testes | 🧪
+Os testes unitários do frontend usam Jest:
+
+```bash
+  # Na pasta do projeto
+  $ cd frontend
+  $ npm ci --legacy-peer-deps
+  $ npm test
+```
+
+O comando `npm test` executa os testes e gera o relatório de cobertura.
 
 <br><br>
 
