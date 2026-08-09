@@ -92,11 +92,14 @@ export class BookComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit(): void {
 		const containerEl = document.querySelector('.book-container');
 		if (!containerEl) return;
+		const pageContainerEl = containerEl.querySelector('.page-container') as HTMLElement;
 
-		const ro = new ResizeObserver(entries => {
-			const newHeight = entries[0].contentRect.height;
+		const ro = new ResizeObserver(() => {
+			const pageHeight = pageContainerEl?.clientHeight || containerEl.clientHeight * 0.9;
+			const pageWidth = pageContainerEl?.clientWidth || pageHeight * 13 / 9;
+			const newHeight = Math.max(0, (pageHeight - pageWidth * 0.08) * 0.95);
 			if (newHeight !== this.pageHeight) {
-				this.pageHeight = newHeight * 0.95;
+				this.pageHeight = newHeight;
 				if (this.pagesLoaded) {
 					this.buildBookFromPages();
 					this.cdr.detectChanges();
@@ -105,6 +108,7 @@ export class BookComponent implements OnInit, AfterViewInit {
 		});
 
 		ro.observe(containerEl);
+		if (pageContainerEl) ro.observe(pageContainerEl);
 	}
 
 	private buildBookFromPages(): void {
@@ -133,17 +137,15 @@ export class BookComponent implements OnInit, AfterViewInit {
 			let currentHeight = 0;
 			let isFirstChunk = true;
 
-			const itemHeight = (item: any) => item?.type === 'capitulo' ? 8 : 4;
+			const itemHeight = (item: any) => !item ? 0 : item.type === 'capitulo' ? 8 : 2;
 			const pairHeight = (page: any) => itemHeight(page.front) + itemHeight(page.verse);
-			const startsNewSection = (page: any) =>
-				page.front.type === 'capitulo' || page.verse?.type === 'capitulo';
 
 			const maxForCurrent = () => isFirstChunk ? MAX_FIRST : MAX_REST;
 
 			for (const page of pages) {
 				const h = pairHeight(page);
 
-				if (currentHeight + h > maxForCurrent() && startsNewSection(page)) {
+				if (current.length && currentHeight + h > maxForCurrent()) {
 					chunks.push(current);
 					current = [];
 					currentHeight = 0;
@@ -182,7 +184,7 @@ export class BookComponent implements OnInit, AfterViewInit {
 		if (!this.pageHeight) return isFirst ? 55 : 75;
 
 		const PX_PER_UNIT = 9;
-		const HEADER_PX = isFirst ? 180 : 0;
+		const HEADER_PX = isFirst ? 120 : 0;
 
 		return Math.floor((this.pageHeight - HEADER_PX) / PX_PER_UNIT);
 	}
