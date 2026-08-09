@@ -240,8 +240,8 @@ export class BookComponent implements OnInit, AfterViewInit {
 				return !!(page && (index + 1 !== this.book.length) &&
 					(
 						'capa' in page ||
-						page.front?.type !== 'subtópico' ||
-						!page.front.isBlocked
+						(page.front?.type !== 'subtópico' || !page.front.isBlocked) &&
+						(page.verse?.type !== 'subtópico' || !page.verse.isBlocked)
 					)
 				);
 			};
