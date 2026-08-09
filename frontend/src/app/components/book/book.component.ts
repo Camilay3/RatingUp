@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
 import { ISheet } from '../../interfaces/book/IBook';
 
@@ -15,11 +15,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 	styleUrls: ['./book.component.scss'],
 	imports: [SheetComponent, LoaderComponent]
 })
-export class BookComponent implements OnInit {
+export class BookComponent implements OnInit, AfterViewInit {
 	onFirstPage: boolean = true;
 	onLastPage: boolean = false;
 	isWaiting: boolean = false;
 	isLoading: boolean = true;
+	showBookHint: boolean = false;
 	pageFlipStates: boolean[] = [];
 
 	capituloAtual: number = 1;
@@ -45,6 +46,13 @@ export class BookComponent implements OnInit {
 	private pagesLoaded = false;
 
 	ngOnInit() {
+		this.showBookHint = history.state?.mostrarDicaCapa === true;
+		if (this.showBookHint) {
+			const state = { ...history.state };
+			delete state.mostrarDicaCapa;
+			history.replaceState(state, '');
+		}
+
 		this.authService.getProgresso()
 			.pipe(
 				switchMap((response) => {
@@ -92,11 +100,14 @@ export class BookComponent implements OnInit {
 	ngAfterViewInit(): void {
 		const containerEl = document.querySelector('.book-container');
 		if (!containerEl) return;
+		const pageContainerEl = containerEl.querySelector('.page-container') as HTMLElement;
 
-		const ro = new ResizeObserver(entries => {
-			const newHeight = entries[0].contentRect.height;
+		const ro = new ResizeObserver(() => {
+			const pageHeight = pageContainerEl?.clientHeight || containerEl.clientHeight * 0.9;
+			const pageWidth = pageContainerEl?.clientWidth || pageHeight * 13 / 9;
+			const newHeight = Math.max(0, (pageHeight - pageWidth * 0.08) * 0.95);
 			if (newHeight !== this.pageHeight) {
-				this.pageHeight = newHeight * 0.95;
+				this.pageHeight = newHeight;
 				if (this.pagesLoaded) {
 					this.buildBookFromPages();
 					this.cdr.detectChanges();
@@ -105,16 +116,17 @@ export class BookComponent implements OnInit {
 		});
 
 		ro.observe(containerEl);
+		if (pageContainerEl) ro.observe(pageContainerEl);
 	}
 
 	private buildBookFromPages(): void {
 		const homePages = this.splitSummaryIntoHomePages(this.pages);
 
 		this.book = [
-			{ capa: 'capa.png', frenteCapa: true },
+			{ capa: 'capa.webp', frenteCapa: true },
 			...homePages,
 			...this.pages,
-			{ capa: 'quartaCapa.png' }
+			{ capa: 'quartaCapa.webp' }
 		];
 
 		this.tamanhoLivro = this.book.length;
@@ -133,17 +145,15 @@ export class BookComponent implements OnInit {
 			let currentHeight = 0;
 			let isFirstChunk = true;
 
-			const itemHeight = (item: any) => item?.type === 'capitulo' ? 8 : 4;
+			const itemHeight = (item: any) => !item ? 0 : item.type === 'capitulo' ? 8 : 2;
 			const pairHeight = (page: any) => itemHeight(page.front) + itemHeight(page.verse);
-			const startsNewSection = (page: any) =>
-				page.front.type === 'capitulo' || page.verse?.type === 'capitulo';
 
 			const maxForCurrent = () => isFirstChunk ? MAX_FIRST : MAX_REST;
 
 			for (const page of pages) {
 				const h = pairHeight(page);
 
-				if (currentHeight + h > maxForCurrent() && startsNewSection(page)) {
+				if (current.length && currentHeight + h > maxForCurrent()) {
 					chunks.push(current);
 					current = [];
 					currentHeight = 0;
@@ -182,7 +192,7 @@ export class BookComponent implements OnInit {
 		if (!this.pageHeight) return isFirst ? 55 : 75;
 
 		const PX_PER_UNIT = 9;
-		const HEADER_PX = isFirst ? 180 : 0;
+		const HEADER_PX = isFirst ? 120 : 0;
 
 		return Math.floor((this.pageHeight - HEADER_PX) / PX_PER_UNIT);
 	}
@@ -211,6 +221,7 @@ export class BookComponent implements OnInit {
 	}
 
 	onFlip(pageIndex: number, flipped: boolean) {
+		if (pageIndex === 0 && flipped) this.showBookHint = false;
 		this.zIndexValues[pageIndex] = Math.max(...this.zIndexValues) + 1;
 		this.pageFlipStates[pageIndex] = flipped;
 		this.checkPagesFlipped();
@@ -240,8 +251,8 @@ export class BookComponent implements OnInit {
 				return !!(page && (index + 1 !== this.book.length) &&
 					(
 						'capa' in page ||
-						page.front?.type !== 'subtópico' ||
-						!page.front.isBlocked
+						(page.front?.type !== 'subtópico' || !page.front.isBlocked) &&
+						(page.verse?.type !== 'subtópico' || !page.verse.isBlocked)
 					)
 				);
 			};
@@ -280,8 +291,9 @@ export class BookComponent implements OnInit {
 				setTimeout(() => {
 					this.duracaoAnimacao = 1000;
 					this.setVelocidade(this.duracaoAnimacao);
+					this.isWaiting = false;
+					this.cdr.detectChanges();
 				}, this.duracaoAnimacao);
-				this.isWaiting = false;
 				return;
 			}
 			setTimeout(virar, 100);

@@ -7,6 +7,36 @@ on:
     branches: [main]
 
 jobs:
+  frontend-tests:
+    name: Frontend tests and coverage
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependências do frontend
+        working-directory: frontend
+        run: npm ci
+
+      - name: Rodar testes do frontend (tentativa 1)
+        id: frontend-tests-1
+        continue-on-error: true
+        working-directory: frontend
+        run: npm test -- --runInBand
+
+      - name: Rodar testes do frontend (tentativa 2)
+        if: steps.frontend-tests-1.outcome == 'failure'
+        working-directory: frontend
+        run: npm test -- --runInBand
+
   robot-tests:
     runs-on: ubuntu-latest
 

@@ -33,6 +33,7 @@ const ANIMATION_DURATION_MS = 520;
             class="img-clone"
             [class.animating]="isAnimating()"
             [src]="imageUrl()"
+            decoding="async"
             alt=""
             aria-hidden="true"
             [style.top.px]="imgTop()"

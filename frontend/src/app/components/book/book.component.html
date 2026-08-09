@@ -1,9 +1,12 @@
 @if (isLoading) {
 	<app-loader [visible]="isLoading"></app-loader>
 }
-<div class="book-container" style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/livro/background.png');">
+<div class="book-container" style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/livro/background.webp');">
 	<div class="page-container pageAnimation">
 		@if (isWaiting) { <div class="blockClick"></div> }
+		@if (showBookHint && book[0]?.frenteCapa && onFirstPage && !pageFlipStates[0]) {
+			<i class="book-hint fa-solid fa-hand-pointer" aria-hidden="true"></i>
+		}
 
 		@for (page of book; track $index) {
 			<app-sheet

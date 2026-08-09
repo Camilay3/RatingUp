@@ -8,7 +8,7 @@
 
 	@if (pageIsBlocked()) {
 		<div class="lock">
-			<img loading="lazy" src="/lock.png" alt="Cadeado" draggable="false">
+			<img loading="lazy" decoding="async" src="/lock.png" alt="Cadeado" draggable="false">
 		</div>
 	}
 
@@ -27,6 +27,7 @@
 			class="subtopico-img"
 			draggable="false"
 			loading="lazy"
+			decoding="async"
 			[src]="apiUrl + sub.subtopicImageUrl"
 			[alt]="'Img do subtópico' + sub.displayOrder"
 			(error)="onImageError($event)"

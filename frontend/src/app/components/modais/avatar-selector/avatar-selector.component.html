@@ -24,7 +24,7 @@
 						[class.selecionando]="isSelecting"
 						[class.selected]="selectedImageName === avatar.imageName"
 						(click)="selecionarAvatar(avatar)">
-						<img [src]="imageUrl(avatar)" [alt]="avatar.imageName" draggable="false">
+						<img [src]="imageUrl(avatar)" [alt]="avatar.imageName" loading="lazy" decoding="async" draggable="false">
 
 						@if (isSelecting && selectedImageName === avatar.imageName) {
 							<div class="avatar-loading">
