@@ -90,7 +90,7 @@ export class ProfileComponent implements OnInit {
 	get avatarSrc(): string {
 		return this.user?.avatarUrl
 			? `${environment.apiUrl}${this.user.avatarUrl}`
-			: '/userDefault.png';
+			: '/userDefault.webp';
 	}
 
 	solicitarSenha() {

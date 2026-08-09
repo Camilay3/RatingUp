@@ -111,10 +111,10 @@ export class BookComponent implements OnInit, AfterViewInit {
 		const homePages = this.splitSummaryIntoHomePages(this.pages);
 
 		this.book = [
-			{ capa: 'capa.png', frenteCapa: true },
+			{ capa: 'capa.webp', frenteCapa: true },
 			...homePages,
 			...this.pages,
-			{ capa: 'quartaCapa.png' }
+			{ capa: 'quartaCapa.webp' }
 		];
 
 		this.tamanhoLivro = this.book.length;

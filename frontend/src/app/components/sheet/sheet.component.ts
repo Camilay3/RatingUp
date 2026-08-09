@@ -52,12 +52,12 @@ export class SheetComponent {
 	frontImage = computed(() => {
 		if (!this.capa()) return null;
 		if (this.frenteCapa()) return `/livro/${this.capa()}`;
-		return '/livro/contracapaFront.png';
+		return '/livro/contracapaFront.webp';
 	});
 
 	backImage = computed(() => {
 		if (!this.capa()) return null;
-		if (this.frenteCapa()) return '/livro/contracapa.png';
+		if (this.frenteCapa()) return '/livro/contracapa.webp';
 		return `/livro/${this.capa()}`;
 	});
 }

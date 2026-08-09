@@ -5,7 +5,7 @@ import { RouterLink } from "@angular/router";
 	selector: 'app-not-found',
 	imports: [RouterLink],
 	template: `
-		<img draggable="false" src="/notfound.png" alt="Página não encontrada">
+		<img draggable="false" src="/notfound.webp" alt="Página não encontrada" decoding="async">
 		<a routerLink="/">Voltar para o início</a>
 	`,
 	styles: [`
