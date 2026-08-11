@@ -75,6 +75,13 @@ public class UserService implements UserDetailsService {
         user.setPassword(senhaCriptografada);
 
         //talvez fazer uma função so pra isso aq(mateus)
+        User registeredUser = saveUser(user);
+
+
+        return registeredUser;
+    }
+
+    public User saveUser(User user){
         User savedUser = userRepository.save(user);
         LocalDateTime creationDate = savedUser.getCreationDate();
         Progress progresso = new Progress();
