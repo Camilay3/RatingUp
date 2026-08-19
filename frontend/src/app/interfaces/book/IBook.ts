@@ -11,22 +11,22 @@ export interface IBook extends IResponse {
 }
 
 export interface ISheet {
-	front: PageData
+	front: IPage
 	verse: IPage
 }
 
 interface IBasePage {
-	type: 'capitulo' | 'subtópico' | 'home'
+	type: 'capitulo' | 'subtópico'
 	displayOrder: number
 	chapterId: number | null
 	title: string
 }
 
-interface IHome extends IBasePage {
+interface IHome {
 	type: 'home'
 	isFirstHome: boolean
 	chunkOffset: number
-	nickname: string
+	nickname: string | null
 	summary: ISheet[]
 }
 
@@ -48,3 +48,18 @@ export interface ISubtopicoContent extends ISubtopico, IResponse {
 	content: string
 	practiceExplanation: string | null;
 }
+
+export type HomePage = {
+	type: 'home';
+	nickname: string | null;
+	isFirstHome: boolean;
+	summary: ISheet[];
+	chunkOffset: number;
+};
+
+export type BookItem = {
+	front?: PageData;
+	verse?: PageData | null;
+	capa?: string;
+	frenteCapa?: boolean;
+};

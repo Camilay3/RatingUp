@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, computed, input, output } from '@angular/core';
 import { PageComponent } from '../page/page.component';
-import { IPage, PageData } from '../../interfaces/book/IBook';
+import { PageData } from '../../interfaces/book/IBook';
 import { AudioService } from '../../services/book/audio.service';
 
 @Component({
@@ -10,8 +10,8 @@ import { AudioService } from '../../services/book/audio.service';
   styleUrls: ['./sheet.component.scss'],
 })
 export class SheetComponent {
-	frente = input<PageData>();
-	verso = input<IPage>();
+	frente = input<PageData | null>();
+	verso = input<PageData | null>();
 	capa = input<string>();
 	frenteCapa = input<boolean>(false);
 	onFirstPage = input<boolean>(true);

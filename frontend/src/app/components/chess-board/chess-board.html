@@ -9,10 +9,11 @@
 					@if (move.error) { <i class="fa-solid fa-xmark"></i> }
 				</div>
 			}
-			@if (move.extra) {
+			@if (move.extra; as extra) {
+				@let parts = extra.split('.');
 				<div class="jogadas" [class.jogadas-concluido]="move.status === 'COMPLETED'" [class.jogadas-sistema]="move.isSystem">
-					<strong>{{ move.extra?.split('.')?.[0] }}.</strong>
-					{{ move.extra?.split('.')?.[1] }}
+					<strong>{{ parts[0] }}.</strong>
+					{{ parts[1] }}
 				</div>
 			}
 		}

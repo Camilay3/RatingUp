@@ -92,10 +92,11 @@ describe('BookComponent', () => {
 			...Array.from({ length: 30 }, () => ({ front: { type: 'capitulo' }, verse: { type: 'subtópico' } })),
 		]);
 		expect(split.length).toBeGreaterThan(1);
+		expect(split[0].front.chunkOffset).toBe(0);
+		expect(split[1].front.chunkOffset).toBe(split[0].front.summary.length + (split[0].verse?.summary.length ?? 0));
 		(component as any).pageHeight = 500;
 		expect((component as any).calcMaxHeight(true)).toBe(42);
 		expect((component as any).calcMaxHeight(false)).toBe(55);
-		expect((component as any).countPagesInChunks([[1, 2], [3]], 1)).toBe(2);
 	});
 
 	it('resizes, navigates with arrows and reorders flipped sheets', () => {
