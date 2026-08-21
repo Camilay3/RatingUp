@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { SheetComponent } from "../sheet/sheet.component";
-import { ISheet } from '../../interfaces/book/IBook';
+import { BookItem, HomePage, ISheet, PageData } from '../../interfaces/book/IBook';
 
 import { BookService } from '../../services/book/book.service';
 import { AudioService } from '../../services/book/audio.service';
@@ -27,12 +27,10 @@ export class BookComponent implements OnInit, AfterViewInit {
 	subtopicoAtual: number = 1;
 
 	pages: ISheet[] = [];
-	home: any[] = [];
-	book: any[] = [];
+	book: BookItem[] = [];
 	tamanhoLivro: number = 0;
 	duracaoAnimacao: number = 1000;
 	zIndexValues: number[] = [];
-	nickname: string = '';
 
 	constructor(
 		private readonly cdr: ChangeDetectorRef,
@@ -64,8 +62,6 @@ export class BookComponent implements OnInit, AfterViewInit {
 			).subscribe({
 				next: (response) => {
 					this.pages = response.data.pages.map(page => {
-						let currentItem = false;
-
 						(['front', 'verse'] as const).forEach(side => {
 							const current = page[side];
 
@@ -79,8 +75,11 @@ export class BookComponent implements OnInit, AfterViewInit {
 									current.chapterId === this.capituloAtual &&
 									current.displayOrder === this.subtopicoAtual;
 
-								currentItem = isAfterCurrentChapter || isAfterCurrentSubtopic;
-								page[side] = { ...current, isBlocked: currentItem, lockOpen };
+								page[side] = {
+									...current,
+									isBlocked: isAfterCurrentChapter || isAfterCurrentSubtopic,
+									lockOpen,
+								};
 							}
 						});
 						return page;
@@ -136,55 +135,63 @@ export class BookComponent implements OnInit, AfterViewInit {
 			this.zIndexValues.push(this.tamanhoLivro - i + 1);
 		}
 
-		private splitSummaryIntoHomePages(pages: any[]): any[] {
-			const MAX_FIRST = this.calcMaxHeight(true);
-			const MAX_REST  = this.calcMaxHeight(false);
+	private splitSummaryIntoHomePages(pages: ISheet[]): BookItem[] {
+		const MAX_FIRST = this.calcMaxHeight(true);
+		const MAX_REST = this.calcMaxHeight(false);
 
-			const chunks: any[][] = [];
-			let current: any[] = [];
-			let currentHeight = 0;
-			let isFirstChunk = true;
+		const chunks: ISheet[][] = [];
+		let current: ISheet[] = [];
+		let currentHeight = 0;
+		let isFirstChunk = true;
 
-			const itemHeight = (item: any) => !item ? 0 : item.type === 'capitulo' ? 8 : 2;
-			const pairHeight = (page: any) => itemHeight(page.front) + itemHeight(page.verse);
+		const itemHeight = (item: PageData | null | undefined) => !item ? 0 : item.type === 'capitulo' ? 8 : 2;
+		const pairHeight = (page: ISheet) => itemHeight(page.front) + itemHeight(page.verse);
 
-			const maxForCurrent = () => isFirstChunk ? MAX_FIRST : MAX_REST;
+		for (const page of pages) {
+			const height = pairHeight(page);
+			const maxHeight = isFirstChunk ? MAX_FIRST : MAX_REST;
 
-			for (const page of pages) {
-				const h = pairHeight(page);
-
-				if (current.length && currentHeight + h > maxForCurrent()) {
-					chunks.push(current);
-					current = [];
-					currentHeight = 0;
-					isFirstChunk = false;
-				}
-
-				current.push(page);
-				currentHeight += h;
+			if (current.length && currentHeight + height > maxHeight) {
+				chunks.push(current);
+				current = [];
+				currentHeight = 0;
+				isFirstChunk = false;
 			}
-			if (current.length) chunks.push(current);
 
-			const homePages: any[] = [];
+			current.push(page);
+			currentHeight += height;
+		}
+		if (current.length) chunks.push(current);
 
-			for (let i = 0; i < chunks.length; i += 2) {
-				homePages.push({
-					front: {
-						type: 'home',
-						nickname: i === 0 ? this.authService.getMyUser()?.data.nickname : null,
-						isFirstHome: i === 0,
-						summary: chunks[i],
-						chunkOffset: this.countPagesInChunks(chunks, i)
-					},
-					verse: chunks[i + 1] ? {
-						type: 'home',
-						nickname: null,
-						isFirstHome: false,
-						summary: chunks[i + 1],
-						chunkOffset: this.countPagesInChunks(chunks, i + 1)
-					} : null
-				});
+		const homePages: BookItem[] = [];
+		let chunkOffset = 0;
+
+		for (let i = 0; i < chunks.length; i += 2) {
+			const isFirstHome = i === 0;
+			const front: HomePage = {
+				type: 'home',
+				nickname: isFirstHome ? this.authService.getMyUser()?.data.nickname ?? null : null,
+				isFirstHome,
+				summary: chunks[i],
+				chunkOffset,
+			};
+			chunkOffset += chunks[i].length;
+
+			let verse: HomePage | null = null;
+			if (chunks[i + 1]) {
+				verse = {
+					type: 'home',
+					nickname: null,
+					isFirstHome: false,
+					summary: chunks[i + 1],
+					chunkOffset,
+				};
+				chunkOffset += chunks[i + 1].length;
 			}
+
+			homePages.push({ front, verse });
+		}
+
 		return homePages;
 	}
 
@@ -195,12 +202,6 @@ export class BookComponent implements OnInit, AfterViewInit {
 		const HEADER_PX = isFirst ? 120 : 0;
 
 		return Math.floor((this.pageHeight - HEADER_PX) / PX_PER_UNIT);
-	}
-
-	private countPagesInChunks(chunks: any[][], targetIndex: number): number {
-		let count = 0;
-		for (let i = 0; i < targetIndex; i++) count += chunks[i].length;
-		return count;
 	}
 
 	@ViewChildren(SheetComponent) sheets!: QueryList<SheetComponent>;

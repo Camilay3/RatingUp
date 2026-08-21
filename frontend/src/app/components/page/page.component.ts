@@ -10,7 +10,7 @@ import {
 	inject,		
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { IPage, ISheet, ISubtopico, PageData } from '../../interfaces/book/IBook';
+import { ISheet, ISubtopico, PageData } from '../../interfaces/book/IBook';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../environments/environment';
@@ -24,7 +24,7 @@ import { TransitionService } from '../../services/transition/transition.service'
 	})
 export class PageComponent {
 	readonly apiUrl = environment.apiUrl;	
-  	page = input<PageData | IPage>();
+	page = input<PageData | null>();
   	side = input<'frente' | 'verso'>();
   	isWaiting = output<boolean>();
   	navigate = output<{ qnt?: number; next?: boolean }>();
@@ -42,7 +42,7 @@ export class PageComponent {
 		this.isHovered = v;
 	}
 
-	private isSubtopicoBlocked(item: PageData | undefined): boolean {
+	private isSubtopicoBlocked(item: PageData | null | undefined): boolean {
 		const valid = (item?.type === 'subtópico' && item.isBlocked) ?? false;
 		if (valid) this.isWaiting.emit(valid);
 		return valid;
@@ -50,7 +50,7 @@ export class PageComponent {
 	pageIsBlocked = computed(() => this.isSubtopicoBlocked(this.page()));
 
 	asType<T extends PageData['type']>(
-		page: PageData | undefined,
+		page: PageData | null | undefined,
 		type: T
 	): Extract<PageData, { type: T }> | undefined {
 		return page?.type === type ? (page as Extract<PageData, { type: T }>) : undefined;
