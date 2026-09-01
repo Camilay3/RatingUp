@@ -1,0 +1,15 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: config/nginx/Dockerfile
+    container_name: ratingup_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - nginx_cache:/var/cache/nginx/images
+    depends_on:
+      - backend
+    networks:
+      - back-network
+      - front-network

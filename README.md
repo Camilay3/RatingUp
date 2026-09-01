@@ -58,8 +58,11 @@ Design                  | <img src="https://img.shields.io/badge/figma-0078D6?st
   $ cd RatingUp
 
   # Iniciar a aplicação (Requisitos: Docker)
+  # em dev
   $ docker compose up --build
-
+  
+  # em prod
+  $ docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build
   # Acessar
   http://localhost/
 
