@@ -17,6 +17,7 @@ public class TokenGenerator{
     @Value("${api.security.token.secret}")
     private String secret;
 
+    //essa função está sendo usada tanto para o token de login como de recuperação, o que dá o mesmo tratamento a tokens com funções diferentes, é melhor separar essa geração em duas funções distintas e diferenciar os detalhes de cada uma
     public String gerarToken(User user){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
