@@ -186,7 +186,7 @@ public class UserService implements UserDetailsService {
         emailService.sendRecoverMail(user.getEmail(), token);
     }
 
-    //ainda falta resetar o token e o tokenExpiry após o uso ter sido validado
+    //o token de recuperação agora é invalidado após validação, porém o token em si ainda deve ser substituído por um específico para reset, não para autenticação)
     public ResponseCookie validateResetToken(String token){
         User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Token inválido"));
@@ -196,6 +196,11 @@ public class UserService implements UserDetailsService {
         }
 
         String jwt = tokenGenerator.gerarToken(user);
+
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+
+        userRepository.saveAndFlush(user);
 
         return ResponseCookie
                 .from("token",jwt)
