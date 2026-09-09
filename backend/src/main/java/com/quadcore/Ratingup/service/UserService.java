@@ -3,7 +3,6 @@ package com.quadcore.Ratingup.service;
 import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 
-import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileUpdateRequestDTO;
 import com.quadcore.Ratingup.enums.Roles;
@@ -15,8 +14,8 @@ import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -38,13 +36,15 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenGenerator tokenGenerator;
+    private final TokenCookieService tokenCookieService;
     private final ProgressRepository progressRepository;
     private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressRepository progressRepository, TokenGenerator tokenGenerator, EmailService emailService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressRepository progressRepository, TokenGenerator tokenGenerator, EmailService emailService, TokenCookieService tokenCookieService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
+        this.tokenCookieService = tokenCookieService;
         this.progressRepository = progressRepository;
         this.emailService = emailService;
     }
@@ -149,7 +149,7 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Senha incorreta");
         }
 
-        String token = tokenGenerator.gerarToken(user);
+        String token = tokenGenerator.generateLoginToken(user);
 
         return ResponseCookie
                 .from("token", token)
@@ -186,7 +186,6 @@ public class UserService implements UserDetailsService {
         emailService.sendRecoverMail(user.getEmail(), token);
     }
 
-    //o token de recuperação agora é invalidado após validação, porém o token em si ainda deve ser substituído por um específico para reset, não para autenticação)
     public ResponseCookie validateResetToken(String token){
         User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Token inválido"));
@@ -195,7 +194,7 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Esse token está expirado");
         }
 
-        String jwt = tokenGenerator.gerarToken(user);
+        String jwt = tokenGenerator.generateRecoveryToken(user);
 
         user.setResetToken(null);
         user.setResetTokenExpiry(null);
@@ -212,13 +211,12 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public void resetPassword(String newPassword){
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+    public void resetPassword(String newPassword, HttpServletRequest request){
+        String jwt = tokenCookieService.recoverToken(request);
 
-        if(user.getResetTokenExpiry().isBefore(LocalDateTime.now())){
-            throw new RuntimeException("Esse token está expirado");
-        }
+        String email = tokenGenerator.getRecoverySubject(jwt);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
         if(!newPassword.matches(regex)){
@@ -228,8 +226,6 @@ public class UserService implements UserDetailsService {
         checkRepeatedCharactersPassword(newPassword);
 
         user.setPassword(passwordEncoder.encode(newPassword));
-        user.setResetToken(null);
-        user.setResetTokenExpiry(null);
         userRepository.save(user);
     }
 

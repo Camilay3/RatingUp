@@ -1,6 +1,7 @@
 package com.quadcore.Ratingup.config.security;
 
 import com.quadcore.Ratingup.repository.UserRepository;
+import com.quadcore.Ratingup.service.TokenCookieService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -23,20 +24,23 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private TokenCookieService tokenCookieService;
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/conta/cadastro") || path.equals("/conta/login");
+        return path.equals("/conta/cadastro") || path.equals("/conta/login") || path.equals("/auth/reset-password");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        var tokenJWT = recuperarToken(request);
+        var tokenJWT = tokenCookieService.recoverToken(request);
 
         if (tokenJWT != null) {
             try {
-                var subject = tokenService.getSubject(tokenJWT);
+                var subject = tokenService.getLoginSubject(tokenJWT);
                 var usuario = repository.findByEmail(subject)
                         .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -49,15 +53,4 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
-    private String recuperarToken(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
-		if (cookies == null) return null;
-
-		for (Cookie cookie : cookies) {
-			if ("token".equals(cookie.getName())) return cookie.getValue();
-		}
-
-		return null;
-	}
 }
