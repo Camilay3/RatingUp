@@ -10,7 +10,7 @@ describe('PageComponent', () => {
 	let fixture: ReturnType<typeof TestBed.createComponent<PageComponent>>;
 	let component: PageComponent;
 	let router: { navigate: jest.Mock; navigateByUrl: jest.Mock };
-	let auth: { logout: jest.Mock };
+	let auth: { logout: jest.Mock, getMyUser: jest.Mock  };
 	let snack: { open: jest.Mock };
 	let transition: { startTransition: jest.Mock };
 
@@ -22,7 +22,11 @@ describe('PageComponent', () => {
 
 	beforeEach(async () => {
 		router = { navigate: jest.fn(), navigateByUrl: jest.fn() };
-		auth = { logout: jest.fn() };
+		auth = { logout: jest.fn(), 
+			    getMyUser: jest.fn().mockReturnValue({
+			data: { nickname: 'Ada', avatarUrl: '/uploads/ada.webp' },
+		}), 
+	    };
 		snack = { open: jest.fn() };
 		transition = { startTransition: jest.fn().mockResolvedValue(undefined) };
 
@@ -218,4 +222,15 @@ describe('PageComponent', () => {
 		component.handleKeydown(new KeyboardEvent('keydown', { key: 'a', ctrlKey: true, cancelable: true }));
 		getSelection.mockRestore();
 	});
+
+	it('computes avatarSrc from user data', () => {
+		expect(component.avatarSrc).toContain('/uploads/ada.webp');	
+	});
+
+	it('falls back to default avatar when user has no avatarUrl', async () => {
+		auth.getMyUser.mockReturnValue({ data: { nickname: 'Sem Foto', avatarUrl: null } });
+		fixture = TestBed.createComponent(PageComponent);
+		component = fixture.componentInstance;
+		expect(component.avatarSrc).toBe('/userDefault.webp');
+   	});
 });

@@ -38,6 +38,7 @@
 	} @else if (asType(page(), 'home'); as home) {
 		@if (home.isFirstHome) {
 			<div class="header">
+				<img class="foto" [src]="avatarSrc" alt="foto de perfil">
 				<h2>{{ home.nickname }}</h2>
 				<div class="actions">
 					<span (click)="$event.stopPropagation(); logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</span>
