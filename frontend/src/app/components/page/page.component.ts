@@ -38,6 +38,8 @@ export class PageComponent {
 	private readonly snackBar = inject(MatSnackBar);
 	private readonly transitionService = inject(TransitionService);
 
+	user = this.authService.getMyUser()?.data;
+
 	onHover(v: boolean) {
 		this.isHovered = v;
 	}
@@ -183,5 +185,11 @@ export class PageComponent {
 
 	verPerfil() {
 		this.router.navigateByUrl('/perfil');
+	}
+
+	get avatarSrc(): string {
+		return this.user?.avatarUrl
+			? `${environment.apiUrl}${this.user.avatarUrl}`
+			: '/userDefault.webp';
 	}
 }
