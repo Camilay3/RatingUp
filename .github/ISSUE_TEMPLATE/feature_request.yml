@@ -1,0 +1,33 @@
+name: "✨ Feature"
+description: Sugerir uma nova funcionalidade ou recurso
+title: "[FEATURE] "
+labels: ["feature"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição da funcionalidade
+      description: Uma descrição clara e concisa do que você deseja.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema que resolve / Motivação
+      description: Há algum problema que essa funcionalidade resolverá? Por que ela é necessária?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solução proposta
+      description: Uma descrição clara e concisa do que você quer que aconteça.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: Descreva quaisquer soluções alternativas ou recursos que você considerou.
+    validations:
+      required: false

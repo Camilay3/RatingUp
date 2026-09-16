@@ -1,0 +1,33 @@
+name: "🔧 Melhoria"
+description: Sugerir melhorias em funcionalidades ou código existente
+title: "[MELHORIA] "
+labels: ["melhoria"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição da melhoria
+      description: Descreva detalhadamente qual é a melhoria proposta.
+    validations:
+      required: true
+  - type: textarea
+    id: current_state
+    attributes:
+      label: Situação atual
+      description: Como o sistema/código se comporta ou está estruturado atualmente.
+    validations:
+      required: true
+  - type: textarea
+    id: desired_state
+    attributes:
+      label: Situação desejada
+      description: Como deve ficar após a implementação da melhoria.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto esperado
+      description: Qual será o benefício (ex: performance, manutenibilidade, usabilidade)?
+    validations:
+      required: true

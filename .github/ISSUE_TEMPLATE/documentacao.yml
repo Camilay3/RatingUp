@@ -1,0 +1,27 @@
+name: "📄 Documentação"
+description: Relatar necessidade de criação ou ajuste em documentação
+title: "[DOCS] "
+labels: ["documentation"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição do que precisa ser documentado/corrigido
+      description: Descreva claramente qual documentação está faltando, incorreta ou precisa ser melhorada.
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Local
+      description: Arquivo, página ou seção específica.
+      placeholder: Ex. README.md, seção de Instalação
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Sugestão de conteúdo
+      description: Se aplicável, forneça uma sugestão de texto ou estrutura.
+    validations:
+      required: false
