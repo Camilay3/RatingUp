@@ -27,6 +27,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.security.SecureRandom;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -37,14 +38,16 @@ public class UserService implements UserDetailsService {
     private final TokenCookieService tokenCookieService;
     private final ProgressRepository progressRepository;
     private final EmailService emailService;
+    private final SecureRandom secureRandom;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressRepository progressRepository, TokenGenerator tokenGenerator, EmailService emailService, TokenCookieService tokenCookieService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressRepository progressRepository, TokenGenerator tokenGenerator, EmailService emailService, TokenCookieService tokenCookieService, SecureRandom secureRandom) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
         this.tokenCookieService = tokenCookieService;
         this.progressRepository = progressRepository;
         this.emailService = emailService;
+        this.secureRandom = secureRandom;
     }
 
     @Transactional
@@ -176,7 +179,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new EntityNotFoundException("Nenhum usuário encontrado para esse email"));
 
 //        String token = UUID.randomUUID().toString(); //codigo de verificação grande
-        String token = String.format("%05d", new java.util.Random().nextInt(100000)); //codigo de verificação pequeno
+        String token = String.format("%05d", secureRandom.nextInt(100000)); //codigo de verificação pequeno
         user.setResetToken(token);
         user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
         userRepository.save(user);
