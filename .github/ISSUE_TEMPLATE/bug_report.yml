@@ -51,3 +51,15 @@ body:
       description: Se aplicável, adicione screenshots ou logs para ajudar a explicar seu problema.
     validations:
       required: false
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceite
+      description: Condições que devem ser atendidas para considerar o bug corrigido.
+      placeholder: |
+        - O comportamento esperado deve ocorrer ao executar os passos descritos.
+        - O comportamento atual reportado não deve mais ocorrer nas condições descritas.
+        - O cenário corrigido deve ser validado após a implementação.
+        - A correção não deve causar regressões nas funcionalidades existentes.
+    validations:
+      required: true
