@@ -30,7 +30,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/conta/cadastro") || path.equals("/conta/login") || path.equals("/auth/reset-password");
+        return path.equals("/conta/cadastro") || path.equals("/auth/login") || path.equals("/auth/reset-password");
     }
 
     @Override
