@@ -28,6 +28,6 @@ body:
     id: impact
     attributes:
       label: Impacto esperado
-      description: Qual será o benefício (ex: performance, manutenibilidade, usabilidade)?
+      description: "Qual será o benefício (ex: performance, manutenibilidade, usabilidade)?"
     validations:
       required: true
