@@ -1,6 +1,6 @@
 name: "✨ Feature"
 description: Sugerir uma nova funcionalidade ou recurso
-title: "[FEATURE] "
+title: ""
 labels: ["feature"]
 body:
   - type: textarea
@@ -23,7 +23,7 @@ body:
       label: Solução proposta
       description: Uma descrição clara e concisa do que você quer que aconteça.
     validations:
-      required: true
+      required: false
   - type: textarea
     id: alternatives
     attributes:
@@ -37,9 +37,8 @@ body:
       label: Critérios de aceite
       description: Condições que devem ser atendidas para considerar a funcionalidade concluída.
       placeholder: |
-        - A nova funcionalidade deve estar disponível conforme a solução proposta.
-        - O fluxo principal da funcionalidade deve funcionar conforme especificado.
-        - Os dados de entrada devem ser tratados corretamente, incluindo casos inválidos quando aplicável.
-        - A implementação não deve causar regressões nas funcionalidades existentes.
+        [] criterio um
+        [] criterio dois
+        [] ...
     validations:
       required: true

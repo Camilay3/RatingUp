@@ -1,6 +1,6 @@
 name: "🐛 Bug"
 description: Relatar um bug ou erro encontrado no sistema
-title: "[BUG] "
+title: ""
 labels: ["bug"]
 body:
   - type: textarea
@@ -36,14 +36,6 @@ body:
       description: O que está acontecendo de fato.
     validations:
       required: true
-  - type: input
-    id: environment
-    attributes:
-      label: Ambiente
-      description: Navegador, Sistema Operacional, Versão, etc.
-      placeholder: Ex. Chrome 110, Windows 11
-    validations:
-      required: true
   - type: textarea
     id: screenshots
     attributes:
@@ -57,9 +49,8 @@ body:
       label: Critérios de aceite
       description: Condições que devem ser atendidas para considerar o bug corrigido.
       placeholder: |
-        - O comportamento esperado deve ocorrer ao executar os passos descritos.
-        - O comportamento atual reportado não deve mais ocorrer nas condições descritas.
-        - O cenário corrigido deve ser validado após a implementação.
-        - A correção não deve causar regressões nas funcionalidades existentes.
+        [] criterio um
+        [] criterio dois
+        [] ...
     validations:
       required: true
