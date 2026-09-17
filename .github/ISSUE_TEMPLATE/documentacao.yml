@@ -1,6 +1,6 @@
 name: "📄 Documentação"
 description: Relatar necessidade de criação ou ajuste em documentação
-title: "[DOCS] "
+title: ""
 labels: ["documentation"]
 body:
   - type: textarea
@@ -31,9 +31,8 @@ body:
       label: Critérios de aceite
       description: Condições que devem ser atendidas para considerar a documentação concluída.
       placeholder: |
-        - A documentação deve estar atualizada no local especificado.
-        - As informações devem estar corretas e consistentes com o funcionamento atual do sistema.
-        - O conteúdo deve ser claro e suficiente para o objetivo descrito na Issue.
-        - Links, exemplos e instruções devem funcionar corretamente, quando aplicável.
+        [] criterio um
+        [] criterio dois
+        [] ...
     validations:
       required: true

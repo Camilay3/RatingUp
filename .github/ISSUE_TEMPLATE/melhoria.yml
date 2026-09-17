@@ -1,6 +1,6 @@
 name: "🔧 Melhoria"
 description: Sugerir melhorias em funcionalidades ou código existente
-title: "[MELHORIA] "
+title: ""
 labels: ["melhoria"]
 body:
   - type: textarea
@@ -25,22 +25,14 @@ body:
     validations:
       required: true
   - type: textarea
-    id: impact
-    attributes:
-      label: Impacto esperado
-      description: "Qual será o benefício (ex: performance, manutenibilidade, usabilidade)?"
-    validations:
-      required: true
-  - type: textarea
     id: acceptance
     attributes:
       label: Critérios de aceite
       description: Condições que devem ser atendidas para considerar a melhoria concluída.
       placeholder: |
-        - A melhoria deve estar implementada conforme a situação desejada.
-        - O comportamento atual deve ser substituído ou aprimorado conforme especificado.
-        - As funcionalidades existentes não devem ser prejudicadas.
-        - O benefício esperado deve ser alcançado.
+        [] criterio um
+        [] criterio dois
+        [] ...
     validations:
       required: true
 
