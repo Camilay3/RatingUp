@@ -155,7 +155,7 @@ public class UserService implements UserDetailsService {
         return ResponseCookie
                 .from("token", token)
                 .httpOnly(true)
-                .secure(false)
+                .secure(tokenCookieService.isCookieSecure())
                 .path("/")
                 .sameSite("Lax")
                 .maxAge(Duration.ofDays(7))
@@ -166,7 +166,7 @@ public class UserService implements UserDetailsService {
         return ResponseCookie
                 .from("token", "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(tokenCookieService.isCookieSecure())
                 .path("/")
                 .sameSite("Lax")
                 .maxAge(0)
@@ -205,7 +205,7 @@ public class UserService implements UserDetailsService {
         return ResponseCookie
                 .from("token",jwt)
                 .httpOnly(true)
-                .secure(false)
+                .secure(tokenCookieService.isCookieSecure())
                 .path("/")
                 .sameSite("Lax")
                 .maxAge(Duration.ofMinutes(10))

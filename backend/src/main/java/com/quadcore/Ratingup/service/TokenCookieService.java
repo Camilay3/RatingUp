@@ -2,10 +2,14 @@ package com.quadcore.Ratingup.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TokenCookieService {
+
+    @Value("${api.security.cookie-secure}")
+    private boolean cookieSecure;
 
     public String recoverToken(HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
@@ -16,5 +20,9 @@ public class TokenCookieService {
         }
 
         return null;
+    }
+
+    public boolean isCookieSecure() {
+        return cookieSecure;
     }
 }
