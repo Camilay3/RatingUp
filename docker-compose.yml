@@ -97,7 +97,7 @@ services:
 
   # Object Storage Service
   minio:
-    image: minio/minio
+    image: quay.io/minio/minio
     container_name: ratingup_minio
     env_file:
       - .env
@@ -116,7 +116,7 @@ services:
     networks:
       - back-network
   minio-restore:
-    image: minio/mc
+    image: quay.io/minio/mc
     container_name: ratingup_minio_restore
     env_file:
       - .env
@@ -161,6 +161,16 @@ services:
     networks:
       - back-network
     restart: "no"
+
+  # Fake SMTP Server (Fallback)
+  mailpit:
+    image: axllent/mailpit
+    container_name: ratingup_mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - back-network
 
 networks:
   back-network:

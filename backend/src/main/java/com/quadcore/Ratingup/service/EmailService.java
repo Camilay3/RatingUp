@@ -5,6 +5,7 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -18,6 +19,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    private final JavaMailSender fallbackMailSender;
 
     @Value("${spring.mail.username}")
     private String emailOrigem;
@@ -28,6 +30,12 @@ public class EmailService {
     public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
+        
+        // Configura o Mailpit como servidor local de fallback
+        JavaMailSenderImpl fallback = new JavaMailSenderImpl();
+        fallback.setHost("mailpit"); // Usa o nome do container do docker-compose
+        fallback.setPort(1025);
+        this.fallbackMailSender = fallback;
     }
 
     public void sendRecoverMail(String destiny, String token) {
@@ -40,18 +48,28 @@ public class EmailService {
     }
 
     private void enviarEmail(String destino, String assunto, String conteudo) {
-        MimeMessage message = mailSender.createMimeMessage();
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom(emailOrigem, nomeEnviador);
-            helper.setTo(destino);
-            helper.setSubject(assunto);
-            helper.setText(conteudo, true); // true = HTML
-            mailSender.send(message);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new RuntimeException("Erro ao enviar e-mail: " + e.getMessage());
-        } catch (MailException e) {
-            throw new RuntimeException("Erro ao enviar e-mail: " + e.getMessage());
+            send(this.mailSender, destino, assunto, conteudo);
+        } catch (Exception e) {
+            System.err.println("[EmailService] Falha ao enviar pelo SMTP principal. Motivo: " + e.getMessage());
+            System.err.println("[EmailService] Tentando servidor de Fallback local (Mailpit)...");
+            
+            try {
+                send(this.fallbackMailSender, destino, assunto, conteudo);
+                System.out.println("[EmailService] E-mail enviado com sucesso via Fallback (Mailpit)!");
+            } catch (Exception fallbackError) {
+                throw new RuntimeException("Erro ao enviar e-mail em ambos os servidores: " + fallbackError.getMessage());
+            }
         }
+    }
+
+    private void send(JavaMailSender sender, String destino, String assunto, String conteudo) throws MessagingException, UnsupportedEncodingException, MailException {
+        MimeMessage message = sender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setFrom(emailOrigem, nomeEnviador);
+        helper.setTo(destino);
+        helper.setSubject(assunto);
+        helper.setText(conteudo, true); // true = HTML
+        sender.send(message);
     }
 }

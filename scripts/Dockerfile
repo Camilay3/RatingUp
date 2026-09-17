@@ -4,8 +4,6 @@ RUN apk add --no-cache \
     bash \
     curl
 
-RUN wget -q https://dl.min.io/client/mc/release/linux-amd64/mc \
-      -O /usr/local/bin/mc && \
-    chmod +x /usr/local/bin/mc
+COPY --from=quay.io/minio/mc /usr/bin/mc /usr/local/bin/mc
 
 WORKDIR /
