@@ -162,6 +162,16 @@ services:
       - back-network
     restart: "no"
 
+  # Fake SMTP Server (Fallback)
+  mailpit:
+    image: axllent/mailpit
+    container_name: ratingup_mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - back-network
+
 networks:
   back-network:
     driver: bridge
