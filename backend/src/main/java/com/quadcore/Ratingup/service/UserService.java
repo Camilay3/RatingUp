@@ -174,13 +174,15 @@ public class UserService implements UserDetailsService {
     }
 
     public void passwordRecoverRequest(String email){
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Nenhum usuário encontrado para esse email"));
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return;
+        }
+        User user = userOpt.get();
 
-//        String token = UUID.randomUUID().toString(); //codigo de verificação grande
-        String token = String.format("%05d", new java.util.Random().nextInt(100000)); //codigo de verificação pequeno
+        String token = java.util.UUID.randomUUID().toString();
         user.setResetToken(token);
-        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
         userRepository.save(user);
 
         emailService.sendRecoverMail(user.getEmail(), token);

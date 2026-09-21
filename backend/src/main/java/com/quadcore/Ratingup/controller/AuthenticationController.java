@@ -22,6 +22,19 @@ import java.time.Duration;
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final UserService userService;
+    private final java.util.concurrent.ConcurrentHashMap<String, Long> rateLimitMap = new java.util.concurrent.ConcurrentHashMap<>();
+
+    private boolean isRateLimited(String ip) {
+        long now = System.currentTimeMillis();
+        long window = 60000; // 1 minute
+        rateLimitMap.values().removeIf(time -> now - time > window);
+        long attempts = rateLimitMap.entrySet().stream().filter(e -> e.getKey().startsWith(ip + "_")).count();
+        if (attempts >= 5) {
+            return true;
+        }
+        rateLimitMap.put(ip + "_" + now + "_" + java.util.UUID.randomUUID(), now);
+        return false;
+    }
 
     public AuthenticationController (UserService userService){
         this.userService = userService;
@@ -59,13 +72,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/validate-token")
-    public ResponseEntity<Void> validateToken(@RequestParam String token){
+    public ResponseEntity<?> validateToken(@RequestParam String token, jakarta.servlet.http.HttpServletRequest request){
+        if (isRateLimited(request.getRemoteAddr())) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ApiResponse<>(false, "Muitas requisições. Tente novamente mais tarde.", null));
+        }
         ResponseCookie cookie = userService.validateResetToken(token);
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }
 
     @PostMapping("/recover-password")
-    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto){
+    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto, jakarta.servlet.http.HttpServletRequest request){
+        if (isRateLimited(request.getRemoteAddr())) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ApiResponse<>(false, "Muitas requisições. Tente novamente mais tarde.", null));
+        }
         userService.passwordRecoverRequest(dto.email());
         return ResponseEntity.ok(
                 new ApiResponse<>(
