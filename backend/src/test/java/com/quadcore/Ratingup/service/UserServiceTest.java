@@ -201,4 +201,45 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.deleteUser("notfound@test.com"))
                 .isInstanceOf(EntityNotFoundException.class);
     }
+
+    @Test
+    void resetPassword_ShouldThrow_WhenPasswordIsWeak() {
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(10));
+        
+        org.springframework.security.core.Authentication auth = org.mockito.Mockito.mock(org.springframework.security.core.Authentication.class);
+        org.mockito.Mockito.when(auth.getPrincipal()).thenReturn(user);
+        org.springframework.security.core.context.SecurityContext securityContext = org.mockito.Mockito.mock(org.springframework.security.core.context.SecurityContext.class);
+        org.mockito.Mockito.when(securityContext.getAuthentication()).thenReturn(auth);
+        org.springframework.security.core.context.SecurityContextHolder.setContext(securityContext);
+
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> userService.resetPassword("weak"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("fraca");
+    }
+
+    @Test
+    void registerUser_ShouldThrow_WhenPasswordHasRepeatedCharacters() {
+        com.quadcore.Ratingup.dto.profile.ProfileRequestDTO request = new com.quadcore.Ratingup.dto.profile.ProfileRequestDTO("Name", "Nick", "test@test.com", "11111111", "aaaaaaaaaa1!");
+        
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> userService.registerUser(request))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("repetidos");
+    }
+
+    @Test
+    void resetPassword_ShouldUpdatePassword() {
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(10));
+        
+        org.springframework.security.core.Authentication auth = org.mockito.Mockito.mock(org.springframework.security.core.Authentication.class);
+        org.mockito.Mockito.when(auth.getPrincipal()).thenReturn(user);
+        org.springframework.security.core.context.SecurityContext securityContext = org.mockito.Mockito.mock(org.springframework.security.core.context.SecurityContext.class);
+        org.mockito.Mockito.when(securityContext.getAuthentication()).thenReturn(auth);
+        org.springframework.security.core.context.SecurityContextHolder.setContext(securityContext);
+
+        org.mockito.Mockito.when(passwordEncoder.encode(anyString())).thenReturn("hashed_new_pw");
+
+        userService.resetPassword("StrongPw123@");
+
+        org.mockito.Mockito.verify(userRepository, org.mockito.Mockito.times(1)).save(user);
+}
 }
