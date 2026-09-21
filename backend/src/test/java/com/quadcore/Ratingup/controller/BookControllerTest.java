@@ -51,7 +51,7 @@ public class BookControllerTest {
 
         mockMvc.perform(get("/livro/paginas"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(true))
                 .andExpect(jsonPath("$.message").value("Páginas encontradas"));
     }
 
@@ -64,7 +64,7 @@ public class BookControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(true))
                 .andExpect(jsonPath("$.message").value("Subtópico salvo com sucesso"));
     }
 
@@ -79,7 +79,7 @@ public class BookControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(true))
                 .andExpect(jsonPath("$.message").value("Conteúdo encontrado"));
     }
 }

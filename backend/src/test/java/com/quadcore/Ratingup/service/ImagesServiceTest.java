@@ -59,10 +59,10 @@ public class ImagesServiceTest {
         
         // Mock the GetObjectResponse which extends FilterInputStream (or similar depending on MinIO version)
         GetObjectResponse getObjectResponse = mock(GetObjectResponse.class);
-        when(getObjectResponse.readAllBytes()).thenReturn(content);
-        when(getObjectResponse.read(any(byte[].class), anyInt(), anyInt())).thenAnswer(invocation -> stream.read((byte[]) invocation.getArgument(0), invocation.getArgument(1), invocation.getArgument(2)));
-        when(getObjectResponse.read(any(byte[].class))).thenAnswer(invocation -> stream.read((byte[]) invocation.getArgument(0)));
-        when(getObjectResponse.read()).thenAnswer(invocation -> stream.read());
+        lenient().when(getObjectResponse.readAllBytes()).thenReturn(content);
+        lenient().when(getObjectResponse.read(any(byte[].class), anyInt(), anyInt())).thenAnswer(invocation -> stream.read((byte[]) invocation.getArgument(0), invocation.getArgument(1), invocation.getArgument(2)));
+        lenient().when(getObjectResponse.read(any(byte[].class))).thenAnswer(invocation -> stream.read((byte[]) invocation.getArgument(0)));
+        lenient().when(getObjectResponse.read()).thenAnswer(invocation -> stream.read());
         
         when(minioClient.getObject(any(GetObjectArgs.class))).thenReturn(getObjectResponse);
 

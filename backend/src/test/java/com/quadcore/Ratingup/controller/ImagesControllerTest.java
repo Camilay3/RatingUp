@@ -43,7 +43,7 @@ public class ImagesControllerTest {
         mockMvc.perform(multipart("/images/upload/test-bucket")
                 .file(file))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(true))
                 .andExpect(jsonPath("$.message").value("Imagem subiu com sucesso"));
     }
 
@@ -67,7 +67,7 @@ public class ImagesControllerTest {
 
         mockMvc.perform(get("/images/exists/test-bucket/test-image.png"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(true))
                 .andExpect(jsonPath("$.data").value(true));
     }
 }
