@@ -99,3 +99,29 @@ jobs:
       - name: Para os containers
         if: always()
         run: docker compose down -v
+
+  backend-tests:
+    name: Backend tests and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: "maven"
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Rodar testes e build
+        working-directory: backend
+        run: ./mvnw clean package jacoco:report
