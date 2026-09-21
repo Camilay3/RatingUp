@@ -56,12 +56,6 @@ public class EmailServiceTest {
         when(templateEngine.process(eq("email/redefinir-senha"), any(Context.class))).thenReturn("<html>test</html>");
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
         doThrow(new RuntimeException("Simulated failure")).when(mailSender).send(mimeMessage);
-
-        // Here the fallback will also try to send and will use JavaMailSenderImpl inside EmailService.
-        // It creates a mime message via fallbackMailSender (which is not mocked here).
-        // Testing this fully requires mocking fallbackMailSender, which is instantiated inside the constructor.
-        // To simplify, we can just assert that it throws an exception because the local fallback mailpit isn't reachable in tests.
-        // Or we inject a mock fallbackMailSender via ReflectionTestUtils.
         
         JavaMailSender fallbackMock = mock(JavaMailSender.class);
         when(fallbackMock.createMimeMessage()).thenReturn(mimeMessage);

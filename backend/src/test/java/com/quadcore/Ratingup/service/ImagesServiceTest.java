@@ -57,7 +57,7 @@ public class ImagesServiceTest {
         byte[] content = "test image content".getBytes();
         InputStream stream = new ByteArrayInputStream(content);
         
-        // Mock the GetObjectResponse which extends FilterInputStream (or similar depending on MinIO version)
+
         GetObjectResponse getObjectResponse = mock(GetObjectResponse.class);
         lenient().when(getObjectResponse.readAllBytes()).thenReturn(content);
         lenient().when(getObjectResponse.read(any(byte[].class), anyInt(), anyInt())).thenAnswer(invocation -> stream.read((byte[]) invocation.getArgument(0), invocation.getArgument(1), invocation.getArgument(2)));

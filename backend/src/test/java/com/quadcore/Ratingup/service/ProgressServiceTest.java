@@ -111,7 +111,7 @@ class ProgressServiceTest {
         when(chaptersRepository.findTopByOrderByDisplayOrderDesc()).thenReturn(Optional.of(lastChapter));
         
         Subtopics lastSubtopic = new Subtopics();
-        lastSubtopic.setDisplayOrder(1); // The subtopic we are updating is the last one in this chapter
+        lastSubtopic.setDisplayOrder(1);
         when(subtopicsRepository.findTopByChapterIdOrderByDisplayOrderDesc(1)).thenReturn(Optional.of(lastSubtopic));
 
         when(progressRepository.save(any(Progress.class))).thenAnswer(i -> i.getArgument(0));
@@ -167,7 +167,7 @@ class ProgressServiceTest {
     
     @Test
     void updateCurrentPhase_ShouldThrowException_WhenInvalidProgress() {
-        // e.g. Trying to update chapter 2 subtopic 1, when current is chapter 1 subtopic 1
+
         progress.setChapters(1);
         progress.setSubtopics(1);
         ProgressUpdateDTO dto = new ProgressUpdateDTO(2, 1);

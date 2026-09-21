@@ -77,7 +77,7 @@ class BookServiceTest {
         BookDTO book = bookService.buildBook();
 
         assertThat(book).isNotNull();
-        assertThat(book.totalPages()).isEqualTo(1); // 2 contents: chapter + subtopic = 1 page
+        assertThat(book.totalPages()).isEqualTo(1);
         List<PageDTO> pages = book.pages();
         assertThat(pages).hasSize(1);
         assertThat(pages.get(0).front().type()).isEqualTo("capitulo");

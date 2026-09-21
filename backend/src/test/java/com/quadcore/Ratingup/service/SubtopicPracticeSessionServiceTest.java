@@ -153,7 +153,7 @@ public class SubtopicPracticeSessionServiceTest {
     @Test
     @DisplayName("Should perform movement resulting in checkmate")
     void testPerformMovement_Checkmate() {
-        // Fools mate FEN
+
         subtopic.setInitialFen("rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3");
         subtopic.setSolutionMoves("h4h5"); // Just some valid move for the test that continues it
         session.setCurrentFen(subtopic.getInitialFen());
@@ -162,10 +162,7 @@ public class SubtopicPracticeSessionServiceTest {
         when(subtopicsRepository.findById(1L)).thenReturn(Optional.of(subtopic));
         when(sessionRepository.save(any())).thenReturn(session);
 
-        // Even though it's already checkmate, any check on status will return CHECKMATE. 
-        // Wait, the board will be loaded from current fen, then we apply the move. 
-        // Let's use a fen 1 move BEFORE checkmate.
-        // FEN: rnbqkbnr/ppppp2p/5p2/6p1/4P3/3P4/PPP2PPP/RNBQKBNR w KQkq - 0 3
+
         subtopic.setInitialFen("rnbqkbnr/pppp1ppp/8/4p3/5PP1/8/PPPPP2P/RNBQKBNR b KQkq - 0 2");
         subtopic.setSolutionMoves("d8h4,a2a3"); // Black moves Qh4#
         session.setCurrentFen(subtopic.getInitialFen());
