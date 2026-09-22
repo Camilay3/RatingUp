@@ -16,9 +16,6 @@ mc mb --ignore-existing local/book
 mc mb --ignore-existing local/avatars
 echo "[OK] Buckets verificados."
 
-ADMIN_EMAIL=${ADMIN_EMAIL:-"ratingupadmin@gmail.com"}
-ADMIN_PASSWORD=${ADMIN_PASSWORD:-"Ab@12345"}
-
 echo "[AUTH] Autenticando com usuário administrador ($ADMIN_EMAIL)..."
 curl -s -c /tmp/cookies.txt -X POST "$API_URL/auth/login" \
   -H "Content-Type: application/json" \
