@@ -9,7 +9,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.io.ByteArrayInputStream;
 import java.util.UUID;
 
 @Service
@@ -18,7 +20,7 @@ public class ImagesService {
     private final ImagesRepository imagesRepository;
     private final MinioClient minioClient;
 
-    @org.springframework.beans.factory.annotation.Value("${app.upload.max-size:5242880}")
+    @Value("${app.upload.max-size:5242880}")
     private long maxUploadSize;
 
     public ImagesService(ImagesRepository imagesRepository, MinioClient minioClient) {
@@ -50,7 +52,7 @@ public class ImagesService {
 
         var imageName = objectId + extension;
 
-        java.io.ByteArrayInputStream bais = new java.io.ByteArrayInputStream(bytes);
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 
         minioClient.putObject(
                 PutObjectArgs.builder()

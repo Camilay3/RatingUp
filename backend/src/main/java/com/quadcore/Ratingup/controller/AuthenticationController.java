@@ -5,6 +5,7 @@ import com.quadcore.Ratingup.dto.profile.*;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -17,12 +18,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.Duration;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final UserService userService;
-    private final java.util.concurrent.ConcurrentHashMap<String, Long> rateLimitMap = new java.util.concurrent.ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Long> rateLimitMap = new ConcurrentHashMap<>();
 
     private boolean isRateLimited(String ip) {
         long now = System.currentTimeMillis();
@@ -32,7 +35,7 @@ public class AuthenticationController {
         if (attempts >= 5) {
             return true;
         }
-        rateLimitMap.put(ip + "_" + now + "_" + java.util.UUID.randomUUID(), now);
+        rateLimitMap.put(ip + "_" + now + "_" + UUID.randomUUID(), now);
         return false;
     }
 
@@ -72,16 +75,16 @@ public class AuthenticationController {
     }
 
     @PostMapping("/validate-token")
-    public ResponseEntity<?> validateToken(@RequestParam String token, jakarta.servlet.http.HttpServletRequest request){
+    public ResponseEntity<Void> validateToken(@RequestParam String token, HttpServletRequest request){
         if (isRateLimited(request.getRemoteAddr())) {
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ApiResponse<>(false, "Muitas requisições. Tente novamente mais tarde.", null));
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
         ResponseCookie cookie = userService.validateResetToken(token);
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }
 
     @PostMapping("/recover-password")
-    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto, jakarta.servlet.http.HttpServletRequest request){
+    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto, HttpServletRequest request){
         if (isRateLimited(request.getRemoteAddr())) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ApiResponse<>(false, "Muitas requisições. Tente novamente mais tarde.", null));
         }

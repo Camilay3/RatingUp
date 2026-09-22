@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -41,7 +42,7 @@ public class ImagesServiceTest {
         MockMultipartFile file = new MockMultipartFile("file", "test.png", "image/png", validPng);
         Images savedImage = new Images("objectId", "test.png", "test-bucket");
 
-        org.springframework.test.util.ReflectionTestUtils.setField(imagesService, "maxUploadSize", 5242880L);
+        ReflectionTestUtils.setField(imagesService, "maxUploadSize", 5242880L);
 
         when(minioClient.putObject(any(PutObjectArgs.class))).thenReturn(null);
         when(imagesRepository.save(any(Images.class))).thenReturn(savedImage);
@@ -88,7 +89,7 @@ public class ImagesServiceTest {
     @Test
     @DisplayName("Should throw when image size exceeds limit")
     void testUploadSizeExceeded() {
-        org.springframework.test.util.ReflectionTestUtils.setField(imagesService, "maxUploadSize", 10L);
+        ReflectionTestUtils.setField(imagesService, "maxUploadSize", 10L);
         byte[] validPng = new byte[] { (byte)0x89, 0x50, 0x4E, 0x47, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         MockMultipartFile file = new MockMultipartFile("file", "test.png", "image/png", validPng);
         
@@ -101,7 +102,7 @@ public class ImagesServiceTest {
     @Test
     @DisplayName("Should throw when image content type is invalid")
     void testUploadInvalidContentType() {
-        org.springframework.test.util.ReflectionTestUtils.setField(imagesService, "maxUploadSize", 5242880L);
+        ReflectionTestUtils.setField(imagesService, "maxUploadSize", 5242880L);
         byte[] validPng = new byte[] { (byte)0x89, 0x50, 0x4E, 0x47, 0, 0, 0, 0, 0, 0, 0, 0 };
         MockMultipartFile file = new MockMultipartFile("file", "test.png", "application/pdf", validPng);
         
@@ -114,7 +115,7 @@ public class ImagesServiceTest {
     @Test
     @DisplayName("Should throw when image magic bytes are invalid")
     void testUploadInvalidMagicBytes() {
-        org.springframework.test.util.ReflectionTestUtils.setField(imagesService, "maxUploadSize", 5242880L);
+        ReflectionTestUtils.setField(imagesService, "maxUploadSize", 5242880L);
         byte[] invalidPng = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         MockMultipartFile file = new MockMultipartFile("file", "test.png", "image/png", invalidPng);
         

@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -180,7 +181,7 @@ public class UserService implements UserDetailsService {
         }
         User user = userOpt.get();
 
-        String token = String.format("%05d", new java.util.Random().nextInt(100000));
+        String token = String.format("%05d", new Random().nextInt(100000));
         user.setResetToken(token);
         user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
         userRepository.save(user);
