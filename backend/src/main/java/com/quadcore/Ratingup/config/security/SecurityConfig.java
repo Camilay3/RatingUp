@@ -27,7 +27,7 @@ public class SecurityConfig {
     @Autowired
     private SecurityFilter securityFilter;
 
-    @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:5173}")
+    @Value("${app.cors.allowed-origins}")
     private List<String> allowedOrigins;
 
     @Bean

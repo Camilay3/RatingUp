@@ -20,7 +20,7 @@ public class ImagesService {
     private final ImagesRepository imagesRepository;
     private final MinioClient minioClient;
 
-    @Value("${app.upload.max-size:5242880}")
+    @Value("${app.upload.max-size}")
     private long maxUploadSize;
 
     public ImagesService(ImagesRepository imagesRepository, MinioClient minioClient) {
