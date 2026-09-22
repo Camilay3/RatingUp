@@ -45,6 +45,14 @@ public class UserService implements UserDetailsService {
     private final EmailService emailService;
     private final ConcurrentHashMap<String, Long> rateLimitMap = new ConcurrentHashMap<>();
 
+    public UserService(UserRepository userRepository, ProgressRepository progressRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator, EmailService emailService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenGenerator = tokenGenerator;
+        this.progressRepository = progressRepository;
+        this.emailService = emailService;
+    }
+
     public boolean isRateLimited(String ip) {
         long now = System.currentTimeMillis();
         long window = 60000; // 1 minute
@@ -55,14 +63,6 @@ public class UserService implements UserDetailsService {
         }
         rateLimitMap.put(ip + "_" + now + "_" + UUID.randomUUID(), now);
         return false;
-    }
-
-    public UserService(UserRepository userRepository, ProgressRepository progressRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator, EmailService emailService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.tokenGenerator = tokenGenerator;
-        this.progressRepository = progressRepository;
-        this.emailService = emailService;
     }
 
     @Transactional
