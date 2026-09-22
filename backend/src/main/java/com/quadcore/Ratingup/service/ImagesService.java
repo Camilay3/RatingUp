@@ -50,7 +50,9 @@ public class ImagesService {
         else if (contentType.equals("image/png")) extension = ".png";
         else if (contentType.equals("image/webp")) extension = ".webp";
 
-        var imageName = objectId + extension;
+        var originalName = file.getOriginalFilename();
+        if (originalName == null) originalName = objectId + extension;
+        var imageName = originalName.replace(" ", "-");
 
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 
