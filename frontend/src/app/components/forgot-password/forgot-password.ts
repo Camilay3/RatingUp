@@ -127,7 +127,7 @@ NewPasswordSubmit(){
 
   initCodeForm(){
     this.CodeForm = this.fb.group({
-      code: ['',[Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^\d+$/)]]
+      code: ['',[Validators.required, Validators.minLength(36), Validators.maxLength(36)]]
     })
   }
 

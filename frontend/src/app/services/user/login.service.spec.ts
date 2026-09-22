@@ -15,7 +15,7 @@ describe('LoginService', () => {
 		service.updateProfile({ name: 'Ada' }).subscribe();
 		service.deleteAccount().subscribe();
 		service.recoverPassword('a@b.com').subscribe();
-		service.validateToken('12345').subscribe();
+		service.validateToken('123e4567-e89b-12d3-a456-426614174000').subscribe();
 		service.resetPassword('new').subscribe();
 
 		expect(http.post).toHaveBeenNthCalledWith(1, expect.stringContaining('/auth/login'), { email: 'a@b.com', password: 'secret' });
@@ -23,7 +23,7 @@ describe('LoginService', () => {
 		expect(http.patch).toHaveBeenCalledWith(expect.stringContaining('/conta/me/atualizar'), { name: 'Ada' });
 		expect(http.delete).toHaveBeenCalledWith(expect.stringContaining('/conta/meu/deletar'));
 		expect(http.post).toHaveBeenNthCalledWith(3, expect.stringContaining('/auth/recover-password'), { email: 'a@b.com' });
-		expect(http.post).toHaveBeenNthCalledWith(4, expect.stringContaining('/auth/validate-token'), null, { params: { token: '12345' } });
+		expect(http.post).toHaveBeenNthCalledWith(4, expect.stringContaining('/auth/validate-token'), null, { params: { token: '123e4567-e89b-12d3-a456-426614174000' } });
 		expect(http.post).toHaveBeenNthCalledWith(5, expect.stringContaining('/auth/reset-password'), { newPassword: 'new' });
 	});
 });
