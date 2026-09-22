@@ -180,7 +180,7 @@ public class UserService implements UserDetailsService {
         }
         User user = userOpt.get();
 
-        String token = java.util.UUID.randomUUID().toString();
+        String token = String.format("%05d", new java.util.Random().nextInt(100000));
         user.setResetToken(token);
         user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
         userRepository.save(user);
