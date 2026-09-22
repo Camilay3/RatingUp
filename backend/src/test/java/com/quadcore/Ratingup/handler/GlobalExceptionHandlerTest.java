@@ -2,7 +2,6 @@ package com.quadcore.Ratingup.handler;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
-import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
