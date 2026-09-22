@@ -5,6 +5,7 @@ import com.quadcore.Ratingup.dto.profile.*;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +23,6 @@ import java.time.Duration;
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final UserService userService;
-
     public AuthenticationController (UserService userService){
         this.userService = userService;
     }
@@ -59,13 +59,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/validate-token")
-    public ResponseEntity<Void> validateToken(@RequestParam String token){
+    public ResponseEntity<Void> validateToken(@RequestParam String token, HttpServletRequest request){
+        if (userService.isRateLimited(request.getRemoteAddr())) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
         ResponseCookie cookie = userService.validateResetToken(token);
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }
 
     @PostMapping("/recover-password")
-    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto){
+    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto, HttpServletRequest request){
+        if (userService.isRateLimited(request.getRemoteAddr())) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ApiResponse<>(false, "Muitas requisições. Tente novamente mais tarde.", null));
+        }
         userService.passwordRecoverRequest(dto.email());
         return ResponseEntity.ok(
                 new ApiResponse<>(

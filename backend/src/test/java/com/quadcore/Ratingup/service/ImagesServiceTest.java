@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -37,8 +38,11 @@ public class ImagesServiceTest {
     @Test
     @DisplayName("Should upload image successfully")
     void testUpload() throws Exception {
-        MockMultipartFile file = new MockMultipartFile("file", "test.png", "image/png", "test content".getBytes());
+        byte[] validPng = new byte[] { (byte)0x89, 0x50, 0x4E, 0x47, 0, 0, 0, 0, 0, 0, 0, 0 };
+        MockMultipartFile file = new MockMultipartFile("file", "test.png", "image/png", validPng);
         Images savedImage = new Images("objectId", "test.png", "test-bucket");
+
+        ReflectionTestUtils.setField(imagesService, "maxUploadSize", 5242880L);
 
         when(minioClient.putObject(any(PutObjectArgs.class))).thenReturn(null);
         when(imagesRepository.save(any(Images.class))).thenReturn(savedImage);
@@ -80,5 +84,44 @@ public class ImagesServiceTest {
         boolean result = imagesService.exists("test-image.png", "test-bucket");
 
         assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("Should throw when image size exceeds limit")
+    void testUploadSizeExceeded() {
+        ReflectionTestUtils.setField(imagesService, "maxUploadSize", 10L);
+        byte[] validPng = new byte[] { (byte)0x89, 0x50, 0x4E, 0x47, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        MockMultipartFile file = new MockMultipartFile("file", "test.png", "image/png", validPng);
+        
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            imagesService.upload(file, "test-bucket");
+        });
+        assertEquals("O tamanho do arquivo excede o limite permitido.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw when image content type is invalid")
+    void testUploadInvalidContentType() {
+        ReflectionTestUtils.setField(imagesService, "maxUploadSize", 5242880L);
+        byte[] validPng = new byte[] { (byte)0x89, 0x50, 0x4E, 0x47, 0, 0, 0, 0, 0, 0, 0, 0 };
+        MockMultipartFile file = new MockMultipartFile("file", "test.png", "application/pdf", validPng);
+        
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            imagesService.upload(file, "test-bucket");
+        });
+        assertEquals("Tipo de arquivo não permitido. Apenas JPEG, PNG e WEBP são suportados.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw when image magic bytes are invalid")
+    void testUploadInvalidMagicBytes() {
+        ReflectionTestUtils.setField(imagesService, "maxUploadSize", 5242880L);
+        byte[] invalidPng = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        MockMultipartFile file = new MockMultipartFile("file", "test.png", "image/png", invalidPng);
+        
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            imagesService.upload(file, "test-bucket");
+        });
+        assertEquals("Assinatura do arquivo inválida.", exception.getMessage());
     }
 }

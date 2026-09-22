@@ -16,6 +16,12 @@ mc mb --ignore-existing local/book
 mc mb --ignore-existing local/avatars
 echo "[OK] Buckets verificados."
 
+echo "[AUTH] Autenticando com usuário administrador ($ADMIN_EMAIL)..."
+curl -s -c /tmp/cookies.txt -X POST "$API_URL/auth/login" \
+  -H "Content-Type: application/json" \
+  -d "{\"email\": \"$ADMIN_EMAIL\", \"password\": \"$ADMIN_PASSWORD\"}" > /dev/null
+echo "[OK] Sessão iniciada."
+
 upload_images() {
   local dir=$1
   local bucket=$2
@@ -47,7 +53,7 @@ upload_images() {
 
     echo "[UPLOAD] Enviando $filename para o bucket $bucket..."
 
-    response_code=$(curl -s -o /dev/null -w "%{http_code}" \
+    response_code=$(curl -s -o /dev/null -w "%{http_code}" -b /tmp/cookies.txt \
       -X POST "$API_URL/images/upload/$bucket" \
       -F "file=@$image")
 
