@@ -18,27 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.Duration;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final UserService userService;
-    private final ConcurrentHashMap<String, Long> rateLimitMap = new ConcurrentHashMap<>();
-
-    private boolean isRateLimited(String ip) {
-        long now = System.currentTimeMillis();
-        long window = 60000; // 1 minute
-        rateLimitMap.values().removeIf(time -> now - time > window);
-        long attempts = rateLimitMap.entrySet().stream().filter(e -> e.getKey().startsWith(ip + "_")).count();
-        if (attempts >= 5) {
-            return true;
-        }
-        rateLimitMap.put(ip + "_" + now + "_" + UUID.randomUUID(), now);
-        return false;
-    }
-
     public AuthenticationController (UserService userService){
         this.userService = userService;
     }
@@ -76,7 +60,7 @@ public class AuthenticationController {
 
     @PostMapping("/validate-token")
     public ResponseEntity<Void> validateToken(@RequestParam String token, HttpServletRequest request){
-        if (isRateLimited(request.getRemoteAddr())) {
+        if (userService.isRateLimited(request.getRemoteAddr())) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
         ResponseCookie cookie = userService.validateResetToken(token);
@@ -85,7 +69,7 @@ public class AuthenticationController {
 
     @PostMapping("/recover-password")
     public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto, HttpServletRequest request){
-        if (isRateLimited(request.getRemoteAddr())) {
+        if (userService.isRateLimited(request.getRemoteAddr())) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ApiResponse<>(false, "Muitas requisições. Tente novamente mais tarde.", null));
         }
         userService.passwordRecoverRequest(dto.email());

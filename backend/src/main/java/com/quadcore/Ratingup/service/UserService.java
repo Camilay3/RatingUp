@@ -32,17 +32,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class UserService implements UserDetailsService {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final TokenGenerator tokenGenerator;
     private final ProgressRepository progressRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenGenerator tokenGenerator;
     private final EmailService emailService;
+    private final ConcurrentHashMap<String, Long> rateLimitMap = new ConcurrentHashMap<>();
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressRepository progressRepository, TokenGenerator tokenGenerator, EmailService emailService) {
+    public boolean isRateLimited(String ip) {
+        long now = System.currentTimeMillis();
+        long window = 60000; // 1 minute
+        rateLimitMap.values().removeIf(time -> now - time > window);
+        long attempts = rateLimitMap.entrySet().stream().filter(e -> e.getKey().startsWith(ip + "_")).count();
+        if (attempts >= 5) {
+            return true;
+        }
+        rateLimitMap.put(ip + "_" + now + "_" + UUID.randomUUID(), now);
+        return false;
+    }
+
+    public UserService(UserRepository userRepository, ProgressRepository progressRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
