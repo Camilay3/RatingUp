@@ -97,7 +97,7 @@ services:
 
   # Object Storage Service
   minio:
-    image: quay.io/minio/minio
+    image: elestio/minio
     container_name: ratingup_minio
     env_file:
       - .env
@@ -116,7 +116,7 @@ services:
     networks:
       - back-network
   minio-restore:
-    image: quay.io/minio/mc
+    image: alpine
     container_name: ratingup_minio_restore
     env_file:
       - .env
@@ -129,6 +129,8 @@ services:
 #    Depois colocar o anonymous nas imagens de avatars se elas forem fixas mesmo
     command:
     - >-
+      apk add --no-cache curl &&
+      curl -sL -o /usr/bin/mc https://github.com/minio/mc/releases/download/RELEASE.2025-08-13T08-35-41Z/mc.linux-amd64.RELEASE.2025-08-13T08-35-41Z && chmod +x /usr/bin/mc &&
       mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
       mc mb --ignore-existing local/book &&
       mc mb --ignore-existing local/avatars &&

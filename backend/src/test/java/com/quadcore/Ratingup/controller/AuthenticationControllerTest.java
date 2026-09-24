@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
@@ -74,9 +73,8 @@ class AuthenticationControllerTest {
     @Test
     void loginUser_ShouldReturn200AndSetCookie() throws Exception {
         LoginRequestDTO dto = new LoginRequestDTO("test@test.com", "Pass12345!@#");
-        ResponseCookie cookie = ResponseCookie.from("token", "fake-token").build();
 
-        Mockito.when(userService.loginUser(anyString(), anyString())).thenReturn(cookie);
+        Mockito.when(userService.loginUser(anyString(), anyString())).thenReturn("fake-token");
 
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -88,10 +86,6 @@ class AuthenticationControllerTest {
 
     @Test
     void logoutUser_ShouldReturn200AndSetEmptyCookie() throws Exception {
-        ResponseCookie cookie = ResponseCookie.from("token", "").maxAge(0).build();
-
-        Mockito.when(userService.logoutUser()).thenReturn(cookie);
-
         mockMvc.perform(delete("/auth/logout"))
                 .andExpect(status().isOk())
                 .andExpect(header().exists(HttpHeaders.SET_COOKIE))
@@ -100,9 +94,7 @@ class AuthenticationControllerTest {
 
     @Test
     void validateToken_ShouldReturn200AndSetCookie() throws Exception {
-        ResponseCookie cookie = ResponseCookie.from("token", "new-token").build();
-
-        Mockito.when(userService.validateResetToken(anyString())).thenReturn(cookie);
+        Mockito.when(userService.validateResetToken(anyString())).thenReturn("new-token");
 
         mockMvc.perform(post("/auth/validate-token")
                         .param("token", "some-token"))
