@@ -32,3 +32,4 @@ Thumbs.db
 tests/resources/variables.robot
 tests/venv/
 tests/results/
+.task_progress_context.txt

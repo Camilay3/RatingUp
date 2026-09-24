@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -129,16 +128,14 @@ class UserServiceTest {
     }
 
     @Test
-    void loginUser_ShouldReturnCookie_WhenCredentialsAreValid() {
+    void loginUser_ShouldReturnToken_WhenCredentialsAreValid() {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
         when(tokenGenerator.gerarToken(any(User.class))).thenReturn("fake-jwt-token");
 
-        ResponseCookie cookie = userService.loginUser("test@test.com", "hashed_password");
+        String token = userService.loginUser("test@test.com", "hashed_password");
 
-        assertThat(cookie).isNotNull();
-        assertThat(cookie.getName()).isEqualTo("token");
-        assertThat(cookie.getValue()).isEqualTo("fake-jwt-token");
+        assertThat(token).isEqualTo("fake-jwt-token");
     }
 
     @Test
@@ -164,15 +161,14 @@ class UserServiceTest {
     }
 
     @Test
-    void validateResetToken_ShouldReturnCookie_WhenTokenIsValid() {
+    void validateResetToken_ShouldReturnToken_WhenTokenIsValid() {
         user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(10));
         when(userRepository.findByResetToken(anyString())).thenReturn(Optional.of(user));
         when(tokenGenerator.gerarToken(any(User.class))).thenReturn("fake-jwt-token");
 
-        ResponseCookie cookie = userService.validateResetToken("valid-token");
+        String token = userService.validateResetToken("valid-token");
 
-        assertThat(cookie).isNotNull();
-        assertThat(cookie.getName()).isEqualTo("token");
+        assertThat(token).isEqualTo("fake-jwt-token");
     }
 
     @Test

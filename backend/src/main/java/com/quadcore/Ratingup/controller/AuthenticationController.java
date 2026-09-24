@@ -33,13 +33,8 @@ public class AuthenticationController {
             @Valid @RequestBody LoginRequestDTO dto,
             HttpServletResponse response
     ) {
-        response.addHeader(
-                HttpHeaders.SET_COOKIE,
-                userService.loginUser(
-                        dto.email(),
-                        dto.password())
-                        .toString()
-        );
+        String token = userService.loginUser(dto.email(), dto.password());
+        response.addHeader(HttpHeaders.SET_COOKIE, createCookie(token, Duration.ofDays(7)));
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
@@ -51,7 +46,7 @@ public class AuthenticationController {
 
     @DeleteMapping("/logout")
     public ResponseEntity<ApiResponse<?>> logoutUser(HttpServletResponse response){
-        response.addHeader(HttpHeaders.SET_COOKIE, userService.logoutUser().toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, createCookie("", Duration.ofSeconds(0)));
         return ResponseEntity.ok(new ApiResponse<>(
                 true,
                 "Usuário deslogado com sucesso",
@@ -63,8 +58,8 @@ public class AuthenticationController {
         if (userService.isRateLimited(request.getRemoteAddr())) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
-        ResponseCookie cookie = userService.validateResetToken(token);
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
+        String jwt = userService.validateResetToken(token);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, createCookie(jwt, Duration.ofMinutes(10))).build();
     }
 
     @PostMapping("/recover-password")
@@ -97,5 +92,17 @@ public class AuthenticationController {
                         true,
                         "Senha alterada com sucesso!",
                         null));
+    }
+
+    private String createCookie(String token, Duration maxAge) {
+        return ResponseCookie
+                .from("token", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(maxAge)
+                .build()
+                .toString();
     }
 }

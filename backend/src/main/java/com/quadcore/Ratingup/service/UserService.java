@@ -15,9 +15,6 @@ import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +23,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -157,7 +153,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public ResponseCookie loginUser(String email, String senha){
+    public String loginUser(String email, String senha){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Nenhum usuário encontrado para esse email"));
 
@@ -165,28 +161,7 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Senha incorreta");
         }
 
-        String token = tokenGenerator.gerarToken(user);
-
-        return ResponseCookie
-                .from("token", token)
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(Duration.ofDays(7))
-                .build();
-    }
-
-    public ResponseCookie logoutUser() {
-        return ResponseCookie
-                .from("token", "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(0)
-                .build();
-
+        return tokenGenerator.gerarToken(user);
     }
 
     public void passwordRecoverRequest(String email){
@@ -204,7 +179,7 @@ public class UserService implements UserDetailsService {
         emailService.sendRecoverMail(user.getEmail(), token);
     }
 
-    public ResponseCookie validateResetToken(String token){
+    public String validateResetToken(String token){
         User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Token inválido"));
 
@@ -212,16 +187,7 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Esse token está expirado");
         }
 
-        String jwt = tokenGenerator.gerarToken(user);
-
-        return ResponseCookie
-                .from("token",jwt)
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(Duration.ofMinutes(10))
-                .build();
+        return tokenGenerator.gerarToken(user);
     }
 
     public void resetPassword(String newPassword){
