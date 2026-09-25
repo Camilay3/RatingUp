@@ -1,7 +1,8 @@
 package com.quadcore.Ratingup.handler;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.quadcore.Ratingup.dto.response.ApiResponse;
+import com.quadcore.Ratingup.dto.response.StandardError;
+import com.quadcore.Ratingup.exception.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,13 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 import java.util.Map;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class GlobalExceptionHandlerTest {
 
@@ -26,7 +26,7 @@ public class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Should handle EntityNotFoundException")
     void testEntityNotFound() {
-        ResponseEntity<ApiResponse<?>> response = handler.handleNotFound(new EntityNotFoundException("Not found"));
+        ResponseEntity<StandardError> response = handler.handleNotFound(new EntityNotFoundException("Not found"));
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("Not found", response.getBody().message());
     }
@@ -34,7 +34,7 @@ public class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Should handle DataIntegrityViolationException")
     void testDataIntegrity() {
-        ResponseEntity<ApiResponse<?>> response = handler.handleDataIntegrity(new DataIntegrityViolationException("Conflict"));
+        ResponseEntity<StandardError> response = handler.handleDataIntegrity(new DataIntegrityViolationException("Conflict"));
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals("Violação de integridade de dados", response.getBody().message());
     }
@@ -42,7 +42,7 @@ public class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Should handle JWT Exceptions")
     void testJwt() {
-        ResponseEntity<ApiResponse<?>> response = handler.handleJwt(new JWTVerificationException("Invalid token"));
+        ResponseEntity<StandardError> response = handler.handleJwt(new JWTVerificationException("Invalid token"));
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertEquals("Token inválido ou expirado", response.getBody().message());
     }
@@ -51,7 +51,7 @@ public class GlobalExceptionHandlerTest {
     @DisplayName("Should handle AuthenticationException")
     void testAuthentication() {
         AuthenticationException ex = new AuthenticationException("Auth failed") {};
-        ResponseEntity<ApiResponse<?>> response = handler.handleAuthentication(ex);
+        ResponseEntity<StandardError> response = handler.handleAuthentication(ex);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertEquals("Não autenticado", response.getBody().message());
     }
@@ -59,7 +59,7 @@ public class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Should handle AccessDeniedException")
     void testAccessDenied() {
-        ResponseEntity<ApiResponse<?>> response = handler.handleAccessDenied(new AccessDeniedException("Denied"));
+        ResponseEntity<StandardError> response = handler.handleAccessDenied(new AccessDeniedException("Denied"));
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals("Acesso negado", response.getBody().message());
     }
@@ -68,7 +68,7 @@ public class GlobalExceptionHandlerTest {
     @DisplayName("Should handle MailException")
     void testMail() {
         MailException ex = new MailException("Mail failed") {};
-        ResponseEntity<ApiResponse<?>> response = handler.handleMail(ex);
+        ResponseEntity<StandardError> response = handler.handleMail(ex);
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
         assertEquals("Falha ao enviar e-mail. Tente novamente mais tarde.", response.getBody().message());
     }
@@ -76,35 +76,35 @@ public class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Should handle RuntimeException")
     void testRuntime() {
-        ResponseEntity<ApiResponse<?>> response = handler.handleRuntime(new RuntimeException("Runtime error"));
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Runtime error", response.getBody().message());
+        ResponseEntity<StandardError> response = handler.handleRuntime(new RuntimeException("Runtime error"));
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("Erro interno no servidor", response.getBody().message());
     }
 
     @Test
     @DisplayName("Should handle general Exception")
     void testGeneral() {
-        ResponseEntity<ApiResponse<?>> response = handler.handleGeneral(new Exception("General error"));
+        ResponseEntity<StandardError> response = handler.handleGeneral(new Exception("General error"));
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals("Erro interno no servidor", response.getBody().message());
     }
     
     @Test
-    @DisplayName("Should handle ValidationException")
+    @DisplayName("Should handle FieldValidationException")
     void testValidation() {
-        ValidationException ex = new ValidationException("field1", "Invalid data");
-        ResponseEntity<ApiResponse<?>> response = handler.handleValidation(ex);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        FieldValidationException ex = new FieldValidationException("field1", "Invalid data");
+        ResponseEntity<StandardError> response = handler.handleFieldValidation(ex);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
         assertEquals("Dados inválidos", response.getBody().message());
-        Map<String, List<String>> errors = (Map<String, List<String>>) response.getBody().data();
-        assertEquals("Invalid data", errors.get("field1").get(0));
+        Map<String, String> errors = (Map<String, String>) response.getBody().errors();
+        assertEquals("Invalid data", errors.get("field1"));
     }
     
     @Test
-    @DisplayName("Should handle DuplicateFieldException")
+    @DisplayName("Should handle ConflictException")
     void testDuplicateField() {
-        DuplicateFieldException ex = new DuplicateFieldException(List.of("Error 1"));
-        ResponseEntity<ErrorResponse> response = handler.handleDuplicate(ex);
+        ConflictException ex = new ConflictException("Campos duplicados", List.of("Error 1"));
+        ResponseEntity<StandardError> response = handler.handleConflict(ex);
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals("CONFLICT", response.getBody().code());
     }
@@ -120,7 +120,7 @@ public class GlobalExceptionHandlerTest {
                 bindingResult
         );
         
-        ResponseEntity<ApiResponse<?>> response = handler.handleBadRequest(ex);
+        ResponseEntity<StandardError> response = handler.handleBadRequest(ex);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Dados inválidos", response.getBody().message());
     }

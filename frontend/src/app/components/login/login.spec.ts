@@ -95,7 +95,7 @@ describe('Login', () => {
 		expect(component.RegisterForm.get('nickname')?.hasError('backendError')).toBe(true);
 
 		loginService.register.mockReturnValueOnce(throwError(() => ({ error: {
-			data: { name: 'bad name', nickname: 'bad nickname', telefone: 'bad phone', email: 'bad email', password: 'bad password' },
+			errors: { name: 'bad name', nickname: 'bad nickname', telefone: 'bad phone', email: 'bad email', password: 'bad password' },
 		} })));
 		component.onRegister();
 		expect(component.RegisterForm.get('password')?.hasError('backendError')).toBe(true);
