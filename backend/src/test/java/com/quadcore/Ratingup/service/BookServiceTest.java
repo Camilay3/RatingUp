@@ -90,16 +90,6 @@ class BookServiceTest {
         
         when(chaptersRepository.findById(1L)).thenReturn(Optional.of(chapter));
         
-        Subtopics existingSub = new Subtopics();
-        existingSub.setId(2L);
-        existingSub.setDisplayOrder(1);
-        existingSub.setChapter(chapter);
-        
-        List<Subtopics> existingSubs = new ArrayList<>();
-        existingSubs.add(existingSub);
-        
-        when(subtopicsRepository.findByChapter_IdOrderByDisplayOrderAsc(1L)).thenReturn(existingSubs);
-        
         Subtopics savedSub = new Subtopics();
         savedSub.setId(3L);
         savedSub.setTitle("Novo Subtopico");
@@ -107,11 +97,21 @@ class BookServiceTest {
         savedSub.setChapter(chapter);
         when(subtopicsRepository.save(any(Subtopics.class))).thenReturn(savedSub);
 
+        Subtopics existingSub = new Subtopics();
+        existingSub.setId(2L);
+        existingSub.setDisplayOrder(2);
+        existingSub.setChapter(chapter);
+        
+        List<Subtopics> existingSubs = new ArrayList<>();
+        existingSubs.add(savedSub);
+        existingSubs.add(existingSub);
+        
+        when(subtopicsRepository.findByChapter_IdOrderByDisplayOrderAsc(1L)).thenReturn(existingSubs);
+
         List<SubtopicResponseDTO> response = bookService.addSubtopic(dto);
 
         assertThat(response).hasSize(2);
-        verify(subtopicsRepository, times(1)).saveAll(existingSubs);
-        assertThat(existingSub.getDisplayOrder()).isEqualTo(2); // Should have been incremented
+        verify(subtopicsRepository, times(1)).incrementDisplayOrderFrom(1L, 1);
     }
 
     @Test

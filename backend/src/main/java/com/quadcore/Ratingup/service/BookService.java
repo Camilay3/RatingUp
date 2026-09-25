@@ -12,6 +12,7 @@ import io.minio.MinioClient;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -54,21 +55,16 @@ public class BookService {
         return new BookDTO(paginas, paginas.size());
     }
 
+    @Transactional
     public List<SubtopicResponseDTO> addSubtopic(SubtopicRequestDTO dto) {
         Chapters capitulo = chaptersRepository.findById(dto.chapterId())
                 .orElseThrow(() -> new EntityNotFoundException("Capítulo não encontrado"));
+
+        subtopicsRepository.incrementDisplayOrderFrom(dto.chapterId(), dto.displayOrder());
+
+        subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo,null,null,null,null,null,null));
+
         List<Subtopics> subtopicos = subtopicsRepository.findByChapter_IdOrderByDisplayOrderAsc(dto.chapterId());
-
-        for (Subtopics subs : subtopicos) {
-            if (subs.getDisplayOrder() >= dto.displayOrder()) {
-                subs.setDisplayOrder(subs.getDisplayOrder() + 1);
-            }
-        }
-        subtopicsRepository.saveAll(subtopicos);
-
-        Subtopics salvo = subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo,null,null,null,null,null,null));
-        subtopicos.add(salvo);
-        subtopicos.sort(Comparator.comparingInt(Subtopics::getDisplayOrder));
 
         return subtopicos
                 .stream()
