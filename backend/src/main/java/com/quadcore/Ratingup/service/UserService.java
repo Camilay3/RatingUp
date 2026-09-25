@@ -3,6 +3,7 @@ package com.quadcore.Ratingup.service;
 import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 
+import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileUpdateRequestDTO;
 import com.quadcore.Ratingup.enums.Roles;
@@ -14,8 +15,7 @@ import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,31 +23,45 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.security.SecureRandom;
 
 @Service
 public class UserService implements UserDetailsService {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final TokenGenerator tokenGenerator;
-    private final TokenCookieService tokenCookieService;
     private final ProgressRepository progressRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenGenerator tokenGenerator;
     private final EmailService emailService;
+    private final ConcurrentHashMap<String, Long> rateLimitMap = new ConcurrentHashMap<>();
     private final SecureRandom secureRandom;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ProgressRepository progressRepository, TokenGenerator tokenGenerator, EmailService emailService, TokenCookieService tokenCookieService, SecureRandom secureRandom) {
+    public UserService(UserRepository userRepository, ProgressRepository progressRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator, EmailService emailService, SecureRandom secureRandom) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
-        this.tokenCookieService = tokenCookieService;
         this.progressRepository = progressRepository;
         this.emailService = emailService;
         this.secureRandom = secureRandom;
+    }
+
+    public boolean isRateLimited(String ip) {
+        long now = System.currentTimeMillis();
+        long window = 60000; // 1 minute
+        rateLimitMap.values().removeIf(time -> now - time > window);
+        long attempts = rateLimitMap.entrySet().stream().filter(e -> e.getKey().startsWith(ip + "_")).count();
+        if (attempts >= 5) {
+            return true;
+        }
+        rateLimitMap.put(ip + "_" + now + "_" + UUID.randomUUID(), now);
+        return false;
     }
 
     @Transactional
@@ -142,7 +156,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public ResponseCookie loginUser(String email, String senha){
+    public String loginUser(String email, String senha){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Nenhum usuário encontrado para esse email"));
 
@@ -150,44 +164,25 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Senha incorreta");
         }
 
-        String token = tokenGenerator.generateLoginToken(user);
-
-        return ResponseCookie
-                .from("token", token)
-                .httpOnly(true)
-                .secure(tokenCookieService.isCookieSecure())
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(Duration.ofDays(7))
-                .build();
-    }
-
-    public ResponseCookie logoutUser() {
-        return ResponseCookie
-                .from("token", "")
-                .httpOnly(true)
-                .secure(tokenCookieService.isCookieSecure())
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(0)
-                .build();
-
+        return tokenGenerator.generateLoginToken(user);
     }
 
     public void passwordRecoverRequest(String email){
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Nenhum usuário encontrado para esse email"));
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return;
+        }
+        User user = userOpt.get();
 
-//        String token = UUID.randomUUID().toString(); //codigo de verificação grande
         String token = String.format("%05d", secureRandom.nextInt(100000)); //codigo de verificação pequeno
         user.setResetToken(token);
-        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
         userRepository.save(user);
 
         emailService.sendRecoverMail(user.getEmail(), token);
     }
 
-    public ResponseCookie validateResetToken(String token){
+    public String validateResetToken(String token){
         User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Token inválido"));
 
@@ -195,29 +190,16 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Esse token está expirado");
         }
 
-        String jwt = tokenGenerator.generateRecoveryToken(user);
-
-        user.setResetToken(null);
-        user.setResetTokenExpiry(null);
-
-        userRepository.saveAndFlush(user);
-
-        return ResponseCookie
-                .from("token",jwt)
-                .httpOnly(true)
-                .secure(tokenCookieService.isCookieSecure())
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(Duration.ofMinutes(10))
-                .build();
+        return tokenGenerator.generateRecoveryToken(user);
     }
 
-    public void resetPassword(String newPassword, HttpServletRequest request){
-        String jwt = tokenCookieService.recoverToken(request);
+    public void resetPassword(String newPassword){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
 
-        String email = tokenGenerator.getRecoverySubject(jwt);
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+        if(user.getResetTokenExpiry().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("Esse token está expirado");
+        }
 
         String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
         if(!newPassword.matches(regex)){

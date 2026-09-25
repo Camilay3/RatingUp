@@ -23,7 +23,6 @@ import java.time.Duration;
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final UserService userService;
-
     public AuthenticationController (UserService userService){
         this.userService = userService;
     }
@@ -34,13 +33,8 @@ public class AuthenticationController {
             @Valid @RequestBody LoginRequestDTO dto,
             HttpServletResponse response
     ) {
-        response.addHeader(
-                HttpHeaders.SET_COOKIE,
-                userService.loginUser(
-                        dto.email(),
-                        dto.password())
-                        .toString()
-        );
+        String token = userService.loginUser(dto.email(), dto.password());
+        response.addHeader(HttpHeaders.SET_COOKIE, createCookie(token, Duration.ofDays(7)));
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
@@ -52,7 +46,7 @@ public class AuthenticationController {
 
     @DeleteMapping("/logout")
     public ResponseEntity<ApiResponse<?>> logoutUser(HttpServletResponse response){
-        response.addHeader(HttpHeaders.SET_COOKIE, userService.logoutUser().toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, createCookie("", Duration.ofSeconds(0)));
         return ResponseEntity.ok(new ApiResponse<>(
                 true,
                 "Usuário deslogado com sucesso",
@@ -60,13 +54,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/validate-token")
-    public ResponseEntity<Void> validateToken(@RequestParam String token){
-        ResponseCookie cookie = userService.validateResetToken(token);
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
+    public ResponseEntity<Void> validateToken(@RequestParam String token, HttpServletRequest request){
+        if (userService.isRateLimited(request.getRemoteAddr())) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+        String jwt = userService.validateResetToken(token);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, createCookie(jwt, Duration.ofMinutes(10))).build();
     }
 
     @PostMapping("/recover-password")
-    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto){
+    public ResponseEntity<ApiResponse<?>> recoverRequest(@RequestBody @Valid PasswordResetRequestDTO dto, HttpServletRequest request){
+        if (userService.isRateLimited(request.getRemoteAddr())) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ApiResponse<>(false, "Muitas requisições. Tente novamente mais tarde.", null));
+        }
         userService.passwordRecoverRequest(dto.email());
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -92,5 +92,17 @@ public class AuthenticationController {
                         true,
                         "Senha alterada com sucesso!",
                         null));
+    }
+
+    private String createCookie(String token, Duration maxAge) {
+        return ResponseCookie
+                .from("token", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(maxAge)
+                .build()
+                .toString();
     }
 }

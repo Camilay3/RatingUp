@@ -2,7 +2,6 @@ package com.quadcore.Ratingup.handler;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.quadcore.Ratingup.dto.response.ApiResponse;
-import io.jsonwebtoken.JwtException;
 import io.minio.errors.ErrorResponseException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -63,7 +62,7 @@ public class GlobalExceptionHandler {
                 .body(new ApiResponse<>(false, "Violação de integridade de dados", null));
     }
 
-    @ExceptionHandler({JwtException.class, JWTVerificationException.class})
+    @ExceptionHandler({JWTVerificationException.class})
     public ResponseEntity<ApiResponse<?>> handleJwt(RuntimeException ex) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
