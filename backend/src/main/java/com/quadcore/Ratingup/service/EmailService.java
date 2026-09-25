@@ -60,7 +60,7 @@ public class EmailService {
                 send(this.fallbackMailSender, destino, assunto, conteudo);
                 log.info("E-mail enviado com sucesso via Fallback (Mailpit)!");
             } catch (Exception fallbackError) {
-                throw new RuntimeException("Erro ao enviar e-mail em ambos os servidores: " + fallbackError.getMessage());
+                throw new org.springframework.mail.MailSendException("Erro ao enviar e-mail em ambos os servidores: " + fallbackError.getMessage());
             }
         }
     }

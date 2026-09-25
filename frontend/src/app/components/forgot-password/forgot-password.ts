@@ -64,8 +64,8 @@ export class ForgotPassword implements OnInit{
     },
     error: (err) => {
       const message = err.error?.message;
-      if(err.error?.data?.email){
-        this.EmailForm.get('email')?.setErrors({ backendError: err.error.data.email });
+      if(err.error?.errors?.email){
+        this.EmailForm.get('email')?.setErrors({ backendError: err.error.errors.email });
       } else if(message){
         this.snackBar.open(message, 'Fechar', { duration: 3000 });
       } else {
@@ -108,8 +108,8 @@ NewPasswordSubmit(){
     },
     error: (err) => {
       const message = err.error?.message;
-      if(err.error?.data?.newPassword){
-        this.NewPasswordForm.get('NewPassword')?.setErrors({ backendError: err.error.data.newPassword });
+      if(err.error?.errors?.newPassword){
+        this.NewPasswordForm.get('NewPassword')?.setErrors({ backendError: err.error.errors.newPassword });
       } else if(message){
         this.snackBar.open(message, 'Fechar', { duration: 3000 });
       } else {

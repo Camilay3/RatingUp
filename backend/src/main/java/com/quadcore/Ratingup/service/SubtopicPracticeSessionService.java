@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.service;
 
+import com.quadcore.Ratingup.exception.*;
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
@@ -110,7 +111,7 @@ public class SubtopicPracticeSessionService {
     }
 
     public SubtopicTypeResponseDto getSubtopicType(Long subtopicId) {
-        Subtopics subtopic = subtopicsRepository.findById(subtopicId).orElseThrow(()->new RuntimeException("subtópico não encontrado"));
+        Subtopics subtopic = subtopicsRepository.findById(subtopicId).orElseThrow(()->new ResourceNotFoundException("subtópico não encontrado"));
         return new SubtopicTypeResponseDto(subtopicId,subtopic.getType());
     }
 
