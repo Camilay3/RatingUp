@@ -12,16 +12,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Quiz", description = "Endpoints para questões de múltipla escolha")
-@RequestMapping("/move")
+@RequestMapping("/multiple-choice")
 @RestController
 public class MultipleChoiceController {
 
     @Autowired
     private MultipleChoiceService multipleChoiceService;
 
-    @PostMapping("/session/quiz")
-    public ResponseEntity<QuizResponseDTO> getQuiz(@RequestBody @Valid SubtopicIdRequestDto subtopicIdRequestDto) {
-        return ResponseEntity.ok(multipleChoiceService.getQuiz(subtopicIdRequestDto.subtopicId()));
+    @GetMapping("/session/quiz/{subtopicId}")
+    public ResponseEntity<QuizResponseDTO> getQuiz(@PathVariable("subtopicId") Long subtopicId) {
+        return ResponseEntity.ok(multipleChoiceService.getQuiz(subtopicId));
     }
 
     @PostMapping("/session/quiz/answer")

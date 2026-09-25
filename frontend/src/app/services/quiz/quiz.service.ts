@@ -12,12 +12,12 @@ export class QuizService {
   constructor(private http: HttpClient){}
 
   searchQuiz(subtopicId: number){
-      return this.http.post<IQuiz>(`${this.apiUrl}/move/session/quiz` , {subtopicId})
+      return this.http.get<IQuiz>(`${this.apiUrl}/multiple-choice/session/quiz/${subtopicId}`)
     }
   
     answerQuiz(subtopicId: number, selectedOptionId: number){
     return this.http.post<{ correct: boolean }>(
-      `${this.apiUrl}/move/session/quiz/answer`, 
+      `${this.apiUrl}/multiple-choice/session/quiz/answer`, 
       { subtopicId, selectedOptionId }
     )
     }

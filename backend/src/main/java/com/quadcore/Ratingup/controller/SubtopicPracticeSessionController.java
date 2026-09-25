@@ -12,18 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Movimentos", description = "Endpoints para gerenciamento dos movimentos das peças")
-@RequestMapping("/move")
+@Tag(name = "Movimentos", description = "Endpoints para gerenciamento das sessões de prática")
+@RequestMapping("/practice-sessions")
 @RestController
 public class SubtopicPracticeSessionController {
 
     @Autowired
     private SubtopicPracticeSessionService subtopicPracticeSessionService;
-
-    @PostMapping("/session/type")
-    public ResponseEntity<SubtopicTypeResponseDto> getSubtopicType(@RequestBody @Valid SubtopicIdRequestDto subtopicIdRequestDto) {
-        return ResponseEntity.ok(subtopicPracticeSessionService.getSubtopicType(subtopicIdRequestDto.subtopicId()));
-    }
 
     @PostMapping("/session/start")
     public ResponseEntity<SubtopicPracticeSessionResponseDTO> startSession(

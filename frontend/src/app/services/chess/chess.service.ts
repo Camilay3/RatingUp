@@ -15,7 +15,7 @@ export class ChessService {
   async startChess(subtopicId: number){
     const response = await firstValueFrom(
       this.http.post<{ sessionId: number; fen: string; status: string; initialFen: string }>(
-        `${this.apiUrl}/move/session/start`,
+        `${this.apiUrl}/practice-sessions/session/start`,
         { subtopicId }
       )
     );
@@ -27,7 +27,7 @@ export class ChessService {
   async moveChess(sessionId: number, piece: string, posInitial: string, posFinal: string){
     const response = await firstValueFrom(
       this.http.post<{sessaoId: number, fen: string, status: string, initialFen: string}>(
-        `${this.apiUrl}/move/session/move`,
+        `${this.apiUrl}/practice-sessions/session/move`,
         { sessionId, piece , posInitial , posFinal }
       )
     );
