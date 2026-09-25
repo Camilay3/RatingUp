@@ -146,7 +146,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
 				const control = this.EditForm.get('value');
 				let msg = 'Erro ao atualizar';
 				if (e?.error?.message) msg = e.error.message;
-				if (e?.error?.errors) msg = Array.isArray(e.error.errors) ? e.error.errors.join(', ') : String(e.error.errors);
+				if (e?.error?.errors) msg = Array.isArray(e.error.errors) ? e.error.errors.join(', ') : typeof e.error.errors === "object" ? Object.values(e.error.errors).join(", ") : String(e.error.errors);
 				control?.setErrors({ backendError: msg });
 			}
 		});

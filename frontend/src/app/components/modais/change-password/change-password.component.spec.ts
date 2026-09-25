@@ -49,7 +49,7 @@ describe('ChangePasswordComponent', () => {
 
 	it('maps structured and generic backend errors to the form', () => {
 		component.ChangePassForm.setValue({ senhaAtual: 'old', senhaNova: 'newpassword', senhaNovaConfirmada: 'newpassword' });
-		profile.editPassword.mockReturnValueOnce(throwError(() => ({ error: { data: {
+		profile.editPassword.mockReturnValueOnce(throwError(() => ({ error: { errors: {
 			newPassword: 'weak', oldPassword: 'wrong old', confirmPassword: 'wrong confirm',
 		} } })));
 		component.onChangePassword();
@@ -59,7 +59,7 @@ describe('ChangePasswordComponent', () => {
 		component.ChangePassForm.get('senhaAtual')?.setErrors(null);
 		component.ChangePassForm.get('senhaNova')?.setErrors(null);
 		component.ChangePassForm.get('senhaNovaConfirmada')?.setErrors(null);
-		profile.editPassword.mockReturnValueOnce(throwError(() => ({ error: { data: { newPassword: 'still weak' } } })));
+		profile.editPassword.mockReturnValueOnce(throwError(() => ({ error: { errors: { newPassword: 'still weak' } } })));
 		component.onChangePassword();
 		expect(component.ChangePassForm.get('senhaNova')?.getError('backendError')).toBe('still weak');
 

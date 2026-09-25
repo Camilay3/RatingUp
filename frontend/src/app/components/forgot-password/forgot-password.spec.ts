@@ -39,7 +39,7 @@ describe('ForgotPassword', () => {
 		component.emailSubmit();
 		expect(snackBar.open).toHaveBeenCalledWith('not found', 'Fechar', expect.any(Object));
 
-		service.recoverPassword.mockReturnValueOnce(throwError(() => ({ error: { data: { email: 'invalid' } } })));
+		service.recoverPassword.mockReturnValueOnce(throwError(() => ({ error: { errors: { email: 'invalid' } } })));
 		component.emailSubmit();
 		expect(component.EmailForm.get('email')?.hasError('backendError')).toBe(true);
 
@@ -74,7 +74,7 @@ describe('ForgotPassword', () => {
 		component.NewPasswordSubmit();
 		expect(snackBar.open).toHaveBeenCalledWith('rejected', 'Fechar', expect.any(Object));
 
-		service.resetPassword.mockReturnValueOnce(throwError(() => ({ error: { data: { newPassword: 'weak' } } })));
+		service.resetPassword.mockReturnValueOnce(throwError(() => ({ error: { errors: { newPassword: 'weak' } } })));
 		component.NewPasswordSubmit();
 		expect(component.NewPasswordForm.get('NewPassword')?.hasError('backendError')).toBe(true);
 	});

@@ -82,25 +82,25 @@ export class Login implements OnInit {
     },
     error: (err) => {
 
-    if(err.error.data){
-     if (err.error.data.name) {
-      this.RegisterForm.get('name')?.setErrors({ backendError: err.error.data.name });
+    if(err.error.errors){
+     if (err.error.errors.name) {
+      this.RegisterForm.get('name')?.setErrors({ backendError: err.error.errors.name });
      }
-     if (err.error.data.nickname) {
-      this.RegisterForm.get('nickname')?.setErrors({ backendError: err.error.data.nickname });
+     if (err.error.errors.nickname) {
+      this.RegisterForm.get('nickname')?.setErrors({ backendError: err.error.errors.nickname });
      }
-     if (err.error.data.telefone) {
-      this.RegisterForm.get('telefone')?.setErrors({ backendError: err.error.data.telefone });
+     if (err.error.errors.telefone) {
+      this.RegisterForm.get('telefone')?.setErrors({ backendError: err.error.errors.telefone });
      }
-     if (err.error.data.email) {
-      this.RegisterForm.get('email')?.setErrors({ backendError: err.error.data.email });
+     if (err.error.errors.email) {
+      this.RegisterForm.get('email')?.setErrors({ backendError: err.error.errors.email });
      }
-     if (err.error.data.password) {
-      this.RegisterForm.get('password')?.setErrors({ backendError: err.error.data.password });
+     if (err.error.errors.password) {
+      this.RegisterForm.get('password')?.setErrors({ backendError: err.error.errors.password });
      }
     }
     if (err.error.code === 'CONFLICT') {
-      const msgs: string[] = err.error.messages ?? [];
+      const msgs: string[] = err.error.errors ?? [];
 
      msgs.forEach((msg: string) => {
      if (msg.toLowerCase().includes('email'))     this.RegisterForm.get('email')?.setErrors({ backendError: msg });
@@ -128,8 +128,8 @@ export class Login implements OnInit {
     error: (err) => {
     const message = err.error?.message;
 
-      if (err.error.data?.email) {
-    this.LoginForm.get('email')?.setErrors({ backendError: err.error.data.email });
+      if (err.error.errors?.email) {
+    this.LoginForm.get('email')?.setErrors({ backendError: err.error.errors.email });
     }else if(message){
       this.LoginForm.get('password')?.setErrors({ backendError: message });
     } else {

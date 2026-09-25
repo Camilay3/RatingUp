@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.service;
 
+import com.quadcore.Ratingup.exception.*;
 import com.quadcore.Ratingup.dto.profile.ProfileResponseDTO;
 import com.quadcore.Ratingup.enums.Roles;
 import com.quadcore.Ratingup.mapper.UserMapper;
@@ -44,10 +45,10 @@ public class AdminUserService {
         String senhaPadrao = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
 
         if(user.getPassword() == null || user.getPassword().isEmpty()){
-            throw new RuntimeException("A senha não pode ser nula");
+            throw new FieldValidationException("password", "A senha não pode ser nula");
         }
         if(!user.getPassword().matches(senhaPadrao)){
-            throw new RuntimeException("Senha inválida! A senha precisa ter entre 8 a 12 caracteres, que tenham letras maiúsculas, minúsculas, números e símbolos");
+            throw new FieldValidationException("password", "Senha inválida! A senha precisa ter entre 8 a 12 caracteres, que tenham letras maiúsculas, minúsculas, números e símbolos");
         }
 
         String senhaCriptografada = passwordEncoder.encode(user.getPassword());

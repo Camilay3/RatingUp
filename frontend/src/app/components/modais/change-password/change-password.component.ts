@@ -77,8 +77,8 @@ export class ChangePasswordComponent implements OnInit {
 				const controlNova = this.ChangePassForm.get('senhaNova');
 				const controlConfirm = this.ChangePassForm.get('senhaNovaConfirmada');
 
-				const data = e?.error?.data;
-				if (data && typeof data === 'object') {
+				const data = e?.error?.errors;
+				if (data && typeof data === 'object' && !Array.isArray(data)) {
 					if (data.newPassword) controlNova?.setErrors({ backendError: data.newPassword });
 					if (data.oldPassword) controlAtual?.setErrors({ backendError: data.oldPassword });
 					if (data.confirmPassword) controlConfirm?.setErrors({ backendError: data.confirmPassword });
@@ -86,7 +86,7 @@ export class ChangePasswordComponent implements OnInit {
 				} else {
 					let msg = 'Erro ao atualizar';
 					if (e?.error?.message) msg = e.error.message;
-					if (e?.error?.errors) msg = Array.isArray(e.error.errors) ? e.error.errors.join(', ') : String(e.error.errors);
+					if (e?.error?.errors) msg = Array.isArray(e.error.errors) ? e.error.errors.join(', ') : typeof e.error.errors === "object" ? Object.values(e.error.errors).join(", ") : String(e.error.errors);
 					controlAtual?.setErrors({ backendError: msg });
 					controlNova?.setErrors({ backendError: msg });
 					controlConfirm?.setErrors({ backendError: msg });
