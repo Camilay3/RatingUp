@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,14 +48,12 @@ public class MultipleChoiceControllerTest {
     @Test
     @DisplayName("Should get quiz successfully")
     void testGetQuiz() throws Exception {
-        SubtopicIdRequestDto dto = new SubtopicIdRequestDto(1L);
         QuizResponseDTO responseDTO = new QuizResponseDTO(1L, "Question?", List.of());
 
         when(multipleChoiceService.getQuiz(1L)).thenReturn(responseDTO);
 
-        mockMvc.perform(post("/move/session/quiz")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
+        mockMvc.perform(get("/multiple-choice/session/quiz/1")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.questionText").value("Question?"));
     }
@@ -67,7 +66,7 @@ public class MultipleChoiceControllerTest {
 
         when(multipleChoiceService.answerQuiz(any(QuizAnswerRequestDTO.class))).thenReturn(responseDTO);
 
-        mockMvc.perform(post("/move/session/quiz/answer")
+        mockMvc.perform(post("/multiple-choice/session/quiz/answer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())

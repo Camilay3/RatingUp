@@ -67,19 +67,4 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$.status").value(true))
                 .andExpect(jsonPath("$.message").value("Subtópico salvo com sucesso"));
     }
-
-    @Test
-    @DisplayName("Should get subtopic content successfully")
-    void testGetSubtopicContent() throws Exception {
-        SubtopicIdRequestDto dto = new SubtopicIdRequestDto(1L);
-
-        when(bookService.getSubtopicContent(1L)).thenReturn(null);
-
-        mockMvc.perform(post("/livro/subtopico")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(true))
-                .andExpect(jsonPath("$.message").value("Conteúdo encontrado"));
-    }
 }

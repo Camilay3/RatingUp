@@ -13,8 +13,8 @@ describe('ChessService', () => {
 		await expect(service.startChess(8)).resolves.toEqual({ sessionId: 4, fen: 'start', status: 'NORMAL', initialFen: 'start' });
 		await expect(service.moveChess(4, 'WHITE_KNIGHT', 'E2', 'E4')).resolves.toEqual({ fen: 'next', status: 'COMPLETED', initialFen: 'start' });
 
-		expect(http.post).toHaveBeenNthCalledWith(1, expect.stringContaining('/move/session/start'), { subtopicId: 8 });
-		expect(http.post).toHaveBeenNthCalledWith(2, expect.stringContaining('/move/session/move'), {
+		expect(http.post).toHaveBeenNthCalledWith(1, expect.stringContaining('/practice-sessions/session/start'), { subtopicId: 8 });
+		expect(http.post).toHaveBeenNthCalledWith(2, expect.stringContaining('/practice-sessions/session/move'), {
 			sessionId: 4,
 			piece: 'WHITE_KNIGHT',
 			posInitial: 'E2',
