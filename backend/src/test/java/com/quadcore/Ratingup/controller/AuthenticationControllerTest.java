@@ -6,6 +6,7 @@ import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
 import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
 import com.quadcore.Ratingup.dto.profile.PasswordResetRequestDTO;
 import com.quadcore.Ratingup.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,19 +52,30 @@ class AuthenticationControllerTest {
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        
-        mockedUserDetails = new User("test@test.com", "Pass12345!@#", Collections.emptyList());
 
-        mockMvc = MockMvcBuilders.standaloneSetup(authenticationController)
+        mockedUserDetails = new User(
+                "test@test.com",
+                "Pass12345!@#",
+                Collections.emptyList()
+        );
+
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(authenticationController)
                 .setCustomArgumentResolvers(new HandlerMethodArgumentResolver() {
                     @Override
                     public boolean supportsParameter(MethodParameter parameter) {
-                        return parameter.getParameterType().isAssignableFrom(UserDetails.class);
+                        return UserDetails.class.isAssignableFrom(
+                                parameter.getParameterType()
+                        );
                     }
 
                     @Override
-                    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+                    public Object resolveArgument(
+                            MethodParameter parameter,
+                            ModelAndViewContainer mavContainer,
+                            NativeWebRequest webRequest,
+                            WebDataBinderFactory binderFactory
+                    ) {
                         return mockedUserDetails;
                     }
                 })
@@ -72,13 +84,17 @@ class AuthenticationControllerTest {
 
     @Test
     void loginUser_ShouldReturn200AndSetCookie() throws Exception {
-        LoginRequestDTO dto = new LoginRequestDTO("test@test.com", "Pass12345!@#");
+        LoginRequestDTO dto =
+                new LoginRequestDTO("test@test.com", "Pass12345!@#");
 
-        Mockito.when(userService.loginUser(anyString(), anyString())).thenReturn("fake-token");
+        Mockito.when(userService.loginUser(anyString(), anyString()))
+                .thenReturn("fake-token");
 
-        mockMvc.perform(post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+        mockMvc.perform(
+                        post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto))
+                )
                 .andExpect(status().isOk())
                 .andExpect(header().exists(HttpHeaders.SET_COOKIE))
                 .andExpect(jsonPath("$.status").value(true));
@@ -94,50 +110,80 @@ class AuthenticationControllerTest {
 
     @Test
     void validateToken_ShouldReturn200AndSetCookie() throws Exception {
-        Mockito.when(userService.validateResetToken(anyString())).thenReturn("new-token");
+        Mockito.when(userService.isRateLimited(anyString()))
+                .thenReturn(false);
 
-        mockMvc.perform(post("/auth/validate-token")
-                        .param("token", "some-token"))
+        Mockito.when(userService.validateResetToken(anyString()))
+                .thenReturn("new-token");
+
+        mockMvc.perform(
+                        post("/auth/validate-token")
+                                .param("token", "some-token")
+                )
                 .andExpect(status().isOk())
                 .andExpect(header().exists(HttpHeaders.SET_COOKIE));
     }
 
     @Test
     void recoverRequest_ShouldReturn200() throws Exception {
-        PasswordResetRequestDTO dto = new PasswordResetRequestDTO("test@test.com");
+        PasswordResetRequestDTO dto =
+                new PasswordResetRequestDTO("test@test.com");
 
-        mockMvc.perform(post("/auth/recover-password")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+        Mockito.when(userService.isRateLimited(anyString()))
+                .thenReturn(false);
+
+        mockMvc.perform(
+                        post("/auth/recover-password")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(true));
 
-        Mockito.verify(userService).passwordRecoverRequest("test@test.com");
+        Mockito.verify(userService)
+                .passwordRecoverRequest("test@test.com");
     }
 
     @Test
     void resetPassword_ShouldReturn200() throws Exception {
-        PasswordResetDTO dto = new PasswordResetDTO("NewPass123!@");
+        PasswordResetDTO dto =
+                new PasswordResetDTO("NewPass123!@");
 
-        mockMvc.perform(post("/auth/reset-password")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+        mockMvc.perform(
+                        post("/auth/reset-password")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(true));
 
-        Mockito.verify(userService).resetPassword("NewPass123!@");
+        Mockito.verify(userService)
+                .resetPassword(
+                        eq("NewPass123!@"),
+                        any(HttpServletRequest.class)
+                );
     }
 
     @Test
     void changePassword_ShouldReturn200() throws Exception {
-        PasswordChangeDTO dto = new PasswordChangeDTO("Pass12345!@#", "NewPass123!@");
+        PasswordChangeDTO dto =
+                new PasswordChangeDTO(
+                        "Pass12345!@#",
+                        "NewPass123!@"
+                );
 
-        mockMvc.perform(put("/auth/change-password")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+        mockMvc.perform(
+                        put("/auth/change-password")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(true));
 
-        Mockito.verify(userService).changePassword(eq("test@test.com"), any(PasswordChangeDTO.class));
+        Mockito.verify(userService)
+                .changePassword(
+                        eq("test@test.com"),
+                        any(PasswordChangeDTO.class)
+                );
     }
 }

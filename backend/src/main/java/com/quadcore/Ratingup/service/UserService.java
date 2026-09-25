@@ -15,6 +15,7 @@ import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,14 +43,16 @@ public class UserService implements UserDetailsService {
     private final EmailService emailService;
     private final ConcurrentHashMap<String, Long> rateLimitMap = new ConcurrentHashMap<>();
     private final SecureRandom secureRandom;
+    private final TokenCookieService tokenCookieService;
 
-    public UserService(UserRepository userRepository, ProgressRepository progressRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator, EmailService emailService, SecureRandom secureRandom) {
+    public UserService(UserRepository userRepository, ProgressRepository progressRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator, EmailService emailService, SecureRandom secureRandom, TokenCookieService tokenCookieService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
         this.progressRepository = progressRepository;
         this.emailService = emailService;
         this.secureRandom = secureRandom;
+        this.tokenCookieService = tokenCookieService;
     }
 
     public boolean isRateLimited(String ip) {
@@ -174,7 +177,7 @@ public class UserService implements UserDetailsService {
         }
         User user = userOpt.get();
 
-        String token = String.format("%05d", secureRandom.nextInt(100000)); //codigo de verificação pequeno
+        String token = String.format("%05d", secureRandom.nextInt(100000));
         user.setResetToken(token);
         user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
         userRepository.save(user);
@@ -182,6 +185,7 @@ public class UserService implements UserDetailsService {
         emailService.sendRecoverMail(user.getEmail(), token);
     }
 
+    @Transactional
     public String validateResetToken(String token){
         User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Token inválido"));
@@ -190,16 +194,22 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Esse token está expirado");
         }
 
-        return tokenGenerator.generateRecoveryToken(user);
+        String jwt = tokenGenerator.generateRecoveryToken(user);
+
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+
+        userRepository.save(user);
+
+        return jwt;
     }
 
-    public void resetPassword(String newPassword){
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+    public void resetPassword(String newPassword, HttpServletRequest request){
+        String jwt = tokenCookieService.recoverToken(request);
 
-        if(user.getResetTokenExpiry().isBefore(LocalDateTime.now())){
-            throw new RuntimeException("Esse token está expirado");
-        }
+        String email = tokenGenerator.getRecoverySubject(jwt);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
         if(!newPassword.matches(regex)){
