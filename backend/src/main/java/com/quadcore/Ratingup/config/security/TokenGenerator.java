@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.config.security;
 
+import com.quadcore.Ratingup.exception.*;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -28,7 +29,7 @@ public class TokenGenerator{
                     .sign(algorithm);
         }
         catch (JWTCreationException exception){
-            throw new com.quadcore.Ratingup.exception.DomainException("Erro ao gerar token", "TOKEN_GENERATION_ERROR") {};
+            throw new DomainException("Erro ao gerar token", "TOKEN_GENERATION_ERROR") {};
         }
     }
 
@@ -47,7 +48,7 @@ public class TokenGenerator{
                     .getSubject();
         }
         catch (JWTVerificationException exception){
-            throw new com.quadcore.Ratingup.exception.UnauthorizedOperationException("Token JWT inválido ou expirado");
+            throw new UnauthorizedOperationException("Token JWT inválido ou expirado");
         }
     }
 }
