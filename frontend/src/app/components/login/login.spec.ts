@@ -88,7 +88,7 @@ describe('Login', () => {
 		expect(router.navigate).toHaveBeenCalledWith(['/'], { state: { mostrarDicaCapa: true } });
 
 		loginService.register.mockReturnValueOnce(throwError(() => ({ error: {
-			code: 'CONFLICT', messages: ['email already exists', 'nickname already exists', 'telefone already exists'],
+			code: 'CONFLICT', errors: ['email already exists', 'nickname already exists', 'telefone already exists'],
 		} })));
 		component.onRegister();
 		expect(component.RegisterForm.get('email')?.hasError('backendError')).toBe(true);

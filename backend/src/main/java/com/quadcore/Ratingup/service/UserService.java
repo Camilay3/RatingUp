@@ -75,7 +75,7 @@ public class UserService implements UserDetailsService {
             errors.add("telefone já cadastrado");
         }
         if (!errors.isEmpty()) {
-            throw new ConflictException(errors);
+            throw new ConflictException("Campos duplicados", errors);
         }
 
         User user = UserMapper.toEntity(dto);
