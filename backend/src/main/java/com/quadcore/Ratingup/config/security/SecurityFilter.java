@@ -2,11 +2,13 @@ package com.quadcore.Ratingup.config.security;
 
 import com.quadcore.Ratingup.exception.*;
 import com.quadcore.Ratingup.repository.UserRepository;
+import com.quadcore.Ratingup.service.TokenCookieService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -23,20 +25,22 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private final UserRepository repository;
 
+    private final TokenCookieService tokenCookieService;
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/conta/cadastro") || path.equals("/conta/login");
+        return path.equals("/conta/cadastro") || path.equals("/auth/login") || path.equals("/auth/reset-password");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        var tokenJWT = recuperarToken(request);
+        var tokenJWT = tokenCookieService.recoverToken(request);
 
         if (tokenJWT != null) {
             try {
-                var subject = tokenService.getSubject(tokenJWT);
+                var subject = tokenService.getLoginSubject(tokenJWT);
                 var usuario = repository.findByEmail(subject)
                         .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -49,15 +53,4 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
-    private String recuperarToken(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
-		if (cookies == null) return null;
-
-		for (Cookie cookie : cookies) {
-			if ("token".equals(cookie.getName())) return cookie.getValue();
-		}
-
-		return null;
-	}
 }

@@ -25,11 +25,11 @@ public class TokenGeneratorTest {
 
     @Test
     @DisplayName("Should generate token successfully")
-    void testGerarToken() {
+    void testGenerateLoginToken() {
         User user = new User();
         user.setEmail("test@test.com");
 
-        String token = tokenGenerator.gerarToken(user);
+        String token = tokenGenerator.generateLoginToken(user);
 
         assertNotNull(token);
         assertFalse(token.isEmpty());
@@ -41,8 +41,8 @@ public class TokenGeneratorTest {
         User user = new User();
         user.setEmail("test@test.com");
 
-        String token = tokenGenerator.gerarToken(user);
-        String subject = tokenGenerator.getSubject(token);
+        String token = tokenGenerator.generateLoginToken(user);
+        String subject = tokenGenerator.getLoginSubject(token);
 
         assertEquals("test@test.com", subject);
     }
@@ -50,6 +50,6 @@ public class TokenGeneratorTest {
     @Test
     @DisplayName("Should throw when get subject with invalid token")
     void testGetSubjectInvalid() {
-        assertThrows(Exception.class, () -> tokenGenerator.getSubject("invalid-token"));
+        assertThrows(RuntimeException.class, () -> tokenGenerator.getLoginSubject("invalid-token"));
     }
 }

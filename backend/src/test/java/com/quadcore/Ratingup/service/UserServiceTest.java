@@ -11,14 +11,18 @@ import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -45,6 +49,15 @@ class UserServiceTest {
     
     @Mock
     private EmailService emailService;
+
+    @Mock
+    private TokenCookieService tokenCookieService;
+
+    @Mock
+    private SecureRandom secureRandom;
+
+    @Mock
+    private HttpServletRequest request;
 
     @InjectMocks
     private UserService userService;
@@ -131,7 +144,7 @@ class UserServiceTest {
     void loginUser_ShouldReturnToken_WhenCredentialsAreValid() {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-        when(tokenGenerator.gerarToken(any(User.class))).thenReturn("fake-jwt-token");
+        when(tokenGenerator.generateLoginToken(any(User.class))).thenReturn("fake-jwt-token");
 
         String token = userService.loginUser("test@test.com", "hashed_password");
 
@@ -152,6 +165,9 @@ class UserServiceTest {
     void passwordRecoverRequest_ShouldGenerateTokenAndSendEmail() {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
+        when(secureRandom.nextInt(100000))
+                .thenReturn(12345);
+
         userService.passwordRecoverRequest("test@test.com");
 
         verify(userRepository, times(1)).save(user);
@@ -164,7 +180,7 @@ class UserServiceTest {
     void validateResetToken_ShouldReturnToken_WhenTokenIsValid() {
         user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(10));
         when(userRepository.findByResetToken(anyString())).thenReturn(Optional.of(user));
-        when(tokenGenerator.gerarToken(any(User.class))).thenReturn("fake-jwt-token");
+        when(tokenGenerator.generateRecoveryToken(any(User.class))).thenReturn("fake-jwt-token");
 
         String token = userService.validateResetToken("valid-token");
 
@@ -200,16 +216,24 @@ class UserServiceTest {
 
     @Test
     void resetPassword_ShouldThrow_WhenPasswordIsWeak() {
-        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(10));
-        
-        org.springframework.security.core.Authentication auth = org.mockito.Mockito.mock(org.springframework.security.core.Authentication.class);
-        org.mockito.Mockito.when(auth.getPrincipal()).thenReturn(user);
-        org.springframework.security.core.context.SecurityContext securityContext = org.mockito.Mockito.mock(org.springframework.security.core.context.SecurityContext.class);
-        org.mockito.Mockito.when(securityContext.getAuthentication()).thenReturn(auth);
-        org.springframework.security.core.context.SecurityContextHolder.setContext(securityContext);
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
-        org.assertj.core.api.Assertions.assertThatThrownBy(() -> userService.resetPassword("weak"))
-                .isInstanceOf(Exception.class)
+        String jwt = "recovery-jwt";
+        String email = user.getEmail();
+
+        Mockito.when(tokenCookieService.recoverToken(request))
+                .thenReturn(jwt);
+
+        Mockito.when(tokenGenerator.getRecoverySubject(jwt))
+                .thenReturn(email);
+
+        Mockito.when(userRepository.findByEmail(email))
+                .thenReturn(Optional.of(user));
+
+        Assertions.assertThatThrownBy(() ->
+                        userService.resetPassword("weak", request)
+                )
+                .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("fraca");
     }
 
@@ -224,18 +248,23 @@ class UserServiceTest {
 
     @Test
     void resetPassword_ShouldUpdatePassword() {
-        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(10));
-        
-        org.springframework.security.core.Authentication auth = org.mockito.Mockito.mock(org.springframework.security.core.Authentication.class);
-        org.mockito.Mockito.when(auth.getPrincipal()).thenReturn(user);
-        org.springframework.security.core.context.SecurityContext securityContext = org.mockito.Mockito.mock(org.springframework.security.core.context.SecurityContext.class);
-        org.mockito.Mockito.when(securityContext.getAuthentication()).thenReturn(auth);
-        org.springframework.security.core.context.SecurityContextHolder.setContext(securityContext);
+        when(tokenCookieService.recoverToken(request))
+                .thenReturn("recovery-jwt");
 
-        org.mockito.Mockito.when(passwordEncoder.encode(anyString())).thenReturn("hashed_new_pw");
+        when(tokenGenerator.getRecoverySubject("recovery-jwt"))
+                .thenReturn("test@test.com");
 
-        userService.resetPassword("StrongPw123@");
+        when(userRepository.findByEmail("test@test.com"))
+                .thenReturn(Optional.of(user));
 
-        org.mockito.Mockito.verify(userRepository, org.mockito.Mockito.times(1)).save(user);
-}
+        when(passwordEncoder.encode("Nova123!Abc"))
+                .thenReturn("encoded-password");
+
+        userService.resetPassword("Nova123!Abc", request);
+
+        assertThat(user.getPassword()).isEqualTo("encoded-password");
+
+        verify(passwordEncoder).encode("Nova123!Abc");
+        verify(userRepository).save(user);
+    }
 }

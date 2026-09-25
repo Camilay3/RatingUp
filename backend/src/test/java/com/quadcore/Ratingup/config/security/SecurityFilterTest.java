@@ -3,6 +3,7 @@ import com.quadcore.Ratingup.enums.Roles;
 
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.UserRepository;
+import com.quadcore.Ratingup.service.TokenCookieService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,9 @@ public class SecurityFilterTest {
     @Mock
     private FilterChain filterChain;
 
+    @Mock
+    private TokenCookieService tokenCookieService;
+
     @InjectMocks
     private SecurityFilter securityFilter;
 
@@ -45,7 +49,7 @@ public class SecurityFilterTest {
     @DisplayName("Should skip filter for login")
     void testShouldNotFilter() {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("/conta/login");
+        request.setRequestURI("/auth/login");
 
         assertTrue(securityFilter.shouldNotFilter(request));
     }
@@ -55,14 +59,19 @@ public class SecurityFilterTest {
     void testDoFilterInternal_ValidToken() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        request.setCookies(new Cookie("token", "valid-token"));
 
         User user = new User();
         user.setEmail("test@test.com");
         user.setRole(Roles.USER);
 
-        when(tokenService.getSubject("valid-token")).thenReturn("test@test.com");
-        when(repository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
+        when(tokenCookieService.recoverToken(request))
+                .thenReturn("valid-token");
+
+        when(tokenService.getLoginSubject("valid-token"))
+                .thenReturn("test@test.com");
+
+        when(repository.findByEmail("test@test.com"))
+                .thenReturn(Optional.of(user));
 
         securityFilter.doFilterInternal(request, response, filterChain);
 
@@ -75,16 +84,23 @@ public class SecurityFilterTest {
     void testDoFilterInternal_InvalidToken() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        request.setCookies(new Cookie("token", "invalid-token"));
 
-        when(tokenService.getSubject("invalid-token")).thenThrow(new RuntimeException("Invalid token"));
+        String token = "invalid-token";
+
+        when(tokenCookieService.recoverToken(request))
+                .thenReturn(token);
+
+        when(tokenService.getLoginSubject(token))
+                .thenThrow(new RuntimeException("Invalid token"));
+
+        SecurityContextHolder.clearContext();
 
         securityFilter.doFilterInternal(request, response, filterChain);
 
         assertNull(SecurityContextHolder.getContext().getAuthentication());
         verify(filterChain, times(1)).doFilter(request, response);
     }
-    
+
     @Test
     @DisplayName("Should do nothing when token is absent")
     void testDoFilterInternal_NoToken() throws Exception {

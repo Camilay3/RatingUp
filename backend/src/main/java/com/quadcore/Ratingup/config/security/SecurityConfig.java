@@ -16,6 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.security.SecureRandom;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +44,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/recover-password").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/validate-token").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/auth/reset-password").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/auth/reset-password").permitAll()
                         .requestMatchers(HttpMethod.GET, "/auth/reset-password").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/images/upload/**").authenticated()
@@ -74,5 +76,10 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecureRandom secureRandom(){
+        return new SecureRandom();
     }
 }
