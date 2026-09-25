@@ -1,4 +1,5 @@
 package com.quadcore.Ratingup.handler;
+import com.quadcore.Ratingup.exception.FieldValidationException;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +60,7 @@ public class GlobalExceptionHandlerMoreTest {
     @Test
     @DisplayName("Should handle ValidationException")
     void testValidationException() {
-        com.quadcore.Ratingup.exception.FieldValidationException ex = new com.quadcore.Ratingup.exception.FieldValidationException("field", "msg");
+        FieldValidationException ex = new FieldValidationException("field", "msg");
         var response = handler.handleFieldValidation(ex);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
     }

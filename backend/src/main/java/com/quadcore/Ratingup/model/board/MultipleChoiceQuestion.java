@@ -12,7 +12,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of ="id")
 public class MultipleChoiceQuestion {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,4 +25,17 @@ public class MultipleChoiceQuestion {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<MultipleChoiceOption> options;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MultipleChoiceQuestion)) return false;
+        MultipleChoiceQuestion other = (MultipleChoiceQuestion) o;
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -1,4 +1,5 @@
 package com.quadcore.Ratingup.controller;
+import com.quadcore.Ratingup.dto.book.BookDTO;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quadcore.Ratingup.dto.book.SubtopicIdRequestDto;
@@ -47,7 +48,7 @@ public class BookControllerTest {
     @Test
     @DisplayName("Should list pages successfully")
     void testListPages() throws Exception {
-        when(bookService.buildBook()).thenReturn(new com.quadcore.Ratingup.dto.book.BookDTO(List.of(), 0));
+        when(bookService.buildBook()).thenReturn(new BookDTO(List.of(), 0));
 
         mockMvc.perform(get("/livro/paginas"))
                 .andExpect(status().isOk())
