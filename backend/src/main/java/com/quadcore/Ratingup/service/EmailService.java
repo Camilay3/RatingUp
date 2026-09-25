@@ -13,7 +13,10 @@ import org.thymeleaf.context.Context;
 
 import java.io.UnsupportedEncodingException;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class EmailService {
 
 
@@ -51,12 +54,11 @@ public class EmailService {
         try {
             send(this.mailSender, destino, assunto, conteudo);
         } catch (Exception e) {
-            System.err.println("[EmailService] Falha ao enviar pelo SMTP principal. Motivo: " + e.getMessage());
-            System.err.println("[EmailService] Tentando servidor de Fallback local (Mailpit)...");
+            log.warn("Falha ao enviar pelo SMTP principal. Tentando servidor de Fallback local (Mailpit)", e);
             
             try {
                 send(this.fallbackMailSender, destino, assunto, conteudo);
-                System.out.println("[EmailService] E-mail enviado com sucesso via Fallback (Mailpit)!");
+                log.info("E-mail enviado com sucesso via Fallback (Mailpit)!");
             } catch (Exception fallbackError) {
                 throw new RuntimeException("Erro ao enviar e-mail em ambos os servidores: " + fallbackError.getMessage());
             }
