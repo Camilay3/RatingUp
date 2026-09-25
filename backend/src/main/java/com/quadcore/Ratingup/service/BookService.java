@@ -62,7 +62,13 @@ public class BookService {
 
         subtopicsRepository.incrementDisplayOrderFrom(dto.chapterId(), dto.displayOrder());
 
-        subtopicsRepository.save(new Subtopics(null, dto.title(), dto.displayOrder(), capitulo,null,null,null,null,null,null));
+        Subtopics newSubtopic = Subtopics.builder()
+                .title(dto.title())
+                .displayOrder(dto.displayOrder())
+                .chapter(capitulo)
+                .build();
+                
+        subtopicsRepository.save(newSubtopic);
 
         List<Subtopics> subtopicos = subtopicsRepository.findByChapter_IdOrderByDisplayOrderAsc(dto.chapterId());
 
