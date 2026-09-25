@@ -40,13 +40,4 @@ public class BookController {
                         "Subtópico salvo com sucesso",
                         bookService.addSubtopic(dto)));
     }
-
-    @Operation(summary = "Busca o conteúdo de um subtópico")
-    @PostMapping("/subtopico")
-    public ResponseEntity<?> getSubtopicContent(
-            @RequestBody SubtopicIdRequestDto dto) {
-        return ResponseEntity.ok(new ApiResponse<>(true,
-                "Conteúdo encontrado",
-                bookService.getSubtopicContent(dto.subtopicId())));
-    }
 }

@@ -15,15 +15,12 @@ export class BookService {
 	}
 
 	getSubtopicContent(subtopicId: number) {
-		return this.http.post<ISubtopicoContent>(`${this.apiUrl}/livro/subtopico`, {
-			subtopicId
-		});
+		return this.http.get<ISubtopicoContent>(`${this.apiUrl}/subtopics/${subtopicId}/content`);
 	}
 
 	getSubtopicType(subtopicId: number){
-     return this.http.post<{ subtopicId: number, type: 'BOARD' | 'MULTIPLE_CHOICE' }>(
-     `${this.apiUrl}/move/session/type`,
-     { subtopicId }
+     return this.http.get<{ subtopicId: number, type: 'BOARD' | 'MULTIPLE_CHOICE' }>(
+     `${this.apiUrl}/subtopics/${subtopicId}/type`
     );
    }
 }

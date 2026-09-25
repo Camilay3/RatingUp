@@ -10,8 +10,8 @@ describe('BookService', () => {
 		service.getSubtopicContent(5).subscribe();
 		service.getSubtopicType(5).subscribe();
 
-		expect(http.get).toHaveBeenCalledWith(expect.stringContaining('/livro/paginas'));
-		expect(http.post).toHaveBeenNthCalledWith(1, expect.stringContaining('/livro/subtopico'), { subtopicId: 5 });
-		expect(http.post).toHaveBeenNthCalledWith(2, expect.stringContaining('/move/session/type'), { subtopicId: 5 });
+		expect(http.get).toHaveBeenNthCalledWith(1, expect.stringContaining('/livro/paginas'));
+		expect(http.get).toHaveBeenNthCalledWith(2, expect.stringContaining('/subtopics/5/content'));
+		expect(http.get).toHaveBeenNthCalledWith(3, expect.stringContaining('/subtopics/5/type'));
 	});
 });

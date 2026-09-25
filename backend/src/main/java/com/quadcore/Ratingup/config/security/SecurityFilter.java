@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.config.security;
 
+import com.quadcore.Ratingup.exception.*;
 import com.quadcore.Ratingup.repository.UserRepository;
 import com.quadcore.Ratingup.service.TokenCookieService;
 import jakarta.servlet.FilterChain;
@@ -7,22 +8,21 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private  TokenGenerator tokenService;
+    private final  TokenGenerator tokenService;
 
-    @Autowired
-    private UserRepository repository;
+    private final UserRepository repository;
 
     @Autowired
     private TokenCookieService tokenCookieService;
@@ -42,7 +42,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             try {
                 var subject = tokenService.getLoginSubject(tokenJWT);
                 var usuario = repository.findByEmail(subject)
-                        .orElseThrow(() -> new RuntimeException("User not found"));
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
                 var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);

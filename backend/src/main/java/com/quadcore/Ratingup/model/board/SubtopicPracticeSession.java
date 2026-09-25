@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class SubtopicPracticeSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,4 +39,17 @@ public class SubtopicPracticeSession {
 
     @Column(length = 500)
     private String movesPlayed;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SubtopicPracticeSession)) return false;
+        SubtopicPracticeSession other = (SubtopicPracticeSession) o;
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

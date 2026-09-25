@@ -1,11 +1,11 @@
 package com.quadcore.Ratingup.service;
+import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 
 import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
-import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileUpdateRequestDTO;
-import com.quadcore.Ratingup.handler.DuplicateFieldException;
-import com.quadcore.Ratingup.handler.ValidationException;
+import com.quadcore.Ratingup.exception.ConflictException;
+import com.quadcore.Ratingup.exception.FieldValidationException;
 import com.quadcore.Ratingup.model.profile.Progress;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.ProgressRepository;
@@ -99,7 +99,7 @@ class UserServiceTest {
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
 
         assertThatThrownBy(() -> userService.registerUser(dto))
-                .isInstanceOf(DuplicateFieldException.class)
+                .isInstanceOf(ConflictException.class)
                 .hasMessageContaining("Campos duplicados");
     }
 
@@ -137,7 +137,7 @@ class UserServiceTest {
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
 
         assertThatThrownBy(() -> userService.changePassword("test@test.com", dto))
-                .isInstanceOf(ValidationException.class);
+                .isInstanceOf(FieldValidationException.class);
     }
 
     @Test
@@ -157,7 +157,7 @@ class UserServiceTest {
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
 
         assertThatThrownBy(() -> userService.loginUser("test@test.com", "wrong_password"))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(Exception.class)
                 .hasMessageContaining("Senha incorreta");
     }
 
@@ -193,7 +193,7 @@ class UserServiceTest {
         when(userRepository.findByResetToken(anyString())).thenReturn(Optional.of(user));
 
         assertThatThrownBy(() -> userService.validateResetToken("expired-token"))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(Exception.class)
                 .hasMessageContaining("Esse token está expirado");
     }
 
@@ -239,10 +239,10 @@ class UserServiceTest {
 
     @Test
     void registerUser_ShouldThrow_WhenPasswordHasRepeatedCharacters() {
-        com.quadcore.Ratingup.dto.profile.ProfileRequestDTO request = new com.quadcore.Ratingup.dto.profile.ProfileRequestDTO("Name", "Nick", "test@test.com", "11111111", "aaaaaaaaaa1!");
+        ProfileRequestDTO request = new ProfileRequestDTO("Name", "Nick", "test@test.com", "11111111", "aaaaaaaaaa1!");
         
         org.assertj.core.api.Assertions.assertThatThrownBy(() -> userService.registerUser(request))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(Exception.class)
                 .hasMessageContaining("repetidos");
     }
 

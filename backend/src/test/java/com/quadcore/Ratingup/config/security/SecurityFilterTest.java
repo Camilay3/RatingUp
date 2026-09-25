@@ -1,4 +1,5 @@
 package com.quadcore.Ratingup.config.security;
+import com.quadcore.Ratingup.enums.Roles;
 
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.UserRepository;
@@ -61,7 +62,7 @@ public class SecurityFilterTest {
 
         User user = new User();
         user.setEmail("test@test.com");
-        user.setRole(com.quadcore.Ratingup.enums.Roles.USER);
+        user.setRole(Roles.USER);
 
         when(tokenCookieService.recoverToken(request))
                 .thenReturn("valid-token");

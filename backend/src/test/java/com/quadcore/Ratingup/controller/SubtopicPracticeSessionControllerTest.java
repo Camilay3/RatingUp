@@ -72,25 +72,12 @@ public class SubtopicPracticeSessionControllerTest {
     }
 
     @Test
-    @DisplayName("Should get subtopic type")
-    void testGetSubtopicType() throws Exception {
-        SubtopicIdRequestDto dto = new SubtopicIdRequestDto(1L);
-        when(service.getSubtopicType(1L)).thenReturn(new SubtopicTypeResponseDto(1L, SubtopicType.BOARD));
-
-        mockMvc.perform(post("/move/session/type")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.type").value("BOARD"));
-    }
-
-    @Test
     @DisplayName("Should start session")
     void testStartSession() throws Exception {
         SubtopicIdRequestDto dto = new SubtopicIdRequestDto(1L);
         when(service.startSession(eq(1L), eq(1L))).thenReturn(new SubtopicPracticeSessionResponseDTO(1L, "fen", "NORMAL", "initial"));
 
-        mockMvc.perform(post("/move/session/start")
+        mockMvc.perform(post("/practice-sessions/session/start")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -103,7 +90,7 @@ public class SubtopicPracticeSessionControllerTest {
         SubtopicPracticeSessionRequestDTO dto = new SubtopicPracticeSessionRequestDTO(1L, Piece.WHITE_PAWN, Square.A2, Square.A4);
         when(service.performMovement(any(SubtopicPracticeSessionRequestDTO.class))).thenReturn(new SubtopicPracticeSessionResponseDTO(1L, "fen2", "NORMAL", "initial"));
 
-        mockMvc.perform(post("/move/session/move")
+        mockMvc.perform(post("/practice-sessions/session/move")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())

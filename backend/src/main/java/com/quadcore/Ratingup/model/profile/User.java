@@ -27,21 +27,29 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(min = 10, max = 100)
     private String name;
 
+    @NotBlank(message = "Nickname é obrigatório")
+    @Size(min = 8, max = 16)
     private String nickname;
 
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Formato de email inválido")
     private String email;
 
+    @NotBlank(message = "Telefone é obrigatório")
+    @Size(min = 8, max = 11)
     private String telefone;
 
+    @NotBlank(message = "Senha é obrigatória")
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -93,5 +101,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User other = (User) o;
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

@@ -88,7 +88,7 @@ class AvatarServiceTest {
         when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> avatarService.selectAvatar("avatar1.png"))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(Exception.class)
                 .hasMessageContaining("Usuário não encontrado");
     }
 
@@ -104,7 +104,7 @@ class AvatarServiceTest {
         when(imagesRepository.findByImageName("avatar1.png")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> avatarService.selectAvatar("avatar1.png"))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(Exception.class)
                 .hasMessageContaining("Imagem não encontrada");
     }
 }

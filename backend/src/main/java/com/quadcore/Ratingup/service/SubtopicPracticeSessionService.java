@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.service;
 
+import com.quadcore.Ratingup.exception.*;
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
@@ -13,20 +14,19 @@ import com.quadcore.Ratingup.model.book.Subtopics;
 import com.quadcore.Ratingup.repository.SubtopicPracticeSessionRepository;
 import com.quadcore.Ratingup.repository.SubtopicsRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SubtopicPracticeSessionService {
 
-    @Autowired
-    private SubtopicsRepository subtopicsRepository;
+    private final SubtopicsRepository subtopicsRepository;
 
-    @Autowired
-    private SubtopicPracticeSessionRepository subtopicPracticeSessionRepository;
+    private final SubtopicPracticeSessionRepository subtopicPracticeSessionRepository;
 
     public SubtopicPracticeSessionResponseDTO startSession(Long userId, Long subtopicId) {
         Subtopics subtopic = subtopicsRepository.findById(subtopicId)
@@ -110,7 +110,7 @@ public class SubtopicPracticeSessionService {
     }
 
     public SubtopicTypeResponseDto getSubtopicType(Long subtopicId) {
-        Subtopics subtopic = subtopicsRepository.findById(subtopicId).orElseThrow(()->new RuntimeException("subtópico não encontrado"));
+        Subtopics subtopic = subtopicsRepository.findById(subtopicId).orElseThrow(()->new ResourceNotFoundException("subtópico não encontrado"));
         return new SubtopicTypeResponseDto(subtopicId,subtopic.getType());
     }
 

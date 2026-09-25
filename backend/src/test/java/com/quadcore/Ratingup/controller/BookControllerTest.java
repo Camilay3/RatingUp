@@ -1,4 +1,5 @@
 package com.quadcore.Ratingup.controller;
+import com.quadcore.Ratingup.dto.book.BookDTO;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quadcore.Ratingup.dto.book.SubtopicIdRequestDto;
@@ -47,7 +48,7 @@ public class BookControllerTest {
     @Test
     @DisplayName("Should list pages successfully")
     void testListPages() throws Exception {
-        when(bookService.buildBook()).thenReturn(new com.quadcore.Ratingup.dto.book.BookDTO(List.of(), 0));
+        when(bookService.buildBook()).thenReturn(new BookDTO(List.of(), 0));
 
         mockMvc.perform(get("/livro/paginas"))
                 .andExpect(status().isOk())
@@ -66,20 +67,5 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(true))
                 .andExpect(jsonPath("$.message").value("Subtópico salvo com sucesso"));
-    }
-
-    @Test
-    @DisplayName("Should get subtopic content successfully")
-    void testGetSubtopicContent() throws Exception {
-        SubtopicIdRequestDto dto = new SubtopicIdRequestDto(1L);
-
-        when(bookService.getSubtopicContent(1L)).thenReturn(null);
-
-        mockMvc.perform(post("/livro/subtopico")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(true))
-                .andExpect(jsonPath("$.message").value("Conteúdo encontrado"));
     }
 }

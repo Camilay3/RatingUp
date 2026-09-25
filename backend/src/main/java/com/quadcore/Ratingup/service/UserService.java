@@ -7,8 +7,8 @@ import com.quadcore.Ratingup.dto.profile.PasswordResetDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileUpdateRequestDTO;
 import com.quadcore.Ratingup.enums.Roles;
-import com.quadcore.Ratingup.handler.DuplicateFieldException;
-import com.quadcore.Ratingup.handler.ValidationException;
+import com.quadcore.Ratingup.exception.*;
+
 import com.quadcore.Ratingup.mapper.UserMapper;
 import com.quadcore.Ratingup.model.profile.Progress;
 import com.quadcore.Ratingup.model.profile.User;
@@ -81,7 +81,7 @@ public class UserService implements UserDetailsService {
             errors.add("telefone já cadastrado");
         }
         if (!errors.isEmpty()) {
-            throw new DuplicateFieldException(errors);
+            throw new ConflictException("Campos duplicados", errors);
         }
 
         User user = UserMapper.toEntity(dto);
@@ -142,14 +142,14 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new EntityNotFoundException("Nenhum Usuário encontrado para esse email"));
 
         if (!passwordEncoder.matches(dto.oldPassword(), user.getPassword())) {
-            throw new ValidationException(
+            throw new FieldValidationException(
                     "oldPassword",
                     "Senha antiga não está correta"
             );
         }
 
         if (dto.oldPassword().equals(dto.newPassword())) {
-            throw new ValidationException(
+            throw new FieldValidationException(
                     "newPassword",
                     "A nova senha não pode ser igual à antiga"
             );
@@ -161,10 +161,10 @@ public class UserService implements UserDetailsService {
 
     public String loginUser(String email, String senha){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Nenhum usuário encontrado para esse email"));
+                .orElseThrow(() -> new ResourceNotFoundException("Nenhum usuário encontrado para esse email"));
 
         if(!(passwordEncoder.matches(senha, user.getPassword()))) {
-            throw new RuntimeException("Senha incorreta");
+            throw new UnauthorizedOperationException("Senha incorreta");
         }
 
         return tokenGenerator.generateLoginToken(user);
@@ -188,10 +188,10 @@ public class UserService implements UserDetailsService {
     @Transactional
     public String validateResetToken(String token){
         User user = userRepository.findByResetToken(token)
-                .orElseThrow(() -> new RuntimeException("Token inválido"));
+                .orElseThrow(() -> new UnauthorizedOperationException("Token inválido"));
 
         if(user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Esse token está expirado");
+            throw new UnauthorizedOperationException("Esse token está expirado");
         }
 
         String jwt = tokenGenerator.generateRecoveryToken(user);
@@ -213,7 +213,7 @@ public class UserService implements UserDetailsService {
 
         String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!¨])(?=\\S+$).{8,12}$";
         if(!newPassword.matches(regex)){
-            throw new RuntimeException("Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
+            throw new FieldValidationException("newPassword", "Senha nova fraca! Digite uma senha que tenha letras maiúsculas, minúsculas, números e símbolos");
         }
 
         checkRepeatedCharactersPassword(newPassword);
@@ -229,7 +229,7 @@ public class UserService implements UserDetailsService {
                 contadorSenha++;
 
                 if(contadorSenha >= 7){
-                    throw new RuntimeException("Erro: A senha está com 8 ou mais caracteres repetidos/consecutivos!");
+                    throw new FieldValidationException("newPassword", "Erro: A senha está com 8 ou mais caracteres repetidos/consecutivos!");
                 }
             }
             else{

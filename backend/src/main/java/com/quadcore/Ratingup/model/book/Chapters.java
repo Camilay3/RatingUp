@@ -10,7 +10,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class Chapters {
 
     @Id
@@ -23,4 +22,17 @@ public class Chapters {
     @OrderBy("display_order ASC")
     private List<Subtopics> subtopics;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Chapters)) return false;
+        Chapters other = (Chapters) o;
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

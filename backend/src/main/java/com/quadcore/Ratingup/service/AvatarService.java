@@ -1,5 +1,6 @@
 package com.quadcore.Ratingup.service;
 
+import com.quadcore.Ratingup.exception.*;
 import com.quadcore.Ratingup.dto.profile.AvatarResponseDTO;
 import com.quadcore.Ratingup.model.images.Images;
 import com.quadcore.Ratingup.model.profile.User;
@@ -31,10 +32,10 @@ public class AvatarService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
         Images image = imagesRepository.findByImageName(imageName)
-                .orElseThrow(() -> new RuntimeException("Imagem não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Imagem não encontrada"));
 
         user.setAvatarurl("/images/avatars/" + image.getObjectId());
         userRepository.save(user);
