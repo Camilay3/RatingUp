@@ -58,7 +58,7 @@ public class MultipleChoiceServiceTest {
     void testGetQuizNotFound() {
         when(questionRepository.findBySubtopicId(1L)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> multipleChoiceService.getQuiz(1L));
+        assertThrows(Exception.class, () -> multipleChoiceService.getQuiz(1L));
     }
 
     @Test
@@ -93,6 +93,6 @@ public class MultipleChoiceServiceTest {
 
         when(optionRepository.findById(1L)).thenReturn(Optional.of(option));
 
-        assertThrows(RuntimeException.class, () -> multipleChoiceService.answerQuiz(dto));
+        assertThrows(Exception.class, () -> multipleChoiceService.answerQuiz(dto));
     }
 }

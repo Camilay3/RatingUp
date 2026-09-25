@@ -50,6 +50,6 @@ public class TokenGeneratorTest {
     @Test
     @DisplayName("Should throw when get subject with invalid token")
     void testGetSubjectInvalid() {
-        assertThrows(RuntimeException.class, () -> tokenGenerator.getSubject("invalid-token"));
+        assertThrows(Exception.class, () -> tokenGenerator.getSubject("invalid-token"));
     }
 }

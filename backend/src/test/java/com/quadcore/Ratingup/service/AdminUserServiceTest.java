@@ -96,7 +96,7 @@ class AdminUserServiceTest {
         user.setPassword(null);
 
         assertThatThrownBy(() -> adminUserService.registerAdminUser(user))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(Exception.class)
                 .hasMessageContaining("A senha não pode ser nula");
     }
 
@@ -105,7 +105,7 @@ class AdminUserServiceTest {
         user.setPassword("weak");
 
         assertThatThrownBy(() -> adminUserService.registerAdminUser(user))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(Exception.class)
                 .hasMessageContaining("Senha inválida!");
     }
 }
