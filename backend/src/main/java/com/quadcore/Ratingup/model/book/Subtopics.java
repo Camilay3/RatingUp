@@ -10,7 +10,6 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class Subtopics {
 
     @Id
@@ -42,4 +41,17 @@ public class Subtopics {
 
     @Column(columnDefinition = "TEXT")
     private String practiceExplanation;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Subtopics)) return false;
+        Subtopics other = (Subtopics) o;
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -1,8 +1,8 @@
 package com.quadcore.Ratingup.service;
+import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 
 import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
-import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileUpdateRequestDTO;
 import com.quadcore.Ratingup.exception.ConflictException;
 import com.quadcore.Ratingup.exception.FieldValidationException;
@@ -215,7 +215,7 @@ class UserServiceTest {
 
     @Test
     void registerUser_ShouldThrow_WhenPasswordHasRepeatedCharacters() {
-        com.quadcore.Ratingup.dto.profile.ProfileRequestDTO request = new com.quadcore.Ratingup.dto.profile.ProfileRequestDTO("Name", "Nick", "test@test.com", "11111111", "aaaaaaaaaa1!");
+        ProfileRequestDTO request = new ProfileRequestDTO("Name", "Nick", "test@test.com", "11111111", "aaaaaaaaaa1!");
         
         org.assertj.core.api.Assertions.assertThatThrownBy(() -> userService.registerUser(request))
                 .isInstanceOf(Exception.class)

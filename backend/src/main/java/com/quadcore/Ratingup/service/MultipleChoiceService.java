@@ -9,19 +9,18 @@ import com.quadcore.Ratingup.model.board.MultipleChoiceOption;
 import com.quadcore.Ratingup.model.board.MultipleChoiceQuestion;
 import com.quadcore.Ratingup.repository.MultipleChoiceOptionRepository;
 import com.quadcore.Ratingup.repository.MultipleChoiceQuestionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MultipleChoiceService {
 
-    @Autowired
-    private MultipleChoiceQuestionRepository questionRepository;
+    private final MultipleChoiceQuestionRepository questionRepository;
 
-    @Autowired
-    private MultipleChoiceOptionRepository optionRepository;
+    private final MultipleChoiceOptionRepository optionRepository;
 
     public QuizResponseDTO getQuiz(Long subtopicId) {
         MultipleChoiceQuestion question = questionRepository.findBySubtopicId(subtopicId)

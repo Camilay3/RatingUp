@@ -7,17 +7,17 @@ import com.quadcore.Ratingup.dto.book.SubtopicIdRequestDto;
 import com.quadcore.Ratingup.service.MultipleChoiceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Quiz", description = "Endpoints para questões de múltipla escolha")
 @RequestMapping("/multiple-choice")
 @RestController
+@RequiredArgsConstructor
 public class MultipleChoiceController {
 
-    @Autowired
-    private MultipleChoiceService multipleChoiceService;
+    private final MultipleChoiceService multipleChoiceService;
 
     @GetMapping("/session/quiz/{subtopicId}")
     public ResponseEntity<QuizResponseDTO> getQuiz(@PathVariable("subtopicId") Long subtopicId) {

@@ -1,4 +1,5 @@
 package com.quadcore.Ratingup.controller;
+import com.quadcore.Ratingup.enums.Roles;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
@@ -74,7 +75,7 @@ class AdminUserControllerTest {
 
     @Test
     void listUsers_ShouldReturn200() throws Exception {
-        ProfileResponseDTO dto = new ProfileResponseDTO(1L, "Admin", "nick", "admin@test.com", "123456789", com.quadcore.Ratingup.enums.Roles.ADMIN, LocalDateTime.now(), "avatar");
+        ProfileResponseDTO dto = new ProfileResponseDTO(1L, "Admin", "nick", "admin@test.com", "123456789", Roles.ADMIN, LocalDateTime.now(), "avatar");
         Mockito.when(adminUserService.listUsers()).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/admin/contas/listar"))

@@ -8,7 +8,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of ="id")
 public class MultipleChoiceOption {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,4 +19,17 @@ public class MultipleChoiceOption {
     private String optionText;
 
     private Boolean isCorrect;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MultipleChoiceOption)) return false;
+        MultipleChoiceOption other = (MultipleChoiceOption) o;
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -6,9 +6,9 @@ import com.quadcore.Ratingup.dto.response.ApiResponse;
 import com.quadcore.Ratingup.service.AvatarService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
@@ -16,10 +16,10 @@ import java.util.Map;
 @Tag(name = "Avatar")
 @RestController
 @RequestMapping("/avatar")
+@RequiredArgsConstructor
 public class AvatarController {
-    //Controller para gerenciar os endpoints relacionados ao avatar do usuário
-    @Autowired
-    private AvatarService avatarService;
+
+    private final AvatarService avatarService;
 
     @GetMapping("/avatar-list")
     public ResponseEntity<ApiResponse<List<AvatarResponseDTO>>> showAvatarList(){
