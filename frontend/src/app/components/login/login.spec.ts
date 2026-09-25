@@ -65,7 +65,7 @@ describe('Login', () => {
 		component.onLogin();
 		expect(router.navigate).toHaveBeenCalledWith(['/']);
 
-		loginService.login.mockReturnValueOnce(throwError(() => ({ error: { data: { email: 'invalid email' } } })));
+		loginService.login.mockReturnValueOnce(throwError(() => ({ error: { errors: { email: 'invalid email' } } })));
 		component.onLogin();
 		expect(component.LoginForm.get('email')?.hasError('backendError')).toBe(true);
 
@@ -100,7 +100,7 @@ describe('Login', () => {
 		component.onRegister();
 		expect(component.RegisterForm.get('password')?.hasError('backendError')).toBe(true);
 
-		loginService.register.mockReturnValueOnce(throwError(() => ({ error: { data: { email: 'only email' } } })));
+		loginService.register.mockReturnValueOnce(throwError(() => ({ error: { errors: { email: 'only email' } } })));
 		component.onRegister();
 		expect(component.RegisterForm.get('email')?.hasError('backendError')).toBe(true);
 

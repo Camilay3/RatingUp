@@ -1,6 +1,6 @@
 package com.quadcore.Ratingup.exception;
 
-public abstract class DomainException extends RuntimeException {
+public class DomainException extends RuntimeException {
     private final String errorCode;
 
     public DomainException(String message, String errorCode) {

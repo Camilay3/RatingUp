@@ -29,7 +29,7 @@ public class TokenGenerator{
                     .sign(algorithm);
         }
         catch (JWTCreationException exception){
-            throw new DomainException("Erro ao gerar token", "TOKEN_GENERATION_ERROR") {};
+            throw new DomainException("Erro ao gerar token", "TOKEN_GENERATION_ERROR");
         }
     }
 

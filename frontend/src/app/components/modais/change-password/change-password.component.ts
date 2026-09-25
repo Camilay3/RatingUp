@@ -77,7 +77,7 @@ export class ChangePasswordComponent implements OnInit {
 				const controlNova = this.ChangePassForm.get('senhaNova');
 				const controlConfirm = this.ChangePassForm.get('senhaNovaConfirmada');
 
-				const data = e?.error?.data;
+				const data = e?.error?.errors;
 				if (data && typeof data === 'object') {
 					if (data.newPassword) controlNova?.setErrors({ backendError: data.newPassword });
 					if (data.oldPassword) controlAtual?.setErrors({ backendError: data.oldPassword });
