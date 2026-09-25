@@ -3,7 +3,6 @@ import com.quadcore.Ratingup.dto.profile.ProfileRequestDTO;
 
 import com.quadcore.Ratingup.config.security.TokenGenerator;
 import com.quadcore.Ratingup.dto.profile.PasswordChangeDTO;
-import ProfileRequestDTO;
 import com.quadcore.Ratingup.dto.profile.ProfileUpdateRequestDTO;
 import com.quadcore.Ratingup.exception.ConflictException;
 import com.quadcore.Ratingup.exception.FieldValidationException;
