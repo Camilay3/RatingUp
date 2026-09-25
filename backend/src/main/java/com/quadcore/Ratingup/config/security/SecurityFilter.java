@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -24,8 +25,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private final UserRepository repository;
 
-    @Autowired
-    private TokenCookieService tokenCookieService;
+    private final TokenCookieService tokenCookieService;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
