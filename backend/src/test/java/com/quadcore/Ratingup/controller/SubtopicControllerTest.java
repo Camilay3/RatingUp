@@ -53,7 +53,7 @@ public class SubtopicControllerTest {
     @Test
     @DisplayName("Should get subtopic content")
     void testGetSubtopicContent() throws Exception {
-        com.quadcore.Ratingup.dto.book.SubtopicResponseDTO responseDTO = new com.quadcore.Ratingup.dto.book.SubtopicResponseDTO(1L, "Content", 1);
+        com.quadcore.Ratingup.dto.book.SubtopicResponseDTO responseDTO = new com.quadcore.Ratingup.dto.book.SubtopicResponseDTO(1L, 1L, "Content", 1, "Some content", "Explanation");
         when(bookService.getSubtopicContent(1L)).thenReturn(responseDTO);
 
         mockMvc.perform(get("/subtopics/1/content")
