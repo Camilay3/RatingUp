@@ -52,9 +52,6 @@ public class SubtopicPracticeSessionService {
         board.loadFromFen(session.getCurrentFen());
 
         Move move = new Move(moveDto.posInitial(), moveDto.posFinal(), moveDto.piece());
-        System.out.println("Move criado: " + move);
-        System.out.println("Legal moves: " + board.legalMoves());
-        System.out.println("Contém? " + board.legalMoves().contains(move));
 
         //transforma ambas sequencias de jogada em lista pra comparar
         String moveNotation = moveDto.posInitial().toString().toLowerCase()
