@@ -1,13 +1,13 @@
 INSERT INTO users (name, nickname, email, telefone, password, role)
 VALUES (
         'Administrador',
-        'Master',
+        'MasterAdmin',
         'ratingupadmin@gmail.com',
         '8599998888',
         '$2a$10$xyTt8KT9Qzza60DqXaRg..faEUSULs1DAgunQLmYkbgg..wPIHRm.',
         'ADMIN'
        )
-ON CONFLICT (email) DO NOTHING;
+ON CONFLICT (email) DO UPDATE SET nickname = EXCLUDED.nickname;
 
 INSERT INTO progress (chapters, subtopics, user_id)
 VALUES (
