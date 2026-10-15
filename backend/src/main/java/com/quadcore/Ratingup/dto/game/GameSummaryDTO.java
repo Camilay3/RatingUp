@@ -1,4 +1,10 @@
 package com.quadcore.Ratingup.dto.game;
 
-public record GameSummaryDTO() {
-}
+import com.quadcore.Ratingup.enums.GameStatus;
+
+public record GameSummaryDTO(
+        Long gameId,
+        GameStatus status,
+        String myColor,
+        String opponentNickname
+) {}
