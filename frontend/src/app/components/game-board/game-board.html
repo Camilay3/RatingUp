@@ -1,10 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<section class="xadrez">
+	<div #board class="chess-board"></div>
+
+	<div class="chat-jogadas">
+		<h2 class="titulo">Partida #{{ gameId }}</h2>
+
+		@if (opponentNickname) {
+		<p class="status">Você ({{ corTexto }}) × {{ opponentNickname }}</p>
+		}
+
+		@if (gameStatus === 'WAITING') {
+		<p class="status">Aguardando um adversário entrar...</p>
+		<div class="status">
+			<button class="small outline" (click)="cancelar()">Cancelar partida</button>
+		</div>
+		} @else if (gameStatus === 'FINISHED') {
+		<p class="status">{{ resultText }}</p>
+		<div class="status">
+			<button class="small" (click)="voltar()">Voltar ao lobby</button>
+		</div>
+		} @else {
+		<p class="status">{{ isMyTurn ? 'Sua vez' : 'Vez do adversário' }}</p>
+		}
+
+		@if (errorMessage) {
+		<p class="status">{{ errorMessage }}</p>
+		}
+
+		@for (move of moves; track $index) {
+		<div class="jogadas" [class.jogadas-sistema]="!move.mine">
+			<p>{{ move.from }} <i class="fa-solid fa-arrow-right"></i> {{ move.to }}</p>
+		</div>
+		}
+	</div>
+</section>
