@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Promover peão</h2>
+
+<mat-dialog-content>
+	<div class="opcoes">
+		@for (op of opcoes; track op.letra) {
+		<div class="opcao" (click)="escolher(op.letra)">
+			<span class="glifo">{{ data.color === 'white' ? op.branca : op.preta }}</span>
+			<span class="nome">{{ op.nome }}</span>
+		</div>
+		}
+	</div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close>Cancelar</button>
+</mat-dialog-actions>

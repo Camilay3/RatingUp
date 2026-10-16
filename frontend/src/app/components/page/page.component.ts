@@ -7,7 +7,7 @@ import {
 	ViewChild,
 	ElementRef,
 	HostListener,
-	inject,		
+	inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ISheet, ISubtopico, PageData } from '../../interfaces/book/IBook';
@@ -23,7 +23,7 @@ import { TransitionService } from '../../services/transition/transition.service'
 	imports: [MatTooltipModule],
 	})
 export class PageComponent {
-	readonly apiUrl = environment.apiUrl;	
+	readonly apiUrl = environment.apiUrl;
 	page = input<PageData | null>();
   	side = input<'frente' | 'verso'>();
   	isWaiting = output<boolean>();
@@ -185,6 +185,10 @@ export class PageComponent {
 
 	verPerfil() {
 		this.router.navigateByUrl('/perfil');
+	}
+
+	jogar() {
+		this.router.navigateByUrl('/jogar');
 	}
 
 	get avatarSrc(): string {

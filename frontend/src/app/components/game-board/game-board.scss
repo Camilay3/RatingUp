@@ -1,0 +1,43 @@
+@use '../chess-board/chess-board.scss';
+
+.status {
+  text-align: center;
+  margin: 8px;
+}
+
+.xadrez {
+  --board-size: min(calc(100vw - 380px), 100dvh);
+  align-items: flex-start;
+  justify-content: center;
+
+  .chess-board {
+    flex: 0 0 var(--board-size);
+    width: var(--board-size);
+    height: var(--board-size);
+  }
+
+  .chat-jogadas {
+    flex: 0 1 340px;
+    width: auto;
+    min-width: 260px;
+    aspect-ratio: auto;
+    height: var(--board-size);
+  }
+}
+
+// Telas estreitas: tabuleiro em cima, painel embaixo
+@media (max-width: 900px) {
+  .xadrez {
+    --board-size: min(100vw, 100dvh - 220px);
+    flex-direction: column;
+    align-items: center;
+
+    .chat-jogadas {
+      flex: none;
+      width: 94%;
+      height: auto;
+      max-height: 40dvh;
+      margin: 12px 0 !important;
+    }
+  }
+}
