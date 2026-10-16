@@ -1,55 +1,82 @@
 <section class="lobby">
 	<div class="topo">
-		<h1>Jogar online</h1>
+		<div class="cabecalho">
+			<p class="eyebrow">RatingUp</p>
+			<h1>Jogar online</h1>
+			<p class="descricao">Crie uma partida ou entre em uma mesa aberta para enfrentar outro jogador.</p>
+		</div>
 		<div class="acoes">
 			<button class="small" [disabled]="isBusy" (click)="criar()">Criar partida</button>
 			<button class="small outline" routerLink="/">Voltar para o início</button>
 		</div>
 	</div>
 
-	<h2>Minhas partidas</h2>
-	@if (isLoading) {
-	<p class="vazio">Carregando...</p>
-	} @else if (myGames.length === 0) {
-	<p class="vazio">Você não tem partidas em andamento.</p>
-	} @else {
-	<ul>
-		@for (game of myGames; track game.gameId) {
-		<li>
-          <span>
-            Partida #{{ game.gameId }} —
-            @if (game.status === 'WAITING') {
-              aguardando adversário
-            } @else {
-              contra {{ game.opponentNickname }} ({{ game.myColor === 'WHITE' ? 'brancas' : 'pretas' }})
-            }
-          </span>
-			<div class="botoes">
-				<button class="small" [routerLink]="['/partida', game.gameId]">
-					{{ game.status === 'WAITING' ? 'Abrir' : 'Continuar' }}
-				</button>
-				@if (game.status === 'WAITING') {
-				<button class="small outline" [disabled]="isBusy" (click)="cancelar(game.gameId)">Cancelar</button>
+	<div class="conteudo">
+		<section class="grupo">
+			<div class="titulo-grupo">
+				<div>
+					<p class="eyebrow">Seu histórico</p>
+					<h2>Partidas ativas</h2>
+				</div>
+				<span class="contador">{{ myGames.length }}</span>
+			</div>
+			@if (isLoading) {
+			<p class="vazio">Carregando partidas...</p>
+			} @else if (myGames.length === 0) {
+			<p class="vazio">Você não tem partidas em andamento.</p>
+			} @else {
+			<ul>
+				@for (game of myGames; track game.gameId) {
+				<li>
+					<span class="partida">
+						<strong>Partida #{{ game.gameId }}</strong>
+						<small>
+							@if (game.status === 'WAITING') {
+							Aguardando adversário
+							} @else {
+							Contra {{ game.opponentNickname }} · {{ game.myColor === 'WHITE' ? 'Brancas' : 'Pretas' }}
+							}
+						</small>
+					</span>
+					<div class="botoes">
+						<button class="small" [routerLink]="['/partida', game.gameId]">
+							{{ game.status === 'WAITING' ? 'Abrir' : 'Continuar' }}
+						</button>
+						@if (game.status === 'WAITING') {
+						<button class="small outline" [disabled]="isBusy" (click)="cancelar(game.gameId)">Cancelar</button>
+						}
+					</div>
+				</li>
 				}
-			</div>
-		</li>
-		}
-	</ul>
-	}
+			</ul>
+			}
+		</section>
 
-	<h2>Partidas abertas</h2>
-	@if (!isLoading && openGames.length === 0) {
-	<p class="vazio">Nenhuma partida aberta no momento. Crie uma e espere alguém entrar!</p>
-	} @else {
-	<ul>
-		@for (game of openGames; track game.gameId) {
-		<li>
-			<span>Partida #{{ game.gameId }} — criada por {{ game.opponentNickname }}</span>
-			<div class="botoes">
-				<button class="small" [disabled]="isBusy" (click)="entrar(game.gameId)">Entrar</button>
+		<section class="grupo">
+			<div class="titulo-grupo">
+				<div>
+					<p class="eyebrow">Encontre um desafio</p>
+					<h2>Partidas abertas</h2>
+				</div>
+				<span class="contador">{{ openGames.length }}</span>
 			</div>
-		</li>
-		}
-	</ul>
-	}
+			@if (!isLoading && openGames.length === 0) {
+			<p class="vazio">Nenhuma partida aberta no momento. Crie uma e espere alguém entrar!</p>
+			} @else {
+			<ul>
+				@for (game of openGames; track game.gameId) {
+				<li>
+					<span class="partida">
+						<strong>Partida #{{ game.gameId }}</strong>
+						<small>Criada por {{ game.opponentNickname }}</small>
+					</span>
+					<div class="botoes">
+						<button class="small" [disabled]="isBusy" (click)="entrar(game.gameId)">Entrar</button>
+					</div>
+				</li>
+				}
+			</ul>
+			}
+		</section>
+	</div>
 </section>
