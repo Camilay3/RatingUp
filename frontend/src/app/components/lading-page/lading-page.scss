@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;  // esquerda (logo + menu) e direita (botões)
+    align-items: center;             // centraliza tudo na vertical
+    height: 120px;
+    padding: 0 24px;
+
+    .left {
+        display: flex;
+        align-items: center;
+        gap: 48px;                   // espaço entre o logo e o menu
+
+        img {
+            height: 80px;
+        }
+    }
+
+    nav {
+        display: flex;
+        align-items: center;
+        gap: 32px;                   // espaço entre os links
+
+        a {
+            text-decoration: none;
+            font-size: 1.1rem;
+            white-space: nowrap;
+            color: var(--white);
+        }
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+
+        button {
+            white-space: nowrap;
+            width: 8em !important;
+        }
+    }
+}
+
+body{
+    background-color: #f0e8d8;
+}
