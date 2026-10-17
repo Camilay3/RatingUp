@@ -8,6 +8,8 @@ import { NotFoundComponent } from './components/not-found.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
 import { LadingPage } from './components/lading-page/lading-page';
+import { Lobby } from './components/lobby/lobby';
+import { GameBoard } from './components/game-board/game-board';
 
 export const routes: Routes = [
 
@@ -17,6 +19,8 @@ export const routes: Routes = [
 	{ path: '', component: BookComponent, canActivate: [authGuard] },
 	{ path: 'subtopico', component: SubtopicoComponent, canActivate: [authGuard] },
 	{ path: 'perfil', component: ProfileComponent, canActivate: [authGuard] },
+	{ path: 'jogar', component: Lobby, canActivate: [authGuard] },
+	{ path: 'partida/:id', component: GameBoard, canActivate: [authGuard] },
 
     { path: '**', component: NotFoundComponent },
 
