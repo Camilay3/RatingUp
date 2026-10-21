@@ -2,19 +2,27 @@
   margin: 0;
   padding: 0;
   border: 0;
+  box-sizing: border-box;
+}
+
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;               // a página ocupa exatamente a janela
+    height: 100dvh;              // melhor no celular (o navegador usa esse se suportar)
 }
 
 header {
+    flex: 0 0 120px;
     display: flex;
-    justify-content: space-between;  // esquerda (logo + menu) e direita (botões)
-    align-items: center;             // centraliza tudo na vertical
-    height: 120px;
+    justify-content: space-between;
+    align-items: center;
     padding: 0 24px;
 
     .left {
         display: flex;
         align-items: center;
-        gap: 48px;                   // espaço entre o logo e o menu
+        gap: 48px;
 
         img {
             height: 80px;
@@ -24,7 +32,7 @@ header {
     nav {
         display: flex;
         align-items: center;
-        gap: 32px;                   // espaço entre os links
+        gap: 32px;
 
         a {
             text-decoration: none;
@@ -46,6 +54,43 @@ header {
     }
 }
 
-body{
+body {
+    flex: 1;                     // ocupa o espaço entre header e footer
+    min-height: 0;               // deixa o conteúdo encolher em vez de estourar
+    display: flex;
     background-color: #f0e8d8;
+
+    .caixa {
+        flex: 1;
+        min-height: 0;
+        margin: 40px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-image: url('/livro/background.webp');
+        background-size: cover;
+        background-position: center;
+        border-radius: 10px;
+
+        .titulo {
+            margin-top: 10px;
+        }
+
+        .promotion-text {
+            margin-top: 30px;
+            width: 600px;
+            font-size: 1.3em;
+        }
+
+        img {
+            height: 100%;        // acompanha a altura da caixa
+            max-height: 500px;   // mas nunca passa dos 500px originais
+            width: auto;
+        }
+    }
+}
+
+footer {
+    flex: 0 0 40px;
+    background-color: var(--primary);
 }
