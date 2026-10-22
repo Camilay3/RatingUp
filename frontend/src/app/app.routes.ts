@@ -12,8 +12,9 @@ import { Lobby } from './components/lobby/lobby';
 import { GameBoard } from './components/game-board/game-board';
 
 export const routes: Routes = [
-
-	{ path: 'acesso', component: LadingPage, canActivate: [loginGuard] },
+	
+	{path: 'lading', component: LadingPage, canActivate: [loginGuard]},
+	{ path: 'acesso', component: Login, canActivate: [loginGuard] },
 	{ path: 'esqueci-senha', component: ForgotPassword },
 
 	{ path: '', component: BookComponent, canActivate: [authGuard] },
