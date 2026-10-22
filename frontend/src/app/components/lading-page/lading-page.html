@@ -1,33 +1,186 @@
-<header>
-     <div class="left">
-        <img src="logos/logo.png" alt="RatingUp">
-        <nav>
-            <a href="#" >Jogar Online</a>
-            <a href="#" >Estudar Xadrez</a>
-            <a href="#" >Relatar Erros</a>
-        </nav>
-    </div>
-    <div class="actions" >
-        <button (click)="redirectLogin()" >Entrar</button>
-        <button (click)="redirectLogin()" >Cadastre-se</button>
-    </div>
-</header>
+<!-- Logo reutilizado no header e no footer. Para usar imagem, troque o conteúdo de .logo-mark por <img> -->
+<ng-template #logo>
+  <a class="logo" href="/lading" aria-label="RatingUp — início" (click)="goTo($event, 'inicio')">
+    <span class="logo-mark">
+      <span class="logo-mark-icon">♞</span>
+    </span>
+    <span class="logo-text">Rating<span>Up</span></span>
+  </a>
+</ng-template>
 
-<body>
-    <div class="caixa">
-        <div class="text">
-            <h1 class="titulo">Aprenda Xadrez de forma Simples e Gameficada</h1>
-            <p class="promotion-text">Você já teve vontade de aprender xadrez, mas achava muito complexo e chato ? Resolvemos isso
-            com o RatingUp que propõe uma forma gameficada e didatica através de quizes e praticas de xadrez
-            com intuito de democratizar o ensino desse jogo tão famoso e respeitado por todo o mundo
-            </p>
+<div class="page">
+  <header class="header">
+    <div class="header-inner">
+      <ng-container *ngTemplateOutlet="logo" />
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a class="nav-link" href="#metodo" (click)="goTo($event, 'metodo')">Como funciona</a>
+        <a class="nav-link" href="#beneficios" (click)="goTo($event, 'beneficios')">Por que aprender</a>
+        <a class="nav-link" href="#contato" (click)="goTo($event, 'contato')">Relatar erros</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="btn-ghost" [routerLink]="rotaEntrar">Entrar</a>
+        <a class="btn-gold-sm" [routerLink]="rotaCadastro">Cadastre-se</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="inicio" class="hero">
+      <div class="hero-glow"></div>
+      <div class="chess-grid"></div>
+      <div class="ring ring-1"></div>
+      <div class="ring ring-2"></div>
+
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="badge">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m12 3 1.4 4.1L17.5 8.5l-4.1 1.4L12 14l-1.4-4.1-4.1-1.4 4.1-1.4L12 3Z" />
+              <path d="m18.5 15 .7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7.7-2.1Z" />
+            </svg>
+            Xadrez simples, divertido e para todos
+          </div>
+
+          <h1 class="hero-title">
+            Cada jogada
+            <span>faz você subir.</span>
+          </h1>
+
+          <p class="hero-text">
+            Aprenda xadrez com desafios rápidos, prática guiada e uma jornada que transforma
+            estratégia em diversão — mesmo que você nunca tenha movido uma peça.
+          </p>
+
+          <div class="hero-buttons">
+            <a class="btn-primary" [routerLink]="rotaCadastro">
+              Começar a jogar grátis
+              <span class="arrow">→</span>
+            </a>
+          </div>
+
+          <div class="trust">
+            <span>
+              <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+              Do zero à primeira vitória
+            </span>
+          </div>
         </div>
-        <img src="livro/capa.webp" alt="Capa do RatingUp">
+
+        <!-- Livro (só aparece em telas grandes) -->
+        <div class="hero-visual">
+          <div class="visual-glow"></div>
+
+          <div class="book-card">
+            <div class="book-inner">
+              <span class="book-crown">♛</span>
+              <span class="book-kicker">Seu guia de evolução</span>
+              <div class="book-divider"></div>
+              <span class="book-title">
+                Rating
+                <span>Up</span>
+              </span>
+              <div class="book-diamond">
+                <div class="book-knight">♞</div>
+              </div>
+              <span class="book-tagline">Aprenda · Jogue · Evolua</span>
+              <div class="book-pieces">
+                <span>♟</span>
+                <span>♜</span>
+                <span>♝</span>
+                <span>♛</span>
+                <span>♚</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="next-phase">
+            <span class="next-phase-icon">♟</span>
+            <span>
+              <strong>Próxima fase</strong>
+              <small>Táticas de abertura</small>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-edge"></div>
+    </section>
+
+    <!-- MÉTODO / BENEFÍCIOS -->
+    <section id="metodo" class="method">
+      <div class="container">
+        <div class="method-head">
+          <div>
+            <p class="eyebrow">Um novo jeito de aprender</p>
+            <h2 class="method-title">
+              Menos teoria solta.
+              <span>Mais boas jogadas.</span>
+            </h2>
+          </div>
+          <p class="method-text">
+            O RatingUp divide o xadrez em pequenas conquistas. Você entende uma ideia, testa no
+            tabuleiro e avança com confiança.
+          </p>
+        </div>
+
+        <div id="beneficios" class="benefits">
+          @for (benefit of benefits; track benefit.number) {
+            <article class="feature-card">
+              <span class="feature-number">{{ benefit.number }}</span>
+
+              <span class="feature-icon">
+                <svg class="icon icon-lg" viewBox="0 0 24 24" aria-hidden="true">
+                  @switch (benefit.icon) {
+                    @case ('puzzle') {
+                      <path d="M19 13v6h-6a3 3 0 1 0-6 0H3v-6a3 3 0 1 0 0-6h4a3 3 0 1 1 6 0h6v4a3 3 0 1 1 0 6v-4Z" />
+                    }
+                    @case ('book') {
+                      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z" />
+                      <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5v-16Z" />
+                    }
+                    @case ('flag') {
+                      <path d="M5 21V4" />
+                      <path d="M5 5h11l-2 4 2 4H5" />
+                    }
+                  }
+                </svg>
+              </span>
+
+              <h3>{{ benefit.title }}</h3>
+              <p>{{ benefit.text }}</p>
+
+              <div class="feature-line"><div></div></div>
+            </article>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <div class="cta">
+        <div class="chess-grid-light"></div>
+        <div class="cta-content">
+          <p class="cta-kicker">Sua próxima jogada</p>
+          <h2>Pronto para enxergar o tabuleiro de outro jeito?</h2>
+          <p class="cta-text">Crie sua conta gratuitamente e comece hoje sua primeira trilha.</p>
+          <a class="btn-dark" [routerLink]="rotaCadastro">
+            Criar minha conta
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contato" class="footer">
+    <div class="footer-inner">
+      <ng-container *ngTemplateOutlet="logo" />
+      <p>Aprender xadrez pode ser simples. E divertido.</p>
+      <a class="footer-mail" [href]="'mailto:' + email">{{ email }}</a>
     </div>
-
-</body>
-
-<footer>
-    <p>Email de contado :</p>
-    <a>ratingupadmin@gmail.com</a>
-</footer>
+  </footer>
+</div>

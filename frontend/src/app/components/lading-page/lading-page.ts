@@ -1,20 +1,41 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-lading-page',
-  imports: [],
+  imports: [RouterLink, NgTemplateOutlet],
   templateUrl: './lading-page.html',
-  styleUrl: './lading-page.scss',
+  styleUrls: ['./lading-page.scss'],
 })
 export class LadingPage {
+  readonly rotaEntrar = '/acesso';
+  readonly rotaCadastro = '/acesso';
+  readonly email = 'ratingupadmin@gmail.com';
 
-  constructor(
-    private readonly route: Router,
-  ){}
+  readonly benefits = [
+    {
+      number: '01',
+      icon: 'puzzle',
+      title: 'Aprenda jogando',
+      text: 'Desafios curtos e interativos transformam cada conceito em uma conquista prática.',
+    },
+    {
+      number: '02',
+      icon: 'book',
+      title: 'Evolua no seu ritmo',
+      text: 'Trilhas organizadas do básico ao avançado, sem termos complicados ou aulas cansativas.',
+    },
+    {
+      number: '03',
+      icon: 'flag',
+      title: 'Veja seu progresso',
+      text: 'Acompanhe sua evolução, conquiste níveis e saiba exatamente qual é o próximo passo.',
+    },
+  ];
 
-  redirectLogin(){
-    this.route.navigate(['/acesso'])
+  goTo(event: Event, id: string): void {
+    event.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-
 }
