@@ -72,10 +72,6 @@ export class Login implements OnInit {
   choseForm(value : boolean): void{
     this.isFirstAcess = value;
 
-    this.route.queryParamMap.subscribe(params => {
-      this.isFirstAcess = params.get('modo') === 'cadastro';
-    });
-
     if(this.isFirstAcess === true){
       this.RegisterForm.reset();
     }else if(this.isFirstAcess === false){
