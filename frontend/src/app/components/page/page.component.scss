@@ -69,7 +69,14 @@
 		object-fit: cover;
 		flex-shrink: 0;
 		border: 2.25px solid var(--primary);
+		cursor: pointer;
+  		transition: transform 0.15s ease, box-shadow 0.15s ease;
 	    }
+
+		.foto:hover {
+  		transform: scale(1.05);
+  		box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+		}
 
 		.actions {
 			display: flex;

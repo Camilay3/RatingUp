@@ -7,6 +7,7 @@
 		</div>
 	</div>
 
+	<div class="caixa">
 	<h2>Minhas partidas</h2>
 	@if (isLoading) {
 	<p class="vazio">Carregando...</p>
@@ -36,7 +37,9 @@
 		}
 	</ul>
 	}
+	</div>
 
+	<div class="caixa">
 	<h2>Partidas abertas</h2>
 	@if (!isLoading && openGames.length === 0) {
 	<p class="vazio">Nenhuma partida aberta no momento. Crie uma e espere alguém entrar!</p>
@@ -52,4 +55,5 @@
 		}
 	</ul>
 	}
+	</div>
 </section>

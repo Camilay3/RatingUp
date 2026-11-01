@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute,Router } from '@angular/router';
 import { IUser, ILoginPayload } from '../../interfaces/user/iuser';
 import { LoginService } from '../../services/user/login.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,12 +34,17 @@ export class Login implements OnInit {
     private readonly fb :FormBuilder,
     private readonly loginService : LoginService,
     private readonly router : Router,
+    private readonly route: ActivatedRoute,
     private readonly snackBar : MatSnackBar
   ){}
 
   ngOnInit(): void {
     this.initLoginForm();
     this.initRegisterForm();
+
+    this.route.queryParamMap.subscribe(params => {
+      this.isFirstAcess = params.get('modo') === 'cadastro';
+    });
   }
 
   initLoginForm(){
@@ -66,6 +71,10 @@ export class Login implements OnInit {
 
   choseForm(value : boolean): void{
     this.isFirstAcess = value;
+
+    this.route.queryParamMap.subscribe(params => {
+      this.isFirstAcess = params.get('modo') === 'cadastro';
+    });
 
     if(this.isFirstAcess === true){
       this.RegisterForm.reset();

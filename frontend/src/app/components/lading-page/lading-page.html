@@ -20,8 +20,8 @@
       </nav>
 
       <div class="header-actions">
-        <a class="btn-ghost" [routerLink]="rotaEntrar">Entrar</a>
-        <a class="btn-gold-sm" [routerLink]="rotaCadastro">Cadastre-se</a>
+        <a class="btn-ghost" [routerLink]="rotaEntrar" [queryParams]="{ modo: 'login' }" >Entrar</a>
+        <a class="btn-gold-sm" [routerLink]="rotaCadastro" [queryParams]="{ modo: 'cadastro' }" >Cadastre-se</a>
       </div>
     </div>
   </header>
@@ -55,9 +55,9 @@
           </p>
 
           <div class="hero-buttons">
-            <a class="btn-primary" [routerLink]="rotaCadastro">
+            <a class="btn-primary" [routerLink]="rotaCadastro" [queryParams]="{ modo: 'cadastro' }">
               Começar a jogar grátis
-              <span class="arrow">→</span>
+            <span class="arrow">→</span>
             </a>
           </div>
 
@@ -167,8 +167,8 @@
           <p class="cta-kicker">Sua próxima jogada</p>
           <h2>Pronto para enxergar o tabuleiro de outro jeito?</h2>
           <p class="cta-text">Crie sua conta gratuitamente e comece hoje sua primeira trilha.</p>
-          <a class="btn-dark" [routerLink]="rotaCadastro">
-            Criar minha conta
+          <a class="btn-dark" [routerLink]="rotaCadastro" [queryParams]="{ modo: 'cadastro' }">
+              Criar minha conta
             <span>→</span>
           </a>
         </div>
