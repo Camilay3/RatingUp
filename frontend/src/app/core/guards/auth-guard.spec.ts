@@ -27,6 +27,6 @@ describe('authGuard', () => {
     TestBed.inject(AuthService).me = jest.fn().mockReturnValue(throwError(() => new Error('unauthorized')));
 
     await expect(firstValueFrom(executeGuard({} as any, {} as any) as any)).resolves.toBe(false);
-    expect(router.navigate).toHaveBeenCalledWith(['/acesso']);
+    expect(router.navigate).toHaveBeenCalledWith(['/lading']);
   });
 });

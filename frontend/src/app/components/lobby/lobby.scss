@@ -197,4 +197,23 @@
       }
     }
   }
+
+  .caixa {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #c4a882;
+    border-radius: 12px;
+    background-color: var(--white);
+
+    h2 {
+      margin: 0 0 0.8rem;
+    }
+
+    ul {
+      max-height: 280px;   // ajuste conforme quiser
+      overflow-y: auto;
+      padding-right: 0.4rem; // evita a barra de rolagem colar nos itens
+    }
+  }
+
 }

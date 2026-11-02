@@ -1,23 +1,66 @@
 import { FormBuilder } from '@angular/forms';
-import { of, throwError } from 'rxjs';
+import { convertToParamMap, ParamMap } from '@angular/router';
+import { BehaviorSubject, of, throwError } from 'rxjs';
 import { Login } from './login';
 
 describe('Login', () => {
 	let component: Login;
 	let loginService: { login: jest.Mock; register: jest.Mock };
 	let router: { navigate: jest.Mock };
+	let route: { queryParamMap: BehaviorSubject<ParamMap> };
 	let snackBar: { open: jest.Mock };
 
 	beforeEach(() => {
 		jest.useFakeTimers();
 		loginService = { login: jest.fn(), register: jest.fn() };
 		router = { navigate: jest.fn() };
+		// BehaviorSubject emite o valor atual ao se inscrever, igual ao ActivatedRoute real
+		route = { queryParamMap: new BehaviorSubject<ParamMap>(convertToParamMap({})) };
 		snackBar = { open: jest.fn() };
-		component = new Login(new FormBuilder(), loginService as any, router as any, snackBar as any);
+		component = new Login(new FormBuilder(), loginService as any, router as any, route as any, snackBar as any);
 		component.ngOnInit();
 	});
 
 	afterEach(() => jest.useRealTimers());
+
+	describe('modo inicial vindo da landing page', () => {
+		const abrirCom = (params: Record<string, string>) => {
+			route.queryParamMap.next(convertToParamMap(params));
+		};
+
+		it('abre em login quando não há query param', () => {
+			expect(component.isFirstAcess).toBe(false);
+		});
+
+		it('abre em login quando modo=login', () => {
+			abrirCom({ modo: 'login' });
+			expect(component.isFirstAcess).toBe(false);
+		});
+
+		it('abre em cadastro quando modo=cadastro', () => {
+			abrirCom({ modo: 'cadastro' });
+			expect(component.isFirstAcess).toBe(true);
+		});
+
+		it('abre em login quando o modo é desconhecido', () => {
+			abrirCom({ modo: 'qualquer-coisa' });
+			expect(component.isFirstAcess).toBe(false);
+		});
+
+		it('abre direto em cadastro se a rota já nasce com modo=cadastro', () => {
+			const rota = { queryParamMap: new BehaviorSubject<ParamMap>(convertToParamMap({ modo: 'cadastro' })) };
+			const novo = new Login(new FormBuilder(), loginService as any, router as any, rota as any, snackBar as any);
+			novo.ngOnInit();
+			expect(novo.isFirstAcess).toBe(true);
+		});
+
+		it('acompanha mudanças do query param com o componente já aberto', () => {
+			abrirCom({ modo: 'cadastro' });
+			expect(component.isFirstAcess).toBe(true);
+			abrirCom({ modo: 'login' });
+			expect(component.isFirstAcess).toBe(false);
+		});
+	});
 
 	it('initializes the forms and validates required fields', () => {
 		expect(component.LoginForm.invalid).toBe(true);
@@ -40,6 +83,12 @@ describe('Login', () => {
 		expect(component.hidePassword).toBe(!initial);
 		component.forgotPassword();
 		expect(router.navigate).toHaveBeenCalledWith(['/esqueci-senha']);
+	});
+
+	it('mantém a troca manual de formulário mesmo com modo=login na URL', () => {
+		route.queryParamMap.next(convertToParamMap({ modo: 'login' }));
+		component.choseForm(true);
+		expect(component.isFirstAcess).toBe(true);
 	});
 
 	it('masks phone input and keeps only digits in the form', () => {

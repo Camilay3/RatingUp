@@ -140,5 +140,9 @@ NewPasswordSubmit(){
   togglePassword(){
   this.hidePassword = !this.hidePassword
   }
+  
+  comeBack(){
+    this.router.navigate(['/acesso'])
+  }
 
 }
