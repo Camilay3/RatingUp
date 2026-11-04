@@ -1,0 +1,1 @@
+ALTER TABLE player_ratings ALTER COLUMN rating SET DEFAULT 400;
