@@ -122,9 +122,33 @@ describe('Login', () => {
 		component.onLogin();
 		expect(component.LoginForm.get('password')?.hasError('backendError')).toBe(true);
 
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 		loginService.login.mockReturnValueOnce(throwError(() => ({ error: {} })));
 		component.onLogin();
 		expect(snackBar.open).toHaveBeenCalledWith('Ops, ocorreu um erro inesperado', 'Fechar', expect.any(Object));
+		consoleError.mockRestore();
+	});
+
+	it('tells the user when the server is unreachable instead of a generic error', () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		component.LoginForm.setValue({ email: 'user@example.com', password: 'safe' });
+
+		// sem resposta (status 0) e com error nulo: não pode estourar TypeError
+		loginService.login.mockReturnValueOnce(throwError(() => ({ status: 0, error: null })));
+		expect(() => component.onLogin()).not.toThrow();
+		expect(snackBar.open).toHaveBeenLastCalledWith(expect.stringContaining('conectar ao servidor'), 'Fechar', expect.any(Object));
+
+		// 502 do nginx (backend fora do ar) devolve HTML, sem message
+		loginService.login.mockReturnValueOnce(throwError(() => ({ status: 502, error: '<html>Bad Gateway</html>' })));
+		component.onLogin();
+		expect(snackBar.open).toHaveBeenLastCalledWith(expect.stringContaining('conectar ao servidor'), 'Fechar', expect.any(Object));
+
+		// 500 sem corpo continua sendo erro inesperado
+		loginService.login.mockReturnValueOnce(throwError(() => ({ status: 500, error: {} })));
+		component.onLogin();
+		expect(snackBar.open).toHaveBeenLastCalledWith('Ops, ocorreu um erro inesperado', 'Fechar', expect.any(Object));
+
+		consoleError.mockRestore();
 	});
 
 	it('registers, logs in after registration and maps backend validation errors', () => {

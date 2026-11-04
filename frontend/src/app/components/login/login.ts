@@ -131,21 +131,25 @@ export class Login implements OnInit {
       this.router.navigate(['/']);
     },
     error: (err) => {
-    const message = err.error?.message;
+      const message = err.error?.message;
 
-      if (err.error.errors?.email) {
-    this.LoginForm.get('email')?.setErrors({ backendError: err.error.errors.email });
-    }else if(message){
-      this.LoginForm.get('password')?.setErrors({ backendError: message });
-    } else {
-
-     this.snackBar.open('Ops, ocorreu um erro inesperado', 'Fechar', {
-      duration: 3000,
-     });
-
-    }
-
-    }
+	  if (err.error?.errors?.email) {
+	  	this.LoginForm.get('email')?.setErrors({ backendError: err.error.errors.email });
+	  }else if(message){
+	  	this.LoginForm.get('password')?.setErrors({ backendError: message });
+	  } else if (err.status === 0 || err.status >= 502) {
+	    // sem corpo JSON do backend: o servidor não respondeu (fora do ar, reiniciando ou bloqueado)
+	  	console.error('Falha no login: servidor indisponível', err.status, err.url);
+	  	this.snackBar.open('Não foi possível conectar ao servidor. Tente novamente em instantes.', 'Fechar', {
+	  	duration: 4000,
+	  	});
+	  } else {
+	  	console.error('Falha inesperada no login', err.status, err.url, err.error);
+	  	this.snackBar.open('Ops, ocorreu um erro inesperado', 'Fechar', {
+	  	duration: 3000,
+	  	});
+	  }
+	}
   });
 }
 
