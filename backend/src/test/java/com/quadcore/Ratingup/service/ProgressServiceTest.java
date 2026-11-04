@@ -2,6 +2,7 @@ package com.quadcore.Ratingup.service;
 
 import com.quadcore.Ratingup.dto.progresso.ProgressResponseDTO;
 import com.quadcore.Ratingup.dto.progresso.ProgressUpdateDTO;
+import com.quadcore.Ratingup.exception.BusinessRuleViolationException;
 import com.quadcore.Ratingup.model.book.Chapters;
 import com.quadcore.Ratingup.model.book.Subtopics;
 import com.quadcore.Ratingup.model.profile.Progress;
@@ -140,8 +141,8 @@ class ProgressServiceTest {
         when(subtopicsRepository.findTopByChapterIdOrderByDisplayOrderDesc(2)).thenReturn(Optional.of(lastSubtopic));
 
         assertThatThrownBy(() -> progressService.updateCurrentPhase("test@test.com", dto))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Progresso máximo alcançado!");
+                .isInstanceOf(BusinessRuleViolationException.class)
+                .hasMessageContaining("Você já concluiu todas as fases!");
     }
 
     @Test
@@ -149,20 +150,20 @@ class ProgressServiceTest {
         progress.setChapters(2);
         progress.setSubtopics(2);
         ProgressUpdateDTO dto = new ProgressUpdateDTO(1, 1);
-        
+
         when(progressRepository.findByUserEmail("test@test.com")).thenReturn(Optional.of(progress));
-        
+
         Chapters lastChapter = new Chapters();
         lastChapter.setDisplayOrder(2);
         when(chaptersRepository.findTopByOrderByDisplayOrderDesc()).thenReturn(Optional.of(lastChapter));
-        
+
         Subtopics lastSubtopic = new Subtopics();
         lastSubtopic.setDisplayOrder(2);
         when(subtopicsRepository.findTopByChapterIdOrderByDisplayOrderDesc(1)).thenReturn(Optional.of(lastSubtopic));
 
         assertThatThrownBy(() -> progressService.updateCurrentPhase("test@test.com", dto))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Fase já concluída.");
+                .isInstanceOf(BusinessRuleViolationException.class)
+                .hasMessageContaining("Você já concluiu esta fase.");
     }
     
     @Test
@@ -183,7 +184,7 @@ class ProgressServiceTest {
         when(subtopicsRepository.findTopByChapterIdOrderByDisplayOrderDesc(2)).thenReturn(Optional.of(lastSubtopic));
 
         assertThatThrownBy(() -> progressService.updateCurrentPhase("test@test.com", dto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(BusinessRuleViolationException.class)
                 .hasMessageContaining("Progresso inválido");
     }
 }
