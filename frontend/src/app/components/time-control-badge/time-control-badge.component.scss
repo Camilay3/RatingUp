@@ -1,0 +1,10 @@
+:host { display: inline-flex; align-items: center; gap: 0.35rem; color: inherit; }
+/* o estilo global "p, span, a, button" força cor de texto: aqui herdamos a do botão/linha */
+:host span { color: inherit; font: inherit; }
+.dot {
+	width: 0.4rem; height: 0.4rem; flex-shrink: 0;
+	border-radius: 50%;
+	background: currentColor;
+	opacity: 0.85;
+}
+.tempo { font-variant-numeric: tabular-nums; }

@@ -1,0 +1,7 @@
+<div class="seletor" role="group" aria-label="Acréscimo por jogada">
+	<button type="button" class="small outline passo" aria-label="Diminuir acréscimo"
+			[disabled]="disabled() || value() <= min" (click)="step(-1)">−</button>
+	<output class="numero" aria-live="polite">+{{ value() }}s</output>
+	<button type="button" class="small outline passo" aria-label="Aumentar acréscimo"
+			[disabled]="disabled() || value() >= max" (click)="step(1)">+</button>
+</div>
