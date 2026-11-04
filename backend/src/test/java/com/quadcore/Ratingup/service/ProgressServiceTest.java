@@ -142,7 +142,7 @@ class ProgressServiceTest {
 
         assertThatThrownBy(() -> progressService.updateCurrentPhase("test@test.com", dto))
                 .isInstanceOf(BusinessRuleViolationException.class)
-                .hasMessageContaining("Você já concluiu todas as fases!");
+                .hasMessageContaining("Progresso máximo alcançado!");
     }
 
     @Test
@@ -163,7 +163,7 @@ class ProgressServiceTest {
 
         assertThatThrownBy(() -> progressService.updateCurrentPhase("test@test.com", dto))
                 .isInstanceOf(BusinessRuleViolationException.class)
-                .hasMessageContaining("Você já concluiu esta fase.");
+                .hasMessageContaining("Fase já concluída.");
     }
     
     @Test
