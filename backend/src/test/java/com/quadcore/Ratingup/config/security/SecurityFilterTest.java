@@ -5,7 +5,6 @@ import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.repository.UserRepository;
 import com.quadcore.Ratingup.service.TokenCookieService;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
