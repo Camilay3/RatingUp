@@ -22,8 +22,10 @@ public class GameController {
     private final GameService gameService;
 
     @PostMapping
-    public ResponseEntity<GameStateDTO> create(@AuthenticationPrincipal User logged) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(gameService.createGame(logged.getId()));
+    public ResponseEntity<GameStateDTO> create(
+            @AuthenticationPrincipal User logged,
+            @RequestBody(required = false) @Valid CreateGameRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(gameService.createGame(logged.getId(), dto));
     }
 
     @GetMapping("/open")
@@ -64,5 +66,24 @@ public class GameController {
             @PathVariable Long id) {
         gameService.cancelGame(id, logged.getId());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/resign")
+    public ResponseEntity<GameEventDTO> resign(
+            @AuthenticationPrincipal User logged,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(gameService.resign(id, logged.getId()));
+    }
+
+    @GetMapping("/ratings/me")
+    public ResponseEntity<List<PlayerRatingDTO>> myRatings(@AuthenticationPrincipal User logged) {
+        return ResponseEntity.ok(gameService.listMyRatings(logged.getId()));
+    }
+
+    @PostMapping("/{id}/timeout")
+    public ResponseEntity<GameEventDTO> timeout(
+            @AuthenticationPrincipal User logged,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(gameService.claimTimeout(id, logged.getId()));
     }
 }
