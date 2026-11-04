@@ -13,10 +13,9 @@
 
   .topo {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 1.5rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.75rem;
     padding: clamp(1.5rem, 4vw, 3rem);
     background: color-mix(in srgb, var(--white) 86%, var(--secondary));
     border: 1px solid color-mix(in srgb, var(--primary) 15%, transparent);
@@ -28,7 +27,7 @@
       max-width: 34rem;
 
       h1 {
-		margin: 1rem 0;
+        margin: 1rem 0;
         color: var(--primary);
         font-size: clamp(2rem, 5vw, 3.2rem);
       }
@@ -39,10 +38,46 @@
       }
     }
 
+    // tipo de partida à esquerda, acréscimo à direita
+    .controle-tempo {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5rem 3rem;
+
+      .tipo {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .opcoes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        button { margin: 0; } // o estilo global de button usa margin: 0 auto
+      }
+
+      .incremento {
+        flex: 0 0 auto;
+
+        .eyebrow { margin-bottom: 0.5rem; }
+
+        .dica {
+          margin-top: 0.5rem;
+          font-size: 0.8rem;
+          color: color-mix(in srgb, var(--textColor) 72%, var(--white));
+        }
+      }
+    }
+
     .acoes {
       display: flex;
       flex-wrap: wrap;
       gap: 0.6rem;
+
+      button { margin: 0; }
     }
   }
 
@@ -50,6 +85,11 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
+
+    .estatisticas {
+      grid-column: 1 / -1;
+
+    }
   }
 
   .grupo {
@@ -164,7 +204,10 @@
     }
 
     .topo {
-      align-items: stretch;
+      .controle-tempo {
+        flex-direction: column;
+        gap: 1.25rem;
+      }
 
       .acoes {
         width: 100%;
@@ -175,45 +218,4 @@
       }
     }
   }
-}
-
-@media (max-width: 460px) {
-  .lobby {
-    .topo .acoes,
-    li {
-      align-items: stretch;
-      flex-direction: column;
-    }
-
-    .topo .acoes button {
-      width: 100%;
-    }
-
-    li .botoes {
-      width: 100%;
-
-      button {
-        flex: 1;
-      }
-    }
-  }
-
-  .caixa {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    border: 1px solid #c4a882;
-    border-radius: 12px;
-    background-color: var(--white);
-
-    h2 {
-      margin: 0 0 0.8rem;
-    }
-
-    ul {
-      max-height: 280px;   // ajuste conforme quiser
-      overflow-y: auto;
-      padding-right: 0.4rem; // evita a barra de rolagem colar nos itens
-    }
-  }
-
 }
