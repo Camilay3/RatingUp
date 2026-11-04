@@ -1,0 +1,20 @@
+<h2>Ratings</h2>
+
+<div class="cards">
+	@for (row of rows(); track row.category) {
+	<article class="card" [class.sem-partidas]="row.gamesPlayed === 0">
+		<header>
+			<strong>{{ row.label }}</strong>
+			<small>{{ row.display }}</small>
+		</header>
+		<p class="rating" title="Rating">{{ row.rating ?? '—' }}</p>
+		<p class="nivel">{{ skillLabel(row.skillLevel) }}</p>
+		<p class="stats">{{ row.gamesPlayed }} partidas · {{ row.wins }}V {{ row.losses }}D {{ row.draws }}E</p>
+		@if (row.performanceRating !== null) {
+		<p class="stats">Performance: {{ row.performanceRating }}</p>
+		}
+	</article>
+	}
+</div>
+
+<p class="total">Total: {{ totalGames() }} partidas</p>

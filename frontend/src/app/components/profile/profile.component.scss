@@ -12,13 +12,13 @@ section {
 	position: relative;
 	display: flex;
 	width: clamp(650px, 50%, 900px);
-	height: 50%;
+	height: auto;
+	min-height: 22rem;
 	background-color: var(--white);
 	padding: 3rem;
 	gap: 2rem;
 	box-shadow: 4px 4px 20px 0 var(--neutralOpacity);
 	border: 2px solid var(--neutral);
-	transform: translateY(-200%);
 
 	.avatar-wrapper {
 		position: relative;

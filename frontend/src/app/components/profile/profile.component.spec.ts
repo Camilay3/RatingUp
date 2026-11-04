@@ -14,25 +14,31 @@ describe('ProfileComponent', () => {
 	let dialog: any;
 	let router: any;
 
+	const providers = () => [
+		{ provide: AuthService, useValue: auth },
+		{ provide: MatSnackBar, useValue: snack },
+		{ provide: MatDialog, useValue: dialog },
+		provideRouter([]),
+	];
+
 	beforeEach(async () => {
 		auth = {
 			getMyUser: jest.fn().mockReturnValue({ data: { email: 'user@example.com', avatarUrl: null } }),
 			getProgresso: jest.fn().mockReturnValue(of({ data: { chapter: 4 } })),
 		};
+
 		snack = { open: jest.fn() };
 		dialog = { open: jest.fn() };
+
 		TestBed.overrideComponent(ProfileComponent, {
 			set: { providers: [{ provide: MatDialog, useValue: dialog }] },
 		});
+
 		await TestBed.configureTestingModule({
 			imports: [ProfileComponent],
-			providers: [
-				{ provide: AuthService, useValue: auth },
-				{ provide: MatSnackBar, useValue: snack },
-				{ provide: MatDialog, useValue: dialog },
-				provideRouter([]),
-			],
+			providers: providers(),
 		}).compileComponents();
+
 		const fixture = TestBed.createComponent(ProfileComponent);
 		component = fixture.componentInstance;
 		router = TestBed.inject(Router);
@@ -52,27 +58,33 @@ describe('ProfileComponent', () => {
 
 	it('reports progress loading errors', async () => {
 		TestBed.resetTestingModule();
+
 		auth.getProgresso.mockReturnValue(throwError(() => ({ error: { message: 'failed' } })));
+
 		await TestBed.configureTestingModule({
 			imports: [ProfileComponent],
-			providers: [
-				{ provide: AuthService, useValue: auth }, { provide: MatSnackBar, useValue: snack },
-				{ provide: MatDialog, useValue: dialog }, provideRouter([]),
-			],
+			providers: providers(),
 		}).compileComponents();
+
 		TestBed.createComponent(ProfileComponent).detectChanges();
+
 		expect(snack.open).toHaveBeenCalledWith('failed', 'Fechar', expect.any(Object));
 	});
 
 	it('opens profile dialogs and refreshes the user after edits', () => {
 		const afterClosed = jest.fn().mockReturnValue(of(true));
 		dialog.open.mockReturnValue({ afterClosed });
-		auth.me = jest.fn().mockReturnValue(of({ data: { email: 'new@example.com', avatarUrl: '/avatar.webp' } }));
+
+		auth.me = jest.fn().mockReturnValue(of({
+			data: { email: 'new@example.com', avatarUrl: '/avatar.webp' },
+		}));
 
 		component.abrirModal('Nome', 'Ada');
+
 		expect(dialog.open).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
 			data: expect.objectContaining({ fieldKey: 'name', value: 'Ada' }),
 		}));
+
 		expect(component.user?.email).toBe('new@example.com');
 		expect(component.avatarSrc).toContain('/avatar.webp');
 
@@ -81,18 +93,23 @@ describe('ProfileComponent', () => {
 		component.abrirModal('Apelido');
 		component.abrirModal('Email');
 		component.abrirModal('Telefone');
+
 		expect(dialog.open).toHaveBeenCalledTimes(6);
 	});
 
 	it('logs out after changing the password and formats edge cases', () => {
 		dialog.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(true)) });
 		auth.logout = jest.fn().mockReturnValueOnce(of(undefined));
+
 		component.solicitarSenha();
+
 		expect(router.navigateByUrl).toHaveBeenCalledWith('/acesso');
 
 		dialog.open.mockReturnValue({ afterClosed: jest.fn().mockReturnValue(of(true)) });
 		auth.logout.mockReturnValueOnce(throwError(() => ({ error: { message: 'expired' } })));
+
 		component.solicitarSenha();
+
 		expect(snack.open).toHaveBeenCalledWith('expired', 'Fechar', { duration: 3000 });
 
 		expect(component.formatPhone()).toBe('');
@@ -103,4 +120,5 @@ describe('ProfileComponent', () => {
 		expect(component.formatPhone('1234567')).toBe('(12) 3-4567');
 		expect(component.formatDate('April 3, 2025')).toBe('03/04/2025');
 	});
+
 });
