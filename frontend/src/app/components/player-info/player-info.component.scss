@@ -1,0 +1,30 @@
+.jogador {
+	display: flex; align-items: center; gap: 0.6rem;
+	padding: 0.4rem 0.8rem;
+	background: var(--white);
+	border: 2px solid color-mix(in srgb, var(--primary) 25%, transparent);
+	border-radius: 0.6rem;
+	transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.jogador.ativo {
+	border-color: var(--accent);
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.peca { width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--neutral); flex-shrink: 0; border: 1px solid var(--neutral); }
+.peca.branca { background: var(--white); }
+.nome { color: var(--primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rating { margin-left: auto; font-weight: 900; color: var(--textColor); }
+.delta { font-weight: 900; font-size: 0.85rem; color: var(--textColor); }
+.delta.positivo { color: var(--success); }
+.delta.negativo { color: var(--alert); }
+.relogio {
+	min-width: 4.5rem; padding: 0.15rem 0.5rem;
+	text-align: center; font-weight: 900; font-size: 1.1rem;
+	font-variant-numeric: tabular-nums;
+	color: var(--primary);
+	background: color-mix(in srgb, var(--primary) 8%, transparent);
+	border-radius: 0.4rem;
+	transition: background-color 150ms ease, color 150ms ease;
+}
+.relogio.ativo { background: color-mix(in srgb, var(--accent) 30%, var(--white)); }
+.relogio.baixo { color: var(--alert); }

@@ -13,37 +13,11 @@ import { TransitionService } from '../../services/transition/transition.service'
 const ANIMATION_DURATION_MS = 520;
 
 @Component({
-    selector: 'app-transition-overlay',
-    standalone: true,
-    imports: [],
-    template: `
-        <div
-        class="overlay"
-        [class.active]="isActive()"
-        [style.--dominant-color]="dominantColor()"
-        [style.--primary-color]="'#5A3E2B'"
-        [style.--img-left]="imgLeft() + 'px'"
-        [style.--img-top]="imgTop() + 'px'"
-        [style.--img-width]="imgWidth() + 'px'"
-        [style.--img-height]="imgHeight() + 'px'"
-        >
-        <div class="bg-layer" [class.animating]="isAnimating()"></div>
-
-        <img
-            class="img-clone"
-            [class.animating]="isAnimating()"
-            [src]="imageUrl()"
-            decoding="async"
-            alt=""
-            aria-hidden="true"
-            [style.top.px]="imgTop()"
-            [style.left.px]="imgLeft()"
-            [style.width.px]="imgWidth()"
-            [style.height.px]="imgHeight()"
-        />
-        </div>
-    `,
-    styleUrls: ['./transition-overlay.component.scss'],
+	selector: 'app-transition-overlay',
+	standalone: true,
+	imports: [],
+	templateUrl: './transition-overlay.component.html',
+	styleUrls: ['./transition-overlay.component.scss'],
 })
 export class TransitionOverlayComponent implements OnInit, OnDestroy {
     private readonly transitionService = inject(TransitionService);
