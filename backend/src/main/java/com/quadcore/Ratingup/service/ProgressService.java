@@ -2,6 +2,7 @@ package com.quadcore.Ratingup.service;
 
 import com.quadcore.Ratingup.dto.progresso.ProgressResponseDTO;
 import com.quadcore.Ratingup.dto.progresso.ProgressUpdateDTO;
+import com.quadcore.Ratingup.exception.BusinessRuleViolationException;
 import com.quadcore.Ratingup.mapper.ProgressoMapper;
 import com.quadcore.Ratingup.model.book.Chapters;
 import com.quadcore.Ratingup.model.book.Subtopics;
@@ -54,15 +55,15 @@ public class ProgressService {
 
         if (dto.chapter() == maxChapter &&
             dto.subtopic() == maxSubtopic) {
-            throw new IllegalArgumentException("Progresso máximo alcançado!");
+            throw new BusinessRuleViolationException("Progresso máximo alcançado!", "MAX_PROGRESS_REACHED");
         }
         else if (dto.chapter() < progressoUser.getChapters() ||
                 dto.subtopic() < progressoUser.getSubtopics()) {
-            throw new IllegalArgumentException("Fase já concluída.");
+            throw new BusinessRuleViolationException("Fase já concluída.", "PHASE_ALREADY_COMPLETED");
         }
         else if (dto.chapter() != progressoUser.getChapters() ||
                 dto.subtopic() != progressoUser.getSubtopics()) {
-            throw new IllegalArgumentException("Progresso inválido");
+            throw new BusinessRuleViolationException("Progresso inválido", "INVALID_PROGRESS");
         }
 
         if (dto.subtopic() < maxSubtopic) {

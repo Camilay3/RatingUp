@@ -1,7 +1,6 @@
 package com.quadcore.Ratingup.dto.game;
 
-import com.quadcore.Ratingup.enums.BoardStatus;
-import com.quadcore.Ratingup.enums.GameStatus;
+import com.quadcore.Ratingup.enums.*;
 
 public record GameStateDTO(
         Long gameId,
@@ -11,5 +10,15 @@ public record GameStateDTO(
         String myColor,
         GameStatus gameStatus,
         BoardStatus boardStatus,
-        String opponentNickname
+        String opponentNickname,
+        int initialTimeSeconds,
+        int incrementSeconds,
+        TimeControlCategory timeControlCategory,
+        GameResult result,
+        GameEndReason endReason,
+        Integer myRatingChange,
+        Integer myRating,
+        Integer opponentRating,
+        long whiteTimeMs,
+        long blackTimeMs
 ) {}

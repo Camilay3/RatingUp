@@ -1,7 +1,9 @@
 package com.quadcore.Ratingup.repository;
 
 import com.quadcore.Ratingup.enums.GameStatus;
+import com.quadcore.Ratingup.enums.TimeControlCategory;
 import com.quadcore.Ratingup.model.game.Game;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +25,16 @@ public interface GameRepository extends JpaRepository<Game, Long> {
             ORDER BY g.id DESC
             """)
     List<Game> findByPlayerAndStatusNot(Long userId, GameStatus status);
+
+    @Query("""
+            SELECT g FROM Game g
+            WHERE g.status = :status AND g.result IS NOT NULL
+            AND g.timeControlCategory = :category
+            AND (g.whitePlayerId = :userId OR g.blackPlayerId = :userId)
+            ORDER BY g.finishedAt DESC, g.id DESC
+            """)
+    List<Game> findRecentFinished(@Param("userId") Long userId,
+                                  @Param("category") TimeControlCategory category,
+                                  @Param("status") GameStatus status,
+                                  Pageable pageable);
 }

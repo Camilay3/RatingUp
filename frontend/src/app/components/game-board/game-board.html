@@ -1,11 +1,41 @@
 <section class="xadrez">
-	<div #board class="chess-board"></div>
+	<div class="coluna-tabuleiro">
+		<app-player-info
+			[name]="opponentNickname ?? 'Aguardando adversário...'"
+			[rating]="opponentRating"
+			[color]="opponentColor"
+			[active]="gameStatus === 'IN_PROGRESS' && !isMyTurn"
+			[change]="opponentRatingChange"
+			[timeMs]="opponentTimeMs" />
+
+		<div #board class="chess-board"></div>
+
+		<app-player-info
+			[name]="myNickname || 'Você'"
+			[rating]="myRating"
+			[color]="myColor"
+			[active]="isMyTurn"
+			[change]="myRatingChange"
+			[timeMs]="myTimeMs" />
+	</div>
 
 	<div class="chat-jogadas">
 		<h2 class="titulo">Partida #{{ gameId }}</h2>
 
-		@if (opponentNickname) {
-		<p class="status">Você ({{ corTexto }}) × {{ opponentNickname }}</p>
+		@if (isLoading) {
+		<p class="status">Carregando partida...</p>
+		}
+
+		@if (categoryText) {
+		<p class="status">
+			<app-time-control-badge
+				[label]="categoryText"
+				[initialSeconds]="initialTimeSeconds"
+				[incrementSeconds]="incrementSeconds" />
+			@if (incrementSeconds > 0) {
+			<small>(+{{ incrementSeconds }}s por jogada)</small>
+			}
+		</p>
 		}
 
 		@if (gameStatus === 'WAITING') {
@@ -15,11 +45,20 @@
 		</div>
 		} @else if (gameStatus === 'FINISHED') {
 		<p class="status resultado">{{ resultText }}</p>
+		@if (myRatingChange !== null) {
+		<p class="status">Rating: {{ myRatingChange > 0 ? '+' : '' }}{{ myRatingChange }}</p>
+		}
 		<div class="status">
 			<button class="small" (click)="voltar()">Voltar ao lobby</button>
+			<button class="small outline" routerLink="/perfil">Perfil</button>
 		</div>
 		} @else {
 		<p class="status">{{ isMyTurn ? 'Sua vez' : 'Vez do adversário' }}</p>
+		<div class="status">
+			<button class="small outline resign" [disabled]="isResigning" (click)="desistir()">
+				<i class="fa-solid fa-flag"></i> Desistir
+			</button>
+		</div>
 		}
 
 		@if (errorMessage) {

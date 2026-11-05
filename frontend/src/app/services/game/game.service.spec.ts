@@ -44,4 +44,9 @@ describe('GameService', () => {
 			promotion: 'q',
 		});
 	});
+
+	it('claims the timeout of a game', async () => {
+		await expect(service.claimTimeout(8)).resolves.toBe('post');
+		expect(http.post).toHaveBeenCalledWith(expect.stringContaining('/games/8/timeout'), {});
+	});
 });

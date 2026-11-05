@@ -1,0 +1,16 @@
+:host { display: inline-block; }
+.seletor {
+	display: inline-flex; align-items: center; gap: 0.4rem;
+	padding: 0.2rem 0.4rem;
+	background: var(--white);
+	border: 2px solid color-mix(in srgb, var(--primary) 25%, transparent);
+	border-radius: 0.6rem;
+}
+.numero {
+	min-width: 3.2rem; text-align: center;
+	font-weight: 900; color: var(--primary);
+	font-variant-numeric: tabular-nums;
+}
+/* o estilo global de button usa margin: 0 auto, que espalharia os itens do flex */
+button { margin: 0; }
+.passo { min-width: 2rem; }

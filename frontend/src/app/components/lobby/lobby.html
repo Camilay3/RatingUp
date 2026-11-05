@@ -3,10 +3,52 @@
 		<div class="cabecalho">
 			<p class="eyebrow">RatingUp</p>
 			<h1>Jogar online</h1>
-			<p class="descricao">Crie uma partida ou entre em uma mesa aberta para enfrentar outro jogador.</p>
+			<p class="descricao">Escolha o tipo de partida, crie uma mesa ou entre em uma aberta para enfrentar outro jogador.</p>
 		</div>
+
+		<div class="controle-tempo">
+			<div class="tipo">
+				<p class="eyebrow">Tipo de partida</p>
+				<div class="opcoes" role="radiogroup" aria-label="Controle de tempo">
+					@for (preset of timeControls; track preset.initialSeconds) {
+					<button
+						class="small"
+						role="radio"
+						[attr.aria-checked]="selectedControl.initialSeconds === preset.initialSeconds"
+						[class.outline]="selectedControl.initialSeconds !== preset.initialSeconds"
+						[disabled]="isBusy"
+						(click)="selecionarControle(preset)">
+						<app-time-control-badge
+							[label]="presetCategoryLabel(preset)"
+							[initialSeconds]="preset.initialSeconds"
+							[incrementSeconds]="increment" />
+					</button>
+					}
+				</div>
+			</div>
+
+			<div class="incremento">
+				<p class="eyebrow">Acréscimo por jogada</p>
+				<app-increment-selector [(value)]="increment" [disabled]="isBusy" />
+				<p class="dica">
+					@if (increment === 0) {
+					Sem acréscimo: o relógio só diminui.
+					} @else {
+					Cada jogada devolve +{{ increment }}s ao seu relógio.
+					}
+				</p>
+			</div>
+		</div>
+
 		<div class="acoes">
-			<button class="small" [disabled]="isBusy" (click)="criar()">Criar partida</button>
+			<button class="small" [disabled]="isBusy" (click)="criar()">
+				Criar partida ·
+				<app-time-control-badge
+					[label]="categoryLabel(effectiveCategory)"
+					[initialSeconds]="selectedControl.initialSeconds"
+					[incrementSeconds]="increment" />
+			</button>
+			<button class="small outline" routerLink="/perfil">Perfil</button>
 			<button class="small outline" routerLink="/">Voltar para o início</button>
 		</div>
 	</div>
@@ -29,7 +71,12 @@
 				@for (game of myGames; track game.gameId) {
 				<li>
 					<span class="partida">
-						<strong>Partida #{{ game.gameId }}</strong>
+						<strong>Partida #{{ game.gameId }} ·
+							<app-time-control-badge
+								[label]="categoryLabel(game.timeControlCategory)"
+								[initialSeconds]="game.initialTimeSeconds"
+								[incrementSeconds]="game.incrementSeconds" />
+						</strong>
 						<small>
 							@if (game.status === 'WAITING') {
 							Aguardando adversário
@@ -67,7 +114,12 @@
 				@for (game of openGames; track game.gameId) {
 				<li>
 					<span class="partida">
-						<strong>Partida #{{ game.gameId }}</strong>
+						<strong>Partida #{{ game.gameId }} ·
+							<app-time-control-badge
+								[label]="categoryLabel(game.timeControlCategory)"
+								[initialSeconds]="game.initialTimeSeconds"
+								[incrementSeconds]="game.incrementSeconds" />
+						</strong>
 						<small>Criada por {{ game.opponentNickname }}</small>
 					</span>
 					<div class="botoes">
@@ -76,6 +128,17 @@
 				</li>
 				}
 			</ul>
+			}
+		</section>
+
+		<section class="grupo estatisticas">
+			@if (isLoadingRatings) {
+			<p class="vazio">Carregando seus ratings...</p>
+			} @else if (ratingsError) {
+			<p class="vazio">Não foi possível carregar seus ratings.</p>
+			<button class="small outline" (click)="carregarRatings()">Tentar novamente</button>
+			} @else {
+			<app-ratings-panel [rows]="ratingRows" />
 			}
 		</section>
 	</div>

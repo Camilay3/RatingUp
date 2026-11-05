@@ -12,8 +12,17 @@ export class GameService {
 
 	constructor(private http: HttpClient) {}
 
-	createGame() {
-		return firstValueFrom(this.http.post<IGameState>(this.apiUrl, {}));
+	// sem argumento mantém o corpo {} (backend assume 10+0 / Rapid)
+	createGame(timeControl?: { initialTimeSeconds: number; incrementSeconds: number }) {
+		return firstValueFrom(this.http.post<IGameState>(this.apiUrl, timeControl ?? {}));
+	}
+
+	resign(gameId: number) {
+		return firstValueFrom(this.http.post<IGameEvent>(`${this.apiUrl}/${gameId}/resign`, {}));
+	}
+
+	claimTimeout(gameId: number) {
+		return firstValueFrom(this.http.post<IGameEvent>(`${this.apiUrl}/${gameId}/timeout`, {}));
 	}
 
 	joinGame(gameId: number) {
