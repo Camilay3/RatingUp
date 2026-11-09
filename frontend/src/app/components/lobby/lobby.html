@@ -1,9 +1,16 @@
 <section class="lobby">
 	<div class="topo">
-		<div class="cabecalho">
-			<p class="eyebrow">RatingUp</p>
-			<h1>Jogar online</h1>
-			<p class="descricao">Escolha o tipo de partida, crie uma mesa ou entre em uma aberta para enfrentar outro jogador.</p>
+		<div class="linha-topo">
+			<div class="cabecalho">
+				<p class="eyebrow">RatingUp</p>
+				<h1>Jogar online</h1>
+				<p class="descricao">Escolha o tipo de partida, crie uma mesa ou entre em uma aberta para enfrentar outro jogador.</p>
+			</div>
+
+			<div class="acoes">
+				<button class="small outline" routerLink="/perfil">Perfil</button>
+				<button class="small outline" routerLink="/">Voltar para o início</button>
+			</div>
 		</div>
 
 		<div class="controle-tempo">
@@ -26,31 +33,30 @@
 					}
 				</div>
 			</div>
+		</div>
+
+		<div class="rodape-topo">
+			<button class="criarPartida" [disabled]="isBusy" (click)="criar()">
+			Criar partida ·
+			<app-time-control-badge
+			[label]="categoryLabel(effectiveCategory)"
+			[initialSeconds]="selectedControl.initialSeconds"
+			[incrementSeconds]="increment" />
+			</button>
 
 			<div class="incremento">
-				<p class="eyebrow">Acréscimo por jogada</p>
-				<app-increment-selector [(value)]="increment" [disabled]="isBusy" />
-				<p class="dica">
-					@if (increment === 0) {
-					Sem acréscimo: o relógio só diminui.
-					} @else {
-					Cada jogada devolve +{{ increment }}s ao seu relógio.
-					}
-				</p>
+			<p class="eyebrow">Acréscimo por jogada</p>
+			<app-increment-selector [(value)]="increment" [disabled]="isBusy" />
+			<p class="dica">
+				@if (increment === 0) {
+				Sem acréscimo: o relógio só diminui.
+				} @else {
+				Cada jogada devolve +{{ increment }}s ao seu relógio.
+				}
+			</p>
 			</div>
-		</div>
+		</div>		
 
-		<div class="acoes">
-			<button class="small" [disabled]="isBusy" (click)="criar()">
-				Criar partida ·
-				<app-time-control-badge
-					[label]="categoryLabel(effectiveCategory)"
-					[initialSeconds]="selectedControl.initialSeconds"
-					[incrementSeconds]="increment" />
-			</button>
-			<button class="small outline" routerLink="/perfil">Perfil</button>
-			<button class="small outline" routerLink="/">Voltar para o início</button>
-		</div>
 	</div>
 
 	<div class="conteudo">
