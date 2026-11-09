@@ -38,6 +38,19 @@
       }
     }
 
+    .linha-topo {
+	    display: flex;
+	    align-items: flex-start;
+	    justify-content: space-between;
+	    gap: 1rem;
+    }
+
+    .criarPartida {
+	    margin: 0;
+	    align-self: flex-start;
+    	min-width: 220px;
+    }
+
     // tipo de partida à esquerda, acréscimo à direita
     .controle-tempo {
       display: flex;
@@ -58,26 +71,37 @@
 
         button { margin: 0; } // o estilo global de button usa margin: 0 auto
       }
+    }
 
-      .incremento {
-        flex: 0 0 auto;
+    .rodape-topo {
+	      display: flex;
+	      flex-wrap: wrap;
+	      align-items: flex-end;        // alinha pela base
+	      justify-content: space-between;
+	      gap: 1.5rem;
 
-        .eyebrow { margin-bottom: 0.5rem; }
+	    .incremento {
+		    flex: 0 0 auto;
+		    text-align: right;        // opcional: alinha o texto à direita
 
-        .dica {
-          margin-top: 0.5rem;
-          font-size: 0.8rem;
-          color: color-mix(in srgb, var(--textColor) 72%, var(--white));
-        }
-      }
+		  .eyebrow { margin-bottom: 0.5rem; }
+
+		  .dica {
+			  margin-top: 0.5rem;
+			  font-size: 0.8rem;
+			  color: color-mix(in srgb, var(--textColor) 72%, var(--white));
+		    }
+	    }
     }
 
     .acoes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
+	    display: flex;
+	    flex-wrap: wrap;
+	    justify-content: flex-end;
+	    gap: 0.6rem;
+	    flex-shrink: 0;
 
-      button { margin: 0; }
+	    button { margin: 0; }
     }
   }
 
@@ -204,17 +228,30 @@
     }
 
     .topo {
-      .controle-tempo {
+      .linha-topo {
         flex-direction: column;
-        gap: 1.25rem;
       }
 
       .acoes {
         width: 100%;
+        justify-content: flex-start;
 
         button {
           flex: 1;
         }
+      }
+
+      .rodape-topo {
+        flex-direction: column;
+        align-items: stretch;
+
+        .incremento {
+          text-align: left;
+        }
+      }
+
+      .criarPartida {
+        align-self: stretch; // botão ocupa a largura toda no mobile
       }
     }
   }
