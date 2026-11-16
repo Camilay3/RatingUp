@@ -1,0 +1,26 @@
+CREATE TABLE achievements (
+    id BIGSERIAL PRIMARY KEY,
+    code VARCHAR(50) UNIQUE NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    description VARCHAR(200) NOT NULL,
+    category VARCHAR(30) NOT NULL,
+    target_value INT NOT NULL,
+    reward_experience INT NOT NULL,
+    reward_title VARCHAR(50)
+);
+
+CREATE TABLE user_achievements (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    achievement_id BIGINT NOT NULL,
+    current_progress INT DEFAULT 0,
+    is_completed BOOLEAN DEFAULT FALSE,
+    completed_at TIMESTAMP NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (achievement_id) REFERENCES achievements(id),
+    CONSTRAINT unique_key_user_achievement UINQUE (user_id, achievement_id)
+);
+
+INSERT INTO achievements (code, title, description, category, target_value, reward_experience)
+VALUES
+    ('FIRST_MATCH', 'Primeira Partida', 'Jogue uma partida pela primeira vez', 'CONSISTENCY', 1, 50)
