@@ -23,4 +23,5 @@ CREATE TABLE user_achievements (
 
 INSERT INTO achievements (code, title, description, category, target_value, reward_experience)
 VALUES
-    ('FIRST_MATCH', 'Primeira Partida', 'Jogue uma partida pela primeira vez', 'CONSISTENCY', 1, 50)
+    ('FIRST_MATCH', 'Primeira Partida', 'Jogue uma partida pela primeira vez', 'CONSISTENCY', 1, 50),
+    ('FIRST_MULTIPLAYER_VICTORY', 'Começo triunfal', 'Vença uma partida multiplayer de xadrez', 'CONSISTENCY', 1, 100)
