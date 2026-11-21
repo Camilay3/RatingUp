@@ -18,7 +18,7 @@ CREATE TABLE user_achievements (
     completed_at TIMESTAMP NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (achievement_id) REFERENCES achievements(id),
-    CONSTRAINT unique_key_user_achievement UINQUE (user_id, achievement_id)
+    CONSTRAINT unique_key_user_achievement UNIQUE (user_id, achievement_id)
 );
 
 INSERT INTO achievements (code, title, description, category, target_value, reward_experience)

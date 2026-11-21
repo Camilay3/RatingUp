@@ -10,8 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "achievement")
-@Table(name = "achievement", uniqueConstraints = {
+@Entity(name = "achievements")
+@Table(name = "achievements", uniqueConstraints = {
     @UniqueConstraint(name = "uk_achievement_code", columnNames = {"code"})
         })
 @Getter
