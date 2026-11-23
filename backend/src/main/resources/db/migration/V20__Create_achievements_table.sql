@@ -22,7 +22,7 @@ CREATE TABLE user_achievements (
     CONSTRAINT unique_key_user_achievement UNIQUE (user_id, achievement_id)
 );
 
-INSERT INTO achievements (code, title, description, category, target_value, reward_experience)
+INSERT INTO achievements (code, title, description, category, target_value, reward_experience, reward_title)
 VALUES
     ('FIRST_MATCH', 'Primeira Partida', 'Jogue uma partida pela primeira vez', 'CONSISTENCY', 1, 50),
     ('FIRST_MULTIPLAYER_VICTORY', 'Começo triunfal', 'Vença uma partida multiplayer de xadrez', 'CONSISTENCY', 1, 100)
