@@ -24,8 +24,8 @@ CREATE TABLE user_achievements (
 
 INSERT INTO achievements (code, title, description, category, target_value, reward_experience, reward_title)
 VALUES
-    ('FIRST_MATCH', 'Primeira Partida', 'Jogue uma partida pela primeira vez', 'CONSISTENCY', 1, 50),
-    ('FIRST_MULTIPLAYER_VICTORY', 'Começo triunfal', 'Vença uma partida multiplayer de xadrez', 'CONSISTENCY', 1, 100)
+    ('FIRST_MATCH', 'Primeira Partida', 'Jogue uma partida pela primeira vez', 'CONSISTENCY', 1, 50, NULL),
+    ('FIRST_MULTIPLAYER_VICTORY', 'Começo triunfal', 'Vença uma partida multiplayer de xadrez', 'CONSISTENCY', 1, 100, 'Iniciante Promissor')
 
     ('COMPLETE_10_LESSONS', 'Enxadrista Focado', 'Conclua 10 lições teóricas do livro', 'THEORETICAL', 10, 200, 'Teórico'),
     ('TACTICAL_FORK', 'Ataque Duplo', 'Execute um garfo com sucesso', 'TACTICAL', 1, 150, 'Tático');
