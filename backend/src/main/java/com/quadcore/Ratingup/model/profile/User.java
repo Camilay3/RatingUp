@@ -64,6 +64,9 @@ public class User implements UserDetails {
 
     private String avatarurl;
 
+    @Column(nullable = false)
+    private int experience = 0;
+
     @Column(name = "creation_date", updatable = false)
     @CreationTimestamp
     private LocalDateTime creationDate;

@@ -51,6 +51,9 @@ public class AchievementService {
         if (userAchievement.getCurrentProgress() >= achievement.getTargetValue()){
             userAchievement.setCompleted(true);
             userAchievement.setCompletedAt(LocalDateTime.now());
+
+            user.setExperience(user.getExperience() + achievement.getRewardExperience());
+            userRepository.save(user);
         }
         return userAchievementRepository.save(userAchievement);
     }

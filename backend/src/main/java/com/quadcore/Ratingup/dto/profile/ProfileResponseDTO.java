@@ -13,7 +13,8 @@ public record ProfileResponseDTO(
         String telefone,
         Roles role,
         LocalDateTime creationDate,
-        String avatarUrl
+        String avatarUrl,
+        int experience
 ) {
     public ProfileResponseDTO(User user) {
         this(
@@ -24,7 +25,8 @@ public record ProfileResponseDTO(
                 user.getTelefone(),
                 user.getRole(),
                 user.getCreationDate(),
-                user.getAvatarurl()
+                user.getAvatarurl(),
+                user.getExperience()
         );
     }
 }
