@@ -1,6 +1,7 @@
 package com.quadcore.Ratingup.service;
 
 
+import com.quadcore.Ratingup.event.AchievementUnlockedEvent;
 import com.quadcore.Ratingup.model.achievement.Achievement;
 import com.quadcore.Ratingup.model.profile.User;
 import com.quadcore.Ratingup.model.profile.UserAchievement;
@@ -9,6 +10,7 @@ import com.quadcore.Ratingup.repository.UserAchievementRepository;
 import com.quadcore.Ratingup.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
 
@@ -17,11 +19,13 @@ public class AchievementService {
     private final UserRepository userRepository;
     private final UserAchievementRepository userAchievementRepository;
     private final AchievementRepository achievementRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    public AchievementService(UserRepository userRepository, UserAchievementRepository userAchievementRepository, AchievementRepository achievementRepository){
+    public AchievementService(UserRepository userRepository, UserAchievementRepository userAchievementRepository, AchievementRepository achievementRepository, ApplicationEventPublisher applicationEventPublisher){
         this.userRepository = userRepository;
         this.userAchievementRepository = userAchievementRepository;
         this.achievementRepository = achievementRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -54,6 +58,8 @@ public class AchievementService {
 
             user.setExperience(user.getExperience() + achievement.getRewardExperience());
             userRepository.save(user);
+
+            applicationEventPublisher.publishEvent(new AchievementUnlockedEvent(user, achievement));
         }
         return userAchievementRepository.save(userAchievement);
     }
