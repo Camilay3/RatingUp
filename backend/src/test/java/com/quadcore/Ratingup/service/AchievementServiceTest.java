@@ -74,4 +74,47 @@ class AchievementServiceTest {
         verify(userRepository, times(1)).save(user);
         verify(applicationEventPublisher, times(1)).publishEvent(any(AchievementUnlockedEvent.class));
     }
+
+    @Test
+    @DisplayName("Deve somar progresso mas não desbloquear se não atingir a meta")
+    void deveSomarProgressoSemDesbloquear(){
+        achievement.setTargetValue(10);
+
+        when(achievementRepository.findByCode("COMPLETE_10_LESSONS")).thenReturn(Optional.of(achievement));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userAchievementRepository.findByUserIdAndAchievementId(1L, 10L)).thenReturn(Optional.empty());
+        when(userAchievementRepository.save(any(UserAchievement.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        UserAchievement result = achievementService.updateUserAchievement(1L, "COMPLETE_10_LESSONS", 1);
+
+        assertFalse(result.isCompleted(), "A conquista NÃO deveria estar completa");
+        assertEquals(1, result.getCurrentProgress(), "O progresso deveria ser 1");
+        assertEquals(0, user.getExperience(), "O usuário não deveria receber XP ainda");
+
+        verify(userRepository, never()).save(any(User.class));
+        verify(applicationEventPublisher, never()).publishEvent(any());
+    }
+
+    @Test
+    @DisplayName("Deve garantir que não haverá nenhuma recompensa ou mudança caso a conquista já esteja completa")
+    void deveGarantirIdempotenciaSeConquistaFoiConcluida(){
+        UserAchievement oldProgress = new UserAchievement();
+        oldProgress.setUser(user);
+        oldProgress.setAchievement(achievement);
+        oldProgress.setCompleted(true);
+        oldProgress.setCurrentProgress(1);
+
+        when(achievementRepository.findByCode("FIRST_MATCH")).thenReturn(Optional.of(achievement));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userAchievementRepository.findByUserIdAndAchievementId(1L, 10L)).thenReturn(Optional.empty());
+
+        UserAchievement result = achievementService.updateUserAchievement(1L, "FIRST_MATCH", 1);
+
+        assertTrue(result.isCompleted());
+        assertEquals(0, user.getExperience(), "Não pode ter XP repetido");
+
+        verify(userRepository, never()).save(any());
+        verify(userAchievementRepository, never()).save(any());
+        verify(applicationEventPublisher, never()).publishEvent(any());
+    }
 }
