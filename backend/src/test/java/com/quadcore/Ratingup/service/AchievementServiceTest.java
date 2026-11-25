@@ -106,7 +106,7 @@ class AchievementServiceTest {
 
         when(achievementRepository.findByCode("FIRST_MATCH")).thenReturn(Optional.of(achievement));
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userAchievementRepository.findByUserIdAndAchievementId(1L, 10L)).thenReturn(Optional.empty());
+        when(userAchievementRepository.findByUserIdAndAchievementId(1L, 10L)).thenReturn(Optional.of(oldProgress));
 
         UserAchievement result = achievementService.updateUserAchievement(1L, "FIRST_MATCH", 1);
 
