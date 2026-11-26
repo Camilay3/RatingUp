@@ -56,6 +56,7 @@ class AdminUserControllerTest {
         mockedAdmin.setNickname("adminnick");
         mockedAdmin.setName("Admin User Name");
         mockedAdmin.setTelefone("123456789");
+        mockedAdmin.setExperience(0);
 
         mockMvc = MockMvcBuilders.standaloneSetup(adminUserController)
                 .setCustomArgumentResolvers(new HandlerMethodArgumentResolver() {
@@ -75,7 +76,7 @@ class AdminUserControllerTest {
 
     @Test
     void listUsers_ShouldReturn200() throws Exception {
-        ProfileResponseDTO dto = new ProfileResponseDTO(1L, "Admin", "nick", "admin@test.com", "123456789", Roles.ADMIN, LocalDateTime.now(), "avatar");
+        ProfileResponseDTO dto = new ProfileResponseDTO(1L, "Admin", "nick", "admin@test.com", "123456789", Roles.ADMIN, LocalDateTime.now(), "avatar", 0);
         Mockito.when(adminUserService.listUsers()).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/admin/contas/listar"))
